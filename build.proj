@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <BuildTarget Condition="'$(BuildTarget)' == ''">Rebuild</BuildTarget>
+    <BuildConfig Condition="'$(BuildConfig)' == ''">Debug</BuildConfig>
+  </PropertyGroup>
+
+  <!-- Directories -->
+  <PropertyGroup>
+    <RootDir>$(MSBuildProjectDirectory)</RootDir>
+    <SrcDir>$(RootDir)\src</SrcDir>
+    <NuGetExe>$(SrcDir)\.nuget\nuget.exe</NuGetExe>
+    <PackagesOutDir>$(RootDir)\out\packages</PackagesOutDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <MainSolution>$(SrcDir)\Autofac.Extras.Quartz.sln</MainSolution>
+  </PropertyGroup>
+
+  <Target Name="BuildAll">
+    <MSBuild Projects="$(MainSolution)" Properties="Configuration=$(BuildConfig);CreateHardLinksForCopyLocalIfPossible=true" Targets="$(BuildTarget)"
+             BuildInParallel="true" />
+  </Target>
+
+  <Target Name="CleanAll">
+    <Message Text="Performing full cleanup..." />
+    <MSBuild Projects="$(MainSolution)" Properties="Configuration=Debug" Targets="Clean"  BuildInParallel="true" />
+    <MSBuild Projects="$(MainSolution)" Properties="Configuration=Release" Targets="Clean" BuildInParallel="true" />
+  </Target>
+
+  <Target Name="CreatePackagesDir">
+    <MakeDir Directories="$(PackagesOutDir)" ContinueOnError="true" />
+  </Target>
+  
+  <Target Name="Pack" DependsOnTargets="CreatePackagesDir">
+    <Exec Command="$(NuGetExe) pack Autofac.Extras.Quartz.csproj -OutputDirectory $(PackagesOutDir) -Build -Prop Configuration=Release"  WorkingDirectory="$(SrcDir)\Autofac.Extras.Quartz" />
+  </Target>
+
+</Project>
