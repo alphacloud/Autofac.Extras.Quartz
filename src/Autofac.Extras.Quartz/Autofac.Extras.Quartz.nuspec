@@ -10,7 +10,14 @@
     <projectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Initial revision.</releaseNotes>
+    <releaseNotes>Added support of TopShelf.Quartz.
+
+AutofacJobFactory now is registered in Container as IJobFactory and AutofacJobFactory (singleton).
+
+Add HostConfigurator.UsingQuartzJobFactory(() =&gt; _container.Resolve&lt;IJobFactory&gt;()); to resolve jobs with Autofac.
+
+Add XML documentation.
+</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>

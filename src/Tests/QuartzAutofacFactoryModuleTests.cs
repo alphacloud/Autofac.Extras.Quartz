@@ -11,6 +11,7 @@ namespace Autofac.Extras.Quartz.Tests
 {
     using FluentAssertions;
     using global::Quartz;
+    using global::Quartz.Spi;
     using JetBrains.Annotations;
     using NUnit.Framework;
 
@@ -63,6 +64,15 @@ namespace Autofac.Extras.Quartz.Tests
         }
 
 
+        [Test]
+        public void ShouldRegisterAutofacJobFactory()
+        {
+            _container.Resolve<AutofacJobFactory>().Should().NotBeNull();
+            _container.Resolve<IJobFactory>().Should().BeOfType<AutofacJobFactory>();
+            _container.Resolve<IJobFactory>().Should().BeSameAs(_container.Resolve<AutofacJobFactory>(), 
+                "should be singleton");
+
+        }
         [Test]
         public void ShouldRegisterSchedulerAsSingleton()
         {

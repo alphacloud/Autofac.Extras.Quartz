@@ -23,19 +23,17 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class AutofacSchedulerFactory : StdSchedulerFactory
     {
-        private readonly ILifetimeScope _lifetimeScope;
-        private readonly string _scopeName;
+        private readonly AutofacJobFactory _jobFactory;
 
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:Quartz.Impl.StdSchedulerFactory" /> class.
         /// </summary>
-        public AutofacSchedulerFactory([NotNull] ILifetimeScope lifetimeScope, [NotNull] string scopeName = "quartz.job")
+        /// <param name="jobFactory">Job factory.</param>
+        public AutofacSchedulerFactory([NotNull] AutofacJobFactory jobFactory)
         {
-            if (lifetimeScope == null) throw new ArgumentNullException("lifetimeScope");
-            if (scopeName == null) throw new ArgumentNullException("scopeName");
-            _lifetimeScope = lifetimeScope;
-            _scopeName = scopeName;
+            if (jobFactory == null) throw new ArgumentNullException("jobFactory");
+            _jobFactory = jobFactory;
         }
 
 
@@ -43,16 +41,11 @@ namespace Autofac.Extras.Quartz
         ///     Initializes a new instance of the <see cref="T:Quartz.Impl.StdSchedulerFactory" /> class.
         /// </summary>
         /// <param name="props">The properties.</param>
-        /// <param name="lifetimeScope"></param>
-        /// <param name="scopeName"></param>
-        public AutofacSchedulerFactory(NameValueCollection props, [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] string scopeName = "quartz.job")
+        /// <param name="jobFactory">Job factory</param>
+        public AutofacSchedulerFactory(NameValueCollection props, AutofacJobFactory jobFactory)
             : base(props)
         {
-            if (lifetimeScope == null) throw new ArgumentNullException("lifetimeScope");
-            if (scopeName == null) throw new ArgumentNullException("scopeName");
-            _lifetimeScope = lifetimeScope;
-            _scopeName = scopeName;
+            _jobFactory = jobFactory;
         }
 
 
@@ -65,7 +58,7 @@ namespace Autofac.Extras.Quartz
         protected override IScheduler Instantiate(QuartzSchedulerResources rsrcs, QuartzScheduler qs)
         {
             var scheduler = base.Instantiate(rsrcs, qs);
-            scheduler.JobFactory = new AutofacJobFactory(_lifetimeScope, _scopeName);
+            scheduler.JobFactory = _jobFactory;
             return scheduler;
         }
     }

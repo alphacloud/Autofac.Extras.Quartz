@@ -9,4 +9,5 @@
 https://github.com/alphacloud/Autofac.Extras.Quartz&#xD;
 Licensed under MIT license.&#xD;
 Copyright (c) $CREATED_YEAR$ Alphacloud.Net&#xD;
-</s:String></wpf:ResourceDictionary>
+</s:String>
+	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EMigrateBlankLinesAroundFieldToBlankLinesAroundProperty/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

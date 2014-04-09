@@ -16,6 +16,12 @@ namespace Autofac.Extras.Quartz
     using JetBrains.Annotations;
 
 
+    /// <summary>
+    ///     Resolve Quartz Job and it's dependencies from Autofac container.
+    /// </summary>
+    /// <remarks>
+    ///     Factory retuns wrapper around read job. It wraps job execution in nested litefime scope.
+    /// </remarks>
     [PublicAPI]
     public class AutofacJobFactory : IJobFactory
     {
@@ -36,8 +42,10 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         /// <param name="lifetimeScope">The lifetime scope.</param>
         /// <param name="scopeName">Name of the scope.</param>
-        public AutofacJobFactory(ILifetimeScope lifetimeScope, string scopeName = "quartz.job")
+        public AutofacJobFactory([NotNull] ILifetimeScope lifetimeScope, [NotNull] string scopeName)
         {
+            if (lifetimeScope == null) throw new ArgumentNullException("lifetimeScope");
+            if (scopeName == null) throw new ArgumentNullException("scopeName");
             _lifetimeScope = lifetimeScope;
             _scopeName = scopeName;
         }
