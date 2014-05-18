@@ -15,7 +15,6 @@ namespace Autofac.Extras.Quartz
     using global::Quartz.Spi;
     using JetBrains.Annotations;
 
-
     /// <summary>
     ///     Resolve Quartz Job and it's dependencies from Autofac container.
     /// </summary>
@@ -25,14 +24,6 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class AutofacJobFactory : IJobFactory
     {
-        /// <summary>
-        ///     Job execution context data map key for lifetime scope manager.
-        /// </summary>
-        /// <remarks>
-        ///     <see cref="ILifetimeScope" /> is stored in <see cref="IJobExecutionContext" /> during job execution.
-        /// </remarks>
-        public const string LifetimeScopeKeyName = "autofac.lifetime.scope";
-
         private readonly ILifetimeScope _lifetimeScope;
         private readonly string _scopeName;
 
@@ -77,7 +68,11 @@ namespace Autofac.Extras.Quartz
         {
             if (bundle == null) throw new ArgumentNullException("bundle");
             if (scheduler == null) throw new ArgumentNullException("scheduler");
-            return new JobWrapper(bundle, _lifetimeScope, _scopeName);
+
+            var jobType = bundle.JobDetail.JobType;
+            return jobType.IsAssignableTo<IInterruptableJob>() 
+                ? new InterruptableJobWrapper(bundle, _lifetimeScope, _scopeName) 
+                : new JobWrapper(bundle, _lifetimeScope, _scopeName);
         }
 
 
@@ -85,8 +80,24 @@ namespace Autofac.Extras.Quartz
         ///     Allows the the job factory to destroy/cleanup the job if needed.
         /// </summary>
         public void ReturnJob(IJob job)
-        {}
+        {
+        }
 
+
+        internal sealed class InterruptableJobWrapper : JobWrapper, IInterruptableJob
+        {
+            public InterruptableJobWrapper([NotNull] TriggerFiredBundle bundle, [NotNull] ILifetimeScope lifetimeScope,
+                [NotNull] string scopeName) : base(bundle, lifetimeScope, scopeName)
+            {
+            }
+
+            public void Interrupt()
+            {
+                var interruptableJob = RunningJob as IInterruptableJob;
+                if (interruptableJob != null)
+                    interruptableJob.Interrupt();
+            }
+        }
 
         /// <summary>
         ///     Job execution wrapper.
@@ -116,6 +127,8 @@ namespace Autofac.Extras.Quartz
                 _scopeName = scopeName;
             }
 
+            protected IJob RunningJob { get; private set; }
+
 
             /// <summary>
             ///     Called by the <see cref="T:Quartz.IScheduler" /> when a <see cref="T:Quartz.ITrigger" />
@@ -136,9 +149,8 @@ namespace Autofac.Extras.Quartz
                 var scope = _lifetimeScope.BeginLifetimeScope(_scopeName);
                 try
                 {
-                    context.Put(LifetimeScopeKeyName, scope);
-                    var job = (IJob) scope.Resolve(_bundle.JobDetail.JobType);
-                    job.Execute(context);
+                    RunningJob = CreateJob(scope);
+                    RunningJob.Execute(context);
                 }
                 catch (Exception ex)
                 {
@@ -148,9 +160,14 @@ namespace Autofac.Extras.Quartz
                 }
                 finally
                 {
-                    context.Put(LifetimeScopeKeyName, null);
+                    RunningJob = null;
                     scope.Dispose();
                 }
+            }
+
+            protected virtual IJob CreateJob(ILifetimeScope scope)
+            {
+                return (IJob) scope.Resolve(_bundle.JobDetail.JobType);
             }
         }
     }
