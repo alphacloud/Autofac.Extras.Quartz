@@ -9,7 +9,7 @@
 
 namespace Autofac.Extras.Quartz.Tests
 {
-    using System;
+    using System.Diagnostics;
     using System.Threading;
     using FluentAssertions;
     using global::Quartz;
@@ -52,9 +52,8 @@ namespace Autofac.Extras.Quartz.Tests
             {
                 var data = context.JobDetail.JobDataMap;
                 var counter = (int) data["counter"];
-                Console.WriteLine("counter: {0}", counter);
                 counter++;
-
+                Debug.WriteLine("counter: {0}", counter);
                 data["counter"] = counter;
             }
         }
@@ -82,16 +81,22 @@ namespace Autofac.Extras.Quartz.Tests
         [Test]
         public void CanPersistDataInWrapper()
         {
-            var job1 = JobBuilder.Create<SampleJob>().WithIdentity("job1", "grp1").Build();
+            var key = new JobKey("job1", "grp1");
+            var job1 = JobBuilder.Create<SampleJob>().WithIdentity(key).StoreDurably(true)
+                .Build();
             var trigger =
-                TriggerBuilder.Create().WithSimpleSchedule(s => s.WithIntervalInSeconds(10).WithRepeatCount(5)).Build();
-            job1.JobDataMap.Put("counter", 1);
+                TriggerBuilder.Create().WithSimpleSchedule(s => s.WithIntervalInSeconds(1).WithRepeatCount(2)).Build();
+            job1.JobDataMap.Put("counter", 0);
 
             _scheduler.ScheduleJob(job1, trigger);
-
             _scheduler.Start();
 
-            Thread.Sleep(50.Seconds());
+            Thread.Sleep(5.Seconds());
+
+            var jobMap = _scheduler.GetJobDetail(key)
+                .JobDataMap;
+
+            jobMap.GetIntValue("counter").Should().Be(3);
         }
     }
 }
