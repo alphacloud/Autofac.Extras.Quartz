@@ -9,6 +9,8 @@
 
 namespace Autofac.Extras.Quartz.Tests
 {
+    using System;
+    using System.Collections.Specialized;
     using FluentAssertions;
     using global::Quartz;
     using global::Quartz.Spi;
@@ -23,7 +25,8 @@ namespace Autofac.Extras.Quartz.Tests
         public void SetUp()
         {
             var cb = new ContainerBuilder();
-            cb.RegisterModule(new QuartzAutofacFactoryModule());
+            _quartzAutofacFactoryModule = new QuartzAutofacFactoryModule();
+            cb.RegisterModule(_quartzAutofacFactoryModule);
 
             _container = cb.Build();
         }
@@ -38,6 +41,7 @@ namespace Autofac.Extras.Quartz.Tests
 
 
         private IContainer _container;
+        private QuartzAutofacFactoryModule _quartzAutofacFactoryModule;
 
 
         [UsedImplicitly]
@@ -78,6 +82,19 @@ namespace Autofac.Extras.Quartz.Tests
         {
             var scheduler = _container.Resolve<IScheduler>();
             _container.Resolve<IScheduler>().Should().BeSameAs(scheduler);
+        }
+
+        [Test]
+        public void ShouldExecuteConfigureSchedulerFactoryFunctionIfSet()
+        {
+            var configuration = new NameValueCollection();
+            var customSchedulerName = Guid.NewGuid().ToString();
+            configuration["quartz.scheduler.instanceName"] = customSchedulerName;
+
+            _quartzAutofacFactoryModule.ConfigureSchedulerFactory = autofacSchedulerFactory => autofacSchedulerFactory.Initialize(configuration);
+            
+            var scheduler = _container.Resolve<IScheduler>();
+            scheduler.SchedulerName.Should().BeEquivalentTo(customSchedulerName);
         }
     }
 }
