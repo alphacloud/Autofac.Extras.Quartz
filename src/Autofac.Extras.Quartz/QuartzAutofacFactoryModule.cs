@@ -10,7 +10,6 @@
 namespace Autofac.Extras.Quartz
 {
     using System;
-    using System.Collections.Specialized;
     using global::Quartz;
     using global::Quartz.Spi;
     using JetBrains.Annotations;
