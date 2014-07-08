@@ -10,6 +10,7 @@
 namespace Autofac.Extras.Quartz
 {
     using System;
+    using System.Collections.Specialized;
     using global::Quartz;
     using global::Quartz.Spi;
     using JetBrains.Annotations;
@@ -29,6 +30,8 @@ namespace Autofac.Extras.Quartz
         [PublicAPI]
         public const string LifetimeScopeName = "quartz.job";
 
+        [PublicAPI]
+        public Action<AutofacSchedulerFactory> ConfigureSchedulerFactory = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QuartzAutofacFactoryModule"/> class.
@@ -59,8 +62,17 @@ namespace Autofac.Extras.Quartz
                 .As<IJobFactory>()
                 .SingleInstance();
 
-            builder.Register<ISchedulerFactory>(c => new AutofacSchedulerFactory(c.Resolve<AutofacJobFactory>()))
-                .SingleInstance();
+            builder.Register<ISchedulerFactory>(c =>
+            {
+                var autofacSchedulerFactory = new AutofacSchedulerFactory(c.Resolve<AutofacJobFactory>());
+
+                // configure the scheduler programatically from the outside
+                if (ConfigureSchedulerFactory != null)
+                {
+                    ConfigureSchedulerFactory(autofacSchedulerFactory);
+                }
+                return autofacSchedulerFactory;
+            }).SingleInstance();
 
             builder.Register(c => c.Resolve<ISchedulerFactory>().GetScheduler())
                 .SingleInstance();
