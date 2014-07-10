@@ -33,11 +33,20 @@ namespace Autofac.Extras.Quartz
         public Action<AutofacSchedulerFactory> ConfigureSchedulerFactory = null;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="QuartzAutofacFactoryModule"/> class with a default lifetime scope name.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
+        public QuartzAutofacFactoryModule()
+            : this(LifetimeScopeName)
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="QuartzAutofacFactoryModule"/> class.
         /// </summary>
         /// <param name="lifetimeScopeName">Name of the lifetime scope to wrap job resolution and execution.</param>
         /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
-        public QuartzAutofacFactoryModule([NotNull] string lifetimeScopeName = LifetimeScopeName)
+        public QuartzAutofacFactoryModule([NotNull] string lifetimeScopeName)
         {
             if (lifetimeScopeName == null) throw new ArgumentNullException("lifetimeScopeName");
             _lifetimeScopeName = lifetimeScopeName;
