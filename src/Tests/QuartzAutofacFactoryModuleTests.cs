@@ -51,6 +51,13 @@ namespace Autofac.Extras.Quartz.Tests
             {}
         }
 
+        [Test]
+        public void CanUseGenericAutofacModuleRegistrationSyntax()
+        {
+            var cb = new ContainerBuilder();
+            cb.RegisterModule<QuartzAutofacFactoryModule>();
+            cb.Build();
+        }
 
         [Test]
         public void ShouldRegisterAutofacSchedulerFactory()
