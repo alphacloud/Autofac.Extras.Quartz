@@ -44,8 +44,9 @@ namespace Autofac.Extras.Quartz.Tests
         private IScheduler _scheduler;
 
 
+        [UsedImplicitly]
         [PersistJobDataAfterExecution]
-        [DisallowConcurrentExecution, UsedImplicitly]
+        [DisallowConcurrentExecution]
         private class SampleJob : IJob
         {
             public void Execute(IJobExecutionContext context)
@@ -92,7 +93,6 @@ namespace Autofac.Extras.Quartz.Tests
             _scheduler.Start();
 
             Thread.Sleep(5.Seconds());
-
             var jobMap = _scheduler.GetJobDetail(key)
                 .JobDataMap;
 

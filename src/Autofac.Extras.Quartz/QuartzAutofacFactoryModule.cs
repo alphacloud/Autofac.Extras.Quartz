@@ -10,6 +10,7 @@
 namespace Autofac.Extras.Quartz
 {
     using System;
+    using System.Collections.Specialized;
     using global::Quartz;
     using global::Quartz.Spi;
     using JetBrains.Annotations;
@@ -21,28 +22,26 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class QuartzAutofacFactoryModule : Module
     {
+        /// <summary>
+        ///     Default name for nested lifetime scope.
+        /// </summary>
+        [PublicAPI] public const string LifetimeScopeName = "quartz.job";
+
         private readonly string _lifetimeScopeName;
 
-        /// <summary>
-        /// Default name for nested lifetime scope.
-        /// </summary>
-        [PublicAPI]
-        public const string LifetimeScopeName = "quartz.job";
-
-        [PublicAPI]
-        public Action<AutofacSchedulerFactory> ConfigureSchedulerFactory = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QuartzAutofacFactoryModule"/> class with a default lifetime scope name.
+        ///     Initializes a new instance of the <see cref="QuartzAutofacFactoryModule" /> class with a default lifetime scope
+        ///     name.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
         public QuartzAutofacFactoryModule()
             : this(LifetimeScopeName)
-        {
-        }
+        {}
+
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QuartzAutofacFactoryModule"/> class.
+        ///     Initializes a new instance of the <see cref="QuartzAutofacFactoryModule" /> class.
         /// </summary>
         /// <param name="lifetimeScopeName">Name of the lifetime scope to wrap job resolution and execution.</param>
         /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
@@ -51,6 +50,13 @@ namespace Autofac.Extras.Quartz
             if (lifetimeScopeName == null) throw new ArgumentNullException("lifetimeScopeName");
             _lifetimeScopeName = lifetimeScopeName;
         }
+
+
+        /// <summary>
+        ///    Provides custom configuration for Scheduler.
+        /// </summary>
+        [PublicAPI]
+        public Func<NameValueCollection> ConfigurationProvider { get; set; }
 
 
         /// <summary>
@@ -70,17 +76,15 @@ namespace Autofac.Extras.Quartz
                 .As<IJobFactory>()
                 .SingleInstance();
 
-            builder.Register<ISchedulerFactory>(c =>
-            {
-                var autofacSchedulerFactory = new AutofacSchedulerFactory(c.Resolve<AutofacJobFactory>());
+            builder.Register<ISchedulerFactory>(c => {
+                var cfgProvider = ConfigurationProvider;
 
-                // configure the scheduler programatically from the outside
-                if (ConfigureSchedulerFactory != null)
-                {
-                    ConfigureSchedulerFactory(autofacSchedulerFactory);
-                }
+                var autofacSchedulerFactory = (cfgProvider != null)
+                    ? new AutofacSchedulerFactory(cfgProvider(), c.Resolve<AutofacJobFactory>())
+                    : new AutofacSchedulerFactory(c.Resolve<AutofacJobFactory>());
                 return autofacSchedulerFactory;
-            }).SingleInstance();
+            })
+                .SingleInstance();
 
             builder.Register(c => c.Resolve<ISchedulerFactory>().GetScheduler())
                 .SingleInstance();

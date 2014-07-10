@@ -13,13 +13,12 @@ namespace Autofac.Extras.Quartz
     using System.Reflection;
     using global::Quartz;
     using JetBrains.Annotations;
-    using Module = Autofac.Module;
 
 
     /// <summary>
     ///     Registers Quartz jobs from specified assemblies.
     /// </summary>
-    public class QuartzAutofacJobsModule : Module
+    public class QuartzAutofacJobsModule : Autofac.Module
     {
         private readonly Assembly[] _assembliesToScan;
 

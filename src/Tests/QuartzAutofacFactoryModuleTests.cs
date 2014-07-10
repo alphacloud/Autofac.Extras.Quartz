@@ -13,6 +13,7 @@ namespace Autofac.Extras.Quartz.Tests
     using System.Collections.Specialized;
     using FluentAssertions;
     using global::Quartz;
+    using global::Quartz.Impl;
     using global::Quartz.Spi;
     using JetBrains.Annotations;
     using NUnit.Framework;
@@ -96,9 +97,9 @@ namespace Autofac.Extras.Quartz.Tests
         {
             var configuration = new NameValueCollection();
             var customSchedulerName = Guid.NewGuid().ToString();
-            configuration["quartz.scheduler.instanceName"] = customSchedulerName;
+            configuration[StdSchedulerFactory.PropertySchedulerInstanceName] = customSchedulerName;
 
-            _quartzAutofacFactoryModule.ConfigureSchedulerFactory = autofacSchedulerFactory => autofacSchedulerFactory.Initialize(configuration);
+            _quartzAutofacFactoryModule.ConfigurationProvider = () => configuration;
             
             var scheduler = _container.Resolve<IScheduler>();
             scheduler.SchedulerName.Should().BeEquivalentTo(customSchedulerName);
