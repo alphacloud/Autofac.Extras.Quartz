@@ -13,9 +13,9 @@ namespace Autofac.Extras.Quartz.Tests
     using System.Threading;
     using FluentAssertions;
     using global::Quartz;
+    using global::Quartz.Impl;
     using JetBrains.Annotations;
     using NUnit.Framework;
-
 
     [TestFixture]
     public class TransparentWrapperTests
@@ -24,12 +24,13 @@ namespace Autofac.Extras.Quartz.Tests
         public void SetUp()
         {
             var cb = new ContainerBuilder();
-            cb.RegisterModule(new QuartzAutofacFactoryModule());
-            cb.RegisterType<SampleJob>().AsSelf();
-
+            cb.RegisterType<SampleJob>();
             _container = cb.Build();
 
-            _scheduler = _container.Resolve<ISchedulerFactory>().GetScheduler();
+            _factory = new StdSchedulerFactory();
+            _scheduler = _factory.GetScheduler();
+            _scheduler.JobFactory = new AutofacJobFactory(_container.Resolve<ILifetimeScope>(),
+                QuartzAutofacFactoryModule.LifetimeScopeName);
         }
 
 
@@ -42,6 +43,7 @@ namespace Autofac.Extras.Quartz.Tests
 
         private IContainer _container;
         private IScheduler _scheduler;
+        private StdSchedulerFactory _factory;
 
 
         [UsedImplicitly]
@@ -63,18 +65,18 @@ namespace Autofac.Extras.Quartz.Tests
         [UsedImplicitly]
         private class Wrapper : IJob
         {
-            private readonly IJob _targret;
+            private readonly IJob _target;
 
 
-            public Wrapper(IJob targret)
+            public Wrapper(IJob target)
             {
-                _targret = targret;
+                _target = target;
             }
 
 
             public void Execute(IJobExecutionContext context)
             {
-                _targret.Execute(context);
+                _target.Execute(context);
             }
         }
 
