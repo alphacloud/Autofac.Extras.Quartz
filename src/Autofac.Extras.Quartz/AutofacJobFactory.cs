@@ -19,7 +19,7 @@ namespace Autofac.Extras.Quartz
     ///     Resolve Quartz Job and it's dependencies from Autofac container.
     /// </summary>
     /// <remarks>
-    ///     Factory retuns wrapper around read job. It wraps job execution in nested litefime scope.
+    ///     Factory retuns wrapper around read job. It wraps job execution in nested lifetime scope.
     /// </remarks>
     [PublicAPI]
     public class AutofacJobFactory : IJobFactory
@@ -70,8 +70,8 @@ namespace Autofac.Extras.Quartz
             if (scheduler == null) throw new ArgumentNullException("scheduler");
 
             var jobType = bundle.JobDetail.JobType;
-            return jobType.IsAssignableTo<IInterruptableJob>() 
-                ? new InterruptableJobWrapper(bundle, _lifetimeScope, _scopeName) 
+            return jobType.IsAssignableTo<IInterruptableJob>()
+                ? new InterruptableJobWrapper(bundle, _lifetimeScope, _scopeName)
                 : new JobWrapper(bundle, _lifetimeScope, _scopeName);
         }
 
@@ -83,6 +83,7 @@ namespace Autofac.Extras.Quartz
         {
         }
 
+        #region Job Wrappers
 
         internal sealed class InterruptableJobWrapper : JobWrapper, IInterruptableJob
         {
@@ -170,5 +171,7 @@ namespace Autofac.Extras.Quartz
                 return (IJob) scope.Resolve(_bundle.JobDetail.JobType);
             }
         }
+
+        #endregion
     }
 }

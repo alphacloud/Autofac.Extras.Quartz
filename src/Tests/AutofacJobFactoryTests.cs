@@ -12,10 +12,10 @@ namespace Autofac.Extras.Quartz.Tests
     using System;
     using Alphacloud.Common.Testing.Nunit;
     using FluentAssertions;
-    using FluentAssertions.Specialized;
     using global::Quartz;
     using global::Quartz.Impl;
     using global::Quartz.Spi;
+    using JetBrains.Annotations;
     using Moq;
     using NUnit.Framework;
 
@@ -27,6 +27,7 @@ namespace Autofac.Extras.Quartz.Tests
         private Mock<IScheduler> _scheduler;
 
 
+        [UsedImplicitly]
         private class NonInterruptableJob : IJob
         {
             public void Execute(IJobExecutionContext context)
@@ -34,6 +35,7 @@ namespace Autofac.Extras.Quartz.Tests
             }
         }
 
+        [UsedImplicitly]
         private class InterruptableJob : IJob, IInterruptableJob
         {
             public void Interrupt()
@@ -79,19 +81,20 @@ namespace Autofac.Extras.Quartz.Tests
         }
 
         [Test]
+        public void Should_Create_InterruptableWrapper_For_InterruptableJob()
+        {
+            var bundle = CreateBundle<InterruptableJob>();
+            var job = _factory.NewJob(bundle, _scheduler.Object);
+            (job as IInterruptableJob).Should()
+                .NotBeNull("wrapper should implement IInterruptableJob for interruptable jobs");
+        }
+
+        [Test]
         public void Should_Create_NonInterruptableWrapper_For_NonInterruptableJob()
         {
             var bundle = CreateBundle<NonInterruptableJob>();
             var job = _factory.NewJob(bundle, _scheduler.Object);
             (job as IInterruptableJob).Should().BeNull("wrapper should not implement IInterruptableJob");
-        }
-
-        [Test]
-        public void Should_Create_InterruptableWrapper_For_InterruptableJob()
-        {
-            var bundle = CreateBundle<InterruptableJob>();
-            var job = _factory.NewJob(bundle, _scheduler.Object);
-            (job as IInterruptableJob).Should().NotBeNull("wrapper should implement IInterruptableJob for interruptable jobs");
         }
     }
 }
