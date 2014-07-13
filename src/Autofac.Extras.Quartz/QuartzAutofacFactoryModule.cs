@@ -12,20 +12,18 @@ namespace Autofac.Extras.Quartz
     using System;
     using System.Collections.Specialized;
     using global::Quartz;
+    using global::Quartz.Impl;
     using global::Quartz.Spi;
-    using JetBrains.Annotations;
-
 
     /// <summary>
     ///     Registers <see cref="ISchedulerFactory" /> and default <see cref="IScheduler" />.
     /// </summary>
-    [PublicAPI]
     public class QuartzAutofacFactoryModule : Module
     {
         /// <summary>
         ///     Default name for nested lifetime scope.
         /// </summary>
-        [PublicAPI] public const string LifetimeScopeName = "quartz.job";
+        public const string LifetimeScopeName = "quartz.job";
 
         private readonly string _lifetimeScopeName;
 
@@ -37,7 +35,8 @@ namespace Autofac.Extras.Quartz
         /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
         public QuartzAutofacFactoryModule()
             : this(LifetimeScopeName)
-        {}
+        {
+        }
 
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         /// <param name="lifetimeScopeName">Name of the lifetime scope to wrap job resolution and execution.</param>
         /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
-        public QuartzAutofacFactoryModule([NotNull] string lifetimeScopeName)
+        public QuartzAutofacFactoryModule(string lifetimeScopeName)
         {
             if (lifetimeScopeName == null) throw new ArgumentNullException("lifetimeScopeName");
             _lifetimeScopeName = lifetimeScopeName;
@@ -53,9 +52,11 @@ namespace Autofac.Extras.Quartz
 
 
         /// <summary>
-        ///    Provides custom configuration for Scheduler.
+        ///     Provides custom configuration for Scheduler.
+        ///     Returns <see cref="NameValueCollection" /> with custom Quartz settings.
+        ///     <para>See http://quartz-scheduler.org/documentation/quartz-2.x/configuration/ for settings description.</para>
+        ///     <seealso cref="StdSchedulerFactory" /> for some configuration property names.
         /// </summary>
-        [PublicAPI]
         public Func<NameValueCollection> ConfigurationProvider { get; set; }
 
 
@@ -76,7 +77,8 @@ namespace Autofac.Extras.Quartz
                 .As<IJobFactory>()
                 .SingleInstance();
 
-            builder.Register<ISchedulerFactory>(c => {
+            builder.Register<ISchedulerFactory>(c =>
+            {
                 var cfgProvider = ConfigurationProvider;
 
                 var autofacSchedulerFactory = (cfgProvider != null)

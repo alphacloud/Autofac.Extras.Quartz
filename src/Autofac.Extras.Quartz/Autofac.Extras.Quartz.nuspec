@@ -10,13 +10,16 @@
     <projectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Update to latest Autofac version.</releaseNotes>
+    <releaseNotes>
+      Allow custom Quartz configuration from code;
+      Removed JetBrains annotations dependency;
+      https://github.com/alphacloud/Autofac.Extras.Quartz/issues?milestone=1&page=1&state=closed
+    </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
       <dependency id="Autofac" version="[3.5.0,4.0.0)" />
       <dependency id="Common.Logging" version="[2.1.2,3.0.0)" />
-      <dependency id="ReSharper.Annotations" version="7.1.3"  />
     </dependencies>
   </metadata>
 </package>

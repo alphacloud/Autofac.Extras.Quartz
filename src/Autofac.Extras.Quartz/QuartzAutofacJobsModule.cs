@@ -12,13 +12,12 @@ namespace Autofac.Extras.Quartz
     using System;
     using System.Reflection;
     using global::Quartz;
-    using JetBrains.Annotations;
-
+    using Module = Autofac.Module;
 
     /// <summary>
     ///     Registers Quartz jobs from specified assemblies.
     /// </summary>
-    public class QuartzAutofacJobsModule : Autofac.Module
+    public class QuartzAutofacJobsModule : Module
     {
         private readonly Assembly[] _assembliesToScan;
 
@@ -28,7 +27,7 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         /// <param name="assembliesToScan">The assemblies to scan for jobs.</param>
         /// <exception cref="System.ArgumentNullException">assembliesToScan</exception>
-        public QuartzAutofacJobsModule([NotNull] params Assembly[] assembliesToScan)
+        public QuartzAutofacJobsModule(params Assembly[] assembliesToScan)
         {
             if (assembliesToScan == null) throw new ArgumentNullException("assembliesToScan");
             _assembliesToScan = assembliesToScan;

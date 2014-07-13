@@ -13,7 +13,6 @@ namespace Autofac.Extras.Quartz
     using System.Globalization;
     using global::Quartz;
     using global::Quartz.Spi;
-    using JetBrains.Annotations;
 
     /// <summary>
     ///     Resolve Quartz Job and it's dependencies from Autofac container.
@@ -21,7 +20,6 @@ namespace Autofac.Extras.Quartz
     /// <remarks>
     ///     Factory retuns wrapper around read job. It wraps job execution in nested lifetime scope.
     /// </remarks>
-    [PublicAPI]
     public class AutofacJobFactory : IJobFactory
     {
         private readonly ILifetimeScope _lifetimeScope;
@@ -33,7 +31,7 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         /// <param name="lifetimeScope">The lifetime scope.</param>
         /// <param name="scopeName">Name of the scope.</param>
-        public AutofacJobFactory([NotNull] ILifetimeScope lifetimeScope, [NotNull] string scopeName)
+        public AutofacJobFactory(ILifetimeScope lifetimeScope, string scopeName)
         {
             if (lifetimeScope == null) throw new ArgumentNullException("lifetimeScope");
             if (scopeName == null) throw new ArgumentNullException("scopeName");
@@ -64,7 +62,7 @@ namespace Autofac.Extras.Quartz
         /// <returns>
         ///     the newly instantiated Job
         /// </returns>
-        public IJob NewJob([NotNull] TriggerFiredBundle bundle, [NotNull] IScheduler scheduler)
+        public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
             if (bundle == null) throw new ArgumentNullException("bundle");
             if (scheduler == null) throw new ArgumentNullException("scheduler");
@@ -87,8 +85,8 @@ namespace Autofac.Extras.Quartz
 
         internal sealed class InterruptableJobWrapper : JobWrapper, IInterruptableJob
         {
-            public InterruptableJobWrapper([NotNull] TriggerFiredBundle bundle, [NotNull] ILifetimeScope lifetimeScope,
-                [NotNull] string scopeName) : base(bundle, lifetimeScope, scopeName)
+            public InterruptableJobWrapper(TriggerFiredBundle bundle, ILifetimeScope lifetimeScope,
+                string scopeName) : base(bundle, lifetimeScope, scopeName)
             {
             }
 
@@ -116,8 +114,8 @@ namespace Autofac.Extras.Quartz
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
-            public JobWrapper([NotNull] TriggerFiredBundle bundle, [NotNull] ILifetimeScope lifetimeScope,
-                [NotNull] string scopeName)
+            public JobWrapper(TriggerFiredBundle bundle, ILifetimeScope lifetimeScope,
+                string scopeName)
             {
                 if (bundle == null) throw new ArgumentNullException("bundle");
                 if (lifetimeScope == null) throw new ArgumentNullException("lifetimeScope");
