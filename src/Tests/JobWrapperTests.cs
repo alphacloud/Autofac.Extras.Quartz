@@ -59,6 +59,7 @@ namespace Autofac.Extras.Quartz.Tests
         {
             public bool WasDisposed { get; set; }
             public bool WasExecuted { get; set; }
+            public Exception ThrowOnExecute { get; set; }
         }
 
 
@@ -82,6 +83,11 @@ namespace Autofac.Extras.Quartz.Tests
             public void Execute(IJobExecutionContext context)
             {
                 _state.WasExecuted = true;
+
+                if (_state.ThrowOnExecute != null)
+                {
+                    throw _state.ThrowOnExecute;
+                }
             }
         }
 
@@ -124,6 +130,35 @@ namespace Autofac.Extras.Quartz.Tests
 
             _state.WasDisposed.Should().BeTrue("Job should be disposed with nested scope");
             _state.WasExecuted.Should().BeTrue("Job was not executed");
+        }
+
+        [Test]
+        public void ShouldThrowSchedulerExceptionOnInstantiationFailure()
+        {
+            var instantiationException = new Exception();
+            var cb = new ContainerBuilder();
+            Func<IComponentContext, WrappedJob> thrower = _ => { throw instantiationException; };
+
+            cb.Register(thrower);
+            cb.Update(_container);
+
+            _jobDetail.SetupGet(d => d.JobType).Returns(typeof(WrappedJob));
+
+            TestDelegate call = () =>_wrapper.Execute(_executionContext.Object);
+
+            Assert.Throws<SchedulerConfigException>(call);
+        }
+
+        [Test]
+        public void ShouldNotWrapJobExecutionException()
+        {
+            _jobDetail.SetupGet(d => d.JobType).Returns(typeof(WrappedJob));
+            _state.ThrowOnExecute = new Exception("Failed to execute job.");
+
+            TestDelegate call = () => _wrapper.Execute(_executionContext.Object);
+
+            var ex = Assert.Throws<Exception>(call);
+            Assert.That(ex, Is.SameAs(_state.ThrowOnExecute), "Should not wrap execption thrown in IJob.Execute()");
         }
     }
 }
