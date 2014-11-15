@@ -16,7 +16,7 @@ Install package via Nuget: `install-package Autofac.Extras.Quartz`
 # Usage examples
 
 Autofac configuration for Quartz consists of two steps:
-1. Register custom `ISchedulerFactory` and default instance of `IScheduler` instance in Autofac. This is done by QuartzAutofacFactoryModule.
+1. Register custom `ISchedulerFactory` and default instance of `IScheduler` instance in Autofac. This is done by QuartzAutofacFactoryModule. Optionally, custom configuration parameters can be passed using `ConfigurationProvider` property.
 2. Register jobs in Autofac. QuartzAutofacJobsModule will scan given assemblies and register all non-abstract implementors of `IJob` interface as transient instances.
 
 ```
