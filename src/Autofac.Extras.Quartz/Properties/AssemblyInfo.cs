@@ -33,8 +33,8 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
 [assembly: Guid("b7307028-45b4-495c-8c38-8a60dbef8aca")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.1.1.0")]
+[assembly: AssemblyFileVersion("1.1.1.0")]
 
 [assembly: InternalsVisibleTo("Autofac.Extras.Quartz.Tests, PublicKey=" +
     "00240000048000009400000006020000002400005253413100040000010001003b6b2a7202e9a5"
