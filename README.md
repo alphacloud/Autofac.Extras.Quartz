@@ -13,11 +13,20 @@ as well as deterministic [disposal of resources](https://github.com/autofac/Auto
 
 Install package via Nuget: `install-package Autofac.Extras.Quartz`
 
-# Usage examples
+# Usage example
 
 Autofac configuration for Quartz consists of two steps:
-1. Register custom `ISchedulerFactory` and default instance of `IScheduler` instance in Autofac. This is done by QuartzAutofacFactoryModule. Optionally, custom configuration parameters can be passed using `ConfigurationProvider` property.
-2. Register jobs in Autofac. QuartzAutofacJobsModule will scan given assemblies and register all non-abstract implementors of `IJob` interface as transient instances.
+1. Scheduler registration
+2. Job registration
+
+## Scheduler registration
+
+`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container.
+
+Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
+
+## Job registration
+`QuartzAutofacJobsModule` scans given assemblies and registers all non-abstract implementors of `IJob` interface as transient instances.
 
 ```
 internal static ContainerBuilder ConfigureContainer(ContainerBuilder cb)
@@ -27,5 +36,4 @@ internal static ContainerBuilder ConfigureContainer(ContainerBuilder cb)
 	// 2) Register jobs
 	cb.RegisterModule(new QuartzAutofacJobsModule(typeof (CleanupExpiredAnnouncemetsJob).Assembly));
 }
-
 ```
