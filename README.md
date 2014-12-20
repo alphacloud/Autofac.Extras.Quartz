@@ -37,3 +37,6 @@ internal static ContainerBuilder ConfigureContainer(ContainerBuilder cb)
 	cb.RegisterModule(new QuartzAutofacJobsModule(typeof (CleanupExpiredAnnouncemetsJob).Assembly));
 }
 ```
+
+## Sample project
+See src/Samples/SampleService for windows service implementation based on [TopShelf](https://github.com/Topshelf/Topshelf).
