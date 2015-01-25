@@ -20,6 +20,10 @@ namespace Autofac.Extras.Quartz.Tests
     [TestFixture]
     public class TransparentWrapperTests
     {
+        private IContainer _container;
+        private StdSchedulerFactory _factory;
+        private IScheduler _scheduler;
+
         [SetUp]
         public void SetUp()
         {
@@ -33,53 +37,11 @@ namespace Autofac.Extras.Quartz.Tests
                 QuartzAutofacFactoryModule.LifetimeScopeName);
         }
 
-
         [TearDown]
         public void TearDown()
         {
             _container.Dispose();
         }
-
-
-        private IContainer _container;
-        private IScheduler _scheduler;
-        private StdSchedulerFactory _factory;
-
-
-        [UsedImplicitly]
-        [PersistJobDataAfterExecution]
-        [DisallowConcurrentExecution]
-        private class SampleJob : IJob
-        {
-            public void Execute(IJobExecutionContext context)
-            {
-                var data = context.JobDetail.JobDataMap;
-                var counter = (int) data["counter"];
-                counter++;
-                Debug.WriteLine("counter: {0}", counter);
-                data["counter"] = counter;
-            }
-        }
-
-
-        [UsedImplicitly]
-        private class Wrapper : IJob
-        {
-            private readonly IJob _target;
-
-
-            public Wrapper(IJob target)
-            {
-                _target = target;
-            }
-
-
-            public void Execute(IJobExecutionContext context)
-            {
-                _target.Execute(context);
-            }
-        }
-
 
         [Test]
         public void CanPersistDataInWrapper()
@@ -99,6 +61,37 @@ namespace Autofac.Extras.Quartz.Tests
                 .JobDataMap;
 
             jobMap.GetIntValue("counter").Should().Be(3);
+        }
+
+        [UsedImplicitly]
+        [PersistJobDataAfterExecution]
+        [DisallowConcurrentExecution]
+        private class SampleJob : IJob
+        {
+            public void Execute(IJobExecutionContext context)
+            {
+                var data = context.JobDetail.JobDataMap;
+                var counter = (int) data["counter"];
+                counter++;
+                Debug.WriteLine("counter: {0}", counter);
+                data["counter"] = counter;
+            }
+        }
+
+        [UsedImplicitly]
+        private class Wrapper : IJob
+        {
+            private readonly IJob _target;
+
+            public Wrapper(IJob target)
+            {
+                _target = target;
+            }
+
+            public void Execute(IJobExecutionContext context)
+            {
+                _target.Execute(context);
+            }
         }
     }
 }

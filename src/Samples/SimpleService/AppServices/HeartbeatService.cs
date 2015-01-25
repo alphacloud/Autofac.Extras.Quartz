@@ -10,7 +10,7 @@ namespace SimpleService.AppServices
 
     internal class HeartbeatService: IHeartbeatService
     {
-        private static readonly ILog s_log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog s_log = LogManager.GetLogger<HeartbeatService>();
 
         public void UpdateServiceState(string state)
         {

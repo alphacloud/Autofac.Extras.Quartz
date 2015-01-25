@@ -18,10 +18,12 @@ namespace Autofac.Extras.Quartz.Tests
     using JetBrains.Annotations;
     using NUnit.Framework;
 
-
     [TestFixture]
     internal class QuartzAutofacFactoryModuleTests
     {
+        private IContainer _container;
+        private QuartzAutofacFactoryModule _quartzAutofacFactoryModule;
+
         [SetUp]
         public void SetUp()
         {
@@ -32,24 +34,11 @@ namespace Autofac.Extras.Quartz.Tests
             _container = cb.Build();
         }
 
-
         [TearDown]
         public void TearDown()
         {
             if (_container != null)
                 _container.Dispose();
-        }
-
-
-        private IContainer _container;
-        private QuartzAutofacFactoryModule _quartzAutofacFactoryModule;
-
-
-        [UsedImplicitly]
-        private class TestJob : IJob
-        {
-            public void Execute(IJobExecutionContext context)
-            {}
         }
 
         [Test]
@@ -67,7 +56,6 @@ namespace Autofac.Extras.Quartz.Tests
             factory.Should().BeOfType<AutofacSchedulerFactory>();
         }
 
-
         [Test]
         public void ShouldRegisterFactoryAsSingleton()
         {
@@ -75,16 +63,15 @@ namespace Autofac.Extras.Quartz.Tests
             _container.Resolve<ISchedulerFactory>().Should().BeSameAs(factory);
         }
 
-
         [Test]
         public void ShouldRegisterAutofacJobFactory()
         {
             _container.Resolve<AutofacJobFactory>().Should().NotBeNull();
             _container.Resolve<IJobFactory>().Should().BeOfType<AutofacJobFactory>();
-            _container.Resolve<IJobFactory>().Should().BeSameAs(_container.Resolve<AutofacJobFactory>(), 
+            _container.Resolve<IJobFactory>().Should().BeSameAs(_container.Resolve<AutofacJobFactory>(),
                 "should be singleton");
-
         }
+
         [Test]
         public void ShouldRegisterSchedulerAsSingleton()
         {
@@ -100,9 +87,17 @@ namespace Autofac.Extras.Quartz.Tests
             configuration[StdSchedulerFactory.PropertySchedulerInstanceName] = customSchedulerName;
 
             _quartzAutofacFactoryModule.ConfigurationProvider = () => configuration;
-            
+
             var scheduler = _container.Resolve<IScheduler>();
             scheduler.SchedulerName.Should().BeEquivalentTo(customSchedulerName);
+        }
+
+        [UsedImplicitly]
+        private class TestJob : IJob
+        {
+            public void Execute(IJobExecutionContext context)
+            {
+            }
         }
     }
 }

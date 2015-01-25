@@ -27,7 +27,6 @@ namespace Autofac.Extras.Quartz
 
         private readonly string _lifetimeScopeName;
 
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="QuartzAutofacFactoryModule" /> class with a default lifetime scope
         ///     name.
@@ -37,7 +36,6 @@ namespace Autofac.Extras.Quartz
             : this(LifetimeScopeName)
         {
         }
-
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="QuartzAutofacFactoryModule" /> class.
@@ -50,7 +48,6 @@ namespace Autofac.Extras.Quartz
             _lifetimeScopeName = lifetimeScopeName;
         }
 
-
         /// <summary>
         ///     Provides custom configuration for Scheduler.
         ///     Returns <see cref="NameValueCollection" /> with custom Quartz settings.
@@ -58,7 +55,6 @@ namespace Autofac.Extras.Quartz
         ///     <seealso cref="StdSchedulerFactory" /> for some configuration property names.
         /// </summary>
         public Func<NameValueCollection> ConfigurationProvider { get; set; }
-
 
         /// <summary>
         ///     Override to add registrations to the container.

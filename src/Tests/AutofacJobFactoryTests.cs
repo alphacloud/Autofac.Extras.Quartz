@@ -26,27 +26,6 @@ namespace Autofac.Extras.Quartz.Tests
         private AutofacJobFactory _factory;
         private Mock<IScheduler> _scheduler;
 
-
-        [UsedImplicitly]
-        private class NonInterruptableJob : IJob
-        {
-            public void Execute(IJobExecutionContext context)
-            {
-            }
-        }
-
-        [UsedImplicitly]
-        private class InterruptableJob : IJob, IInterruptableJob
-        {
-            public void Interrupt()
-            {
-            }
-
-            public void Execute(IJobExecutionContext context)
-            {
-            }
-        }
-
         protected override void DoSetup()
         {
             _container = CreateContainer();
@@ -63,7 +42,6 @@ namespace Autofac.Extras.Quartz.Tests
             return new TriggerFiredBundle(jobDetailImpl, trigger.Object, calendar.Object, false, DateTimeOffset.Now,
                 DateTimeOffset.Now, null, null);
         }
-
 
         protected override void DoTearDown()
         {
@@ -95,6 +73,26 @@ namespace Autofac.Extras.Quartz.Tests
             var bundle = CreateBundle<NonInterruptableJob>();
             var job = _factory.NewJob(bundle, _scheduler.Object);
             (job as IInterruptableJob).Should().BeNull("wrapper should not implement IInterruptableJob");
+        }
+
+        [UsedImplicitly]
+        private class NonInterruptableJob : IJob
+        {
+            public void Execute(IJobExecutionContext context)
+            {
+            }
+        }
+
+        [UsedImplicitly]
+        private class InterruptableJob : IJob, IInterruptableJob
+        {
+            public void Interrupt()
+            {
+            }
+
+            public void Execute(IJobExecutionContext context)
+            {
+            }
         }
     }
 }

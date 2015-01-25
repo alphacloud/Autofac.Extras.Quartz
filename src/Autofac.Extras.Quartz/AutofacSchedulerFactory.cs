@@ -22,7 +22,6 @@ namespace Autofac.Extras.Quartz
     {
         private readonly AutofacJobFactory _jobFactory;
 
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:Quartz.Impl.StdSchedulerFactory" /> class.
         /// </summary>
@@ -32,7 +31,6 @@ namespace Autofac.Extras.Quartz
             if (jobFactory == null) throw new ArgumentNullException("jobFactory");
             _jobFactory = jobFactory;
         }
-
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:Quartz.Impl.StdSchedulerFactory" /> class.
@@ -44,7 +42,6 @@ namespace Autofac.Extras.Quartz
         {
             _jobFactory = jobFactory;
         }
-
 
         /// <summary>
         ///     Instantiates the scheduler.

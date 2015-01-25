@@ -21,7 +21,6 @@ namespace Autofac.Extras.Quartz
     {
         private readonly Assembly[] _assembliesToScan;
 
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="QuartzAutofacJobsModule" /> class.
         /// </summary>
@@ -32,7 +31,6 @@ namespace Autofac.Extras.Quartz
             if (assembliesToScan == null) throw new ArgumentNullException("assembliesToScan");
             _assembliesToScan = assembliesToScan;
         }
-
 
         /// <summary>
         ///     Override to add registrations to the container.

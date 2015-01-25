@@ -14,5 +14,6 @@ Copyright (c) $CREATED_YEAR$ Alphacloud.Net&#xD;
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/SolBuilderDuo/RequiredBuildEventImportance/@EntryValue">Normal</s:String>
 	<s:Boolean x:Key="/Default/Environment/Hierarchy/Build/SolBuilderDuo/UseConcurrentBuild/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EMigrateBlankLinesAroundFieldToBlankLinesAroundProperty/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EMigrateThisQualifierSettings/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/Environment/UnitTesting/JavaScriptUnitTestProviders/BrowserLocation/@EntryValue">C:\Program Files (x86)\Mozilla Firefox\firefox.exe</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/JavaScriptUnitTestProviders/JasmineJsVersion/@EntryValue">2.0</s:String></wpf:ResourceDictionary>

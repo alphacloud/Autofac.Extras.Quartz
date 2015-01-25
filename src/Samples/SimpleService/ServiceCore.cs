@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014 Alphacloud.Net
+// Copyright (c) 2015 Alphacloud.Net
 
 #endregion
 
@@ -15,7 +15,7 @@ namespace SimpleService
 
     public class ServiceCore
     {
-        private static readonly ILog s_log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog s_log = LogManager.GetLogger<ServiceCore>();
         private readonly IScheduler _scheduler;
 
         public ServiceCore(IScheduler scheduler)

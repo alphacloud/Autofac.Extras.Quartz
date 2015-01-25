@@ -25,7 +25,6 @@ namespace Autofac.Extras.Quartz
         private readonly ILifetimeScope _lifetimeScope;
         private readonly string _scopeName;
 
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="AutofacJobFactory" /> class.
         /// </summary>
@@ -38,7 +37,6 @@ namespace Autofac.Extras.Quartz
             _lifetimeScope = lifetimeScope;
             _scopeName = scopeName;
         }
-
 
         /// <summary>
         ///     Called by the scheduler at the time of the trigger firing, in order to
@@ -72,7 +70,6 @@ namespace Autofac.Extras.Quartz
                 ? new InterruptableJobWrapper(bundle, _lifetimeScope, _scopeName)
                 : new JobWrapper(bundle, _lifetimeScope, _scopeName);
         }
-
 
         /// <summary>
         ///     Allows the the job factory to destroy/cleanup the job if needed.
@@ -110,7 +107,6 @@ namespace Autofac.Extras.Quartz
             private readonly ILifetimeScope _lifetimeScope;
             private readonly string _scopeName;
 
-
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
@@ -127,7 +123,6 @@ namespace Autofac.Extras.Quartz
             }
 
             protected IJob RunningJob { get; private set; }
-
 
             /// <summary>
             ///     Called by the <see cref="T:Quartz.IScheduler" /> when a <see cref="T:Quartz.ITrigger" />

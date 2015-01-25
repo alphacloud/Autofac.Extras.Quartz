@@ -16,10 +16,18 @@ namespace Autofac.Extras.Quartz.Tests
     using Moq;
     using NUnit.Framework;
 
-
     [TestFixture]
     internal class JobWrapperTests
     {
+        private TriggerFiredBundle _bundle;
+        private Mock<ICalendar> _calendar;
+        private IContainer _container;
+        private Mock<IJobExecutionContext> _executionContext;
+        private Mock<IJobDetail> _jobDetail;
+        private State _state;
+        private Mock<IOperableTrigger> _trigger;
+        private AutofacJobFactory.JobWrapper _wrapper;
+
         [SetUp]
         public void SetUp()
         {
@@ -46,7 +54,6 @@ namespace Autofac.Extras.Quartz.Tests
             _wrapper = new AutofacJobFactory.JobWrapper(_bundle, _container.Resolve<ILifetimeScope>(), "nested-scope");
         }
 
-
         [TearDown]
         public void TearDown()
         {
@@ -54,61 +61,14 @@ namespace Autofac.Extras.Quartz.Tests
                 _container.Dispose();
         }
 
-
-        private class State
-        {
-            public bool WasDisposed { get; set; }
-            public bool WasExecuted { get; set; }
-            public Exception ThrowOnExecute { get; set; }
-        }
-
-
-        private class WrappedJob : IJob, IDisposable
-        {
-            private readonly State _state;
-
-
-            public WrappedJob(State state)
-            {
-                _state = state;
-            }
-
-
-            public void Dispose()
-            {
-                _state.WasDisposed = true;
-            }
-
-
-            public void Execute(IJobExecutionContext context)
-            {
-                _state.WasExecuted = true;
-
-                if (_state.ThrowOnExecute != null)
-                {
-                    throw _state.ThrowOnExecute;
-                }
-            }
-        }
-
-
-        private IContainer _container;
-        private Mock<IJobExecutionContext> _executionContext;
-        private Mock<IOperableTrigger> _trigger;
-        private Mock<ICalendar> _calendar;
-        private TriggerFiredBundle _bundle;
-        private AutofacJobFactory.JobWrapper _wrapper;
-        private Mock<IJobDetail> _jobDetail;
-        private State _state;
-
-
         [Test]
         public void ShouldCreateNestedScope()
         {
             string nestedLifetimeScopeTag = null;
             int nestedScopeWasDisposCount = 0;
 
-            _container.ChildLifetimeScopeBeginning += (sender, args) => {
+            _container.ChildLifetimeScopeBeginning += (sender, args) =>
+            {
                 nestedLifetimeScopeTag = args.LifetimeScope.Tag.ToString();
                 args.LifetimeScope.CurrentScopeEnding += (o, eventArgs) => nestedScopeWasDisposCount++;
             };
@@ -119,7 +79,6 @@ namespace Autofac.Extras.Quartz.Tests
             nestedLifetimeScopeTag.Should().NotBeNull();
             nestedScopeWasDisposCount.Should().BeGreaterThan(0);
         }
-
 
         [Test]
         public void ShouldDisposeJobAndScopeAfterExecution()
@@ -142,9 +101,9 @@ namespace Autofac.Extras.Quartz.Tests
             cb.Register(thrower);
             cb.Update(_container);
 
-            _jobDetail.SetupGet(d => d.JobType).Returns(typeof(WrappedJob));
+            _jobDetail.SetupGet(d => d.JobType).Returns(typeof (WrappedJob));
 
-            TestDelegate call = () =>_wrapper.Execute(_executionContext.Object);
+            TestDelegate call = () => _wrapper.Execute(_executionContext.Object);
 
             Assert.Throws<SchedulerConfigException>(call);
         }
@@ -152,13 +111,45 @@ namespace Autofac.Extras.Quartz.Tests
         [Test]
         public void ShouldNotWrapJobExecutionException()
         {
-            _jobDetail.SetupGet(d => d.JobType).Returns(typeof(WrappedJob));
+            _jobDetail.SetupGet(d => d.JobType).Returns(typeof (WrappedJob));
             _state.ThrowOnExecute = new Exception("Failed to execute job.");
 
             TestDelegate call = () => _wrapper.Execute(_executionContext.Object);
 
             var ex = Assert.Throws<Exception>(call);
             Assert.That(ex, Is.SameAs(_state.ThrowOnExecute), "Should not wrap execption thrown in IJob.Execute()");
+        }
+
+        private class State
+        {
+            public bool WasDisposed { get; set; }
+            public bool WasExecuted { get; set; }
+            public Exception ThrowOnExecute { get; set; }
+        }
+
+        private class WrappedJob : IJob, IDisposable
+        {
+            private readonly State _state;
+
+            public WrappedJob(State state)
+            {
+                _state = state;
+            }
+
+            public void Dispose()
+            {
+                _state.WasDisposed = true;
+            }
+
+            public void Execute(IJobExecutionContext context)
+            {
+                _state.WasExecuted = true;
+
+                if (_state.ThrowOnExecute != null)
+                {
+                    throw _state.ThrowOnExecute;
+                }
+            }
         }
     }
 }

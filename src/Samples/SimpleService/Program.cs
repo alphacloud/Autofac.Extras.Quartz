@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014 Alphacloud.Net
+// Copyright (c) 2015 Alphacloud.Net
 
 #endregion
 
@@ -25,7 +25,7 @@ namespace SimpleService
 
     internal static class Program
     {
-        private static readonly ILog s_log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog s_log = LogManager.GetLogger(typeof (Program));
         private static IContainer _container;
 
         private static int Main(string[] args)
@@ -74,7 +74,7 @@ namespace SimpleService
 
             svc.ScheduleQuartzJob(q =>
             {
-                q.WithJob(JobBuilder.Create<HearbeatJob>()
+                q.WithJob(JobBuilder.Create<HeartbeatJob>()
                     .WithIdentity("Heartbeat", "Maintenance")
                     .Build);
                 q.AddTrigger(() => TriggerBuilder.Create()
@@ -85,7 +85,7 @@ namespace SimpleService
         internal static ContainerBuilder ConfigureContainer(ContainerBuilder cb)
         {
             cb.RegisterModule(new QuartzAutofacFactoryModule());
-            cb.RegisterModule(new QuartzAutofacJobsModule(typeof (HearbeatJob).Assembly));
+            cb.RegisterModule(new QuartzAutofacJobsModule(typeof (HeartbeatJob).Assembly));
 
             RegisterComponents(cb);
             return cb;

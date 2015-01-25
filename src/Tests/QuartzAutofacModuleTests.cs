@@ -15,10 +15,11 @@ namespace Autofac.Extras.Quartz.Tests
     using JetBrains.Annotations;
     using NUnit.Framework;
 
-
     [TestFixture]
     internal class QuartzAutofacJobsModuleTests
     {
+        private IContainer _container;
+
         [SetUp]
         public void SetUp()
         {
@@ -28,7 +29,6 @@ namespace Autofac.Extras.Quartz.Tests
             _container = cb.Build();
         }
 
-
         [TearDown]
         public void TearDown()
         {
@@ -36,23 +36,19 @@ namespace Autofac.Extras.Quartz.Tests
                 _container.Dispose();
         }
 
-
-        private IContainer _container;
-
-
-        [UsedImplicitly]
-        private class TestJob : IJob
-        {
-            public void Execute(IJobExecutionContext context)
-            {}
-        }
-
-
         [Test]
         public void ShouldRegisterJobsFromAssembly()
         {
             _container.IsRegistered<TestJob>()
                 .Should().BeTrue();
+        }
+
+        [UsedImplicitly]
+        private class TestJob : IJob
+        {
+            public void Execute(IJobExecutionContext context)
+            {
+            }
         }
     }
 }
