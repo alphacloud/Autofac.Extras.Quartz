@@ -148,14 +148,18 @@ namespace Autofac.Extras.Quartz
                 var scope = _lifetimeScope.BeginLifetimeScope(_scopeName);
                 try
                 {
-                    RunningJob = CreateJob(scope);
+                    try
+                    {
+                        RunningJob = CreateJob(scope);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new SchedulerConfigException(string.Format(CultureInfo.InvariantCulture,
+                            "Failed to instantiate Job '{0}' of type '{1}'",
+                            _bundle.JobDetail.Key, _bundle.JobDetail.JobType), ex);
+                    }
+
                     RunningJob.Execute(context);
-                }
-                catch (Exception ex)
-                {
-                    throw new SchedulerConfigException(string.Format(CultureInfo.InvariantCulture,
-                        "Failed to instantiate Job '{0}' of type '{1}'",
-                        _bundle.JobDetail.Key, _bundle.JobDetail.JobType), ex);
                 }
                 finally
                 {
