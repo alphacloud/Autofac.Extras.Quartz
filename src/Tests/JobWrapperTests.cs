@@ -95,17 +95,17 @@ namespace Autofac.Extras.Quartz.Tests
         public void ShouldThrowSchedulerExceptionOnInstantiationFailure()
         {
             var instantiationException = new Exception();
+            
             var cb = new ContainerBuilder();
             Func<IComponentContext, WrappedJob> thrower = _ => { throw instantiationException; };
-
             cb.Register(thrower);
             cb.Update(_container);
 
             _jobDetail.SetupGet(d => d.JobType).Returns(typeof (WrappedJob));
 
-            TestDelegate call = () => _wrapper.Execute(_executionContext.Object);
+            Action call = () => _wrapper.Execute(_executionContext.Object);
 
-            Assert.Throws<SchedulerConfigException>(call);
+            call.ShouldThrow<SchedulerConfigException>();
         }
 
         [Test]
@@ -114,10 +114,11 @@ namespace Autofac.Extras.Quartz.Tests
             _jobDetail.SetupGet(d => d.JobType).Returns(typeof (WrappedJob));
             _state.ThrowOnExecute = new Exception("Failed to execute job.");
 
-            TestDelegate call = () => _wrapper.Execute(_executionContext.Object);
+            Action call = () => _wrapper.Execute(_executionContext.Object);
 
-            var ex = Assert.Throws<Exception>(call);
-            Assert.That(ex, Is.SameAs(_state.ThrowOnExecute), "Should not wrap execption thrown in IJob.Execute()");
+            call.ShouldThrow<Exception>()
+                .And
+                .Should().BeSameAs(_state.ThrowOnExecute, "Should not wrap execption thrown in IJob.Execute()");
         }
 
         private class State
