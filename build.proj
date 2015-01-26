@@ -10,15 +10,26 @@
   <PropertyGroup>
     <RootDir>$(MSBuildProjectDirectory)</RootDir>
     <SrcDir>$(RootDir)\src</SrcDir>
+    <PkgDir>$(SrcDir)\packages</PkgDir>
     <NuGetExe>$(SrcDir)\.nuget\nuget.exe</NuGetExe>
     <PackagesOutDir>$(RootDir)\out\packages</PackagesOutDir>
   </PropertyGroup>
 
   <PropertyGroup>
+	<SolutionDir>$(SrcDir)</SolutionDir>
+	<DownloadNuGetExe>true</DownloadNuGetExe>
     <MainSolution>$(SrcDir)\Autofac.Extras.Quartz.sln</MainSolution>
   </PropertyGroup>
 
-  <Target Name="BuildAll">
+  <Import Project="$(SrcDir)\.nuget\NuGet.targets" />
+  
+  <Target Name="Prepare" DependsOnTargets="RestorePackages">
+	<Exec WorkingDirectory="$(SrcDir)"
+		Command="$(NuGetCommand) restore $(MainSolution)"
+	/>
+  </Target>
+  
+  <Target Name="BuildAll" DependsOnTargets="Prepare">
     <MSBuild Projects="$(MainSolution)" Properties="Configuration=$(BuildConfig);CreateHardLinksForCopyLocalIfPossible=true" Targets="$(BuildTarget)"
              BuildInParallel="true" />
   </Target>
@@ -32,8 +43,14 @@
   <Target Name="CreatePackagesDir">
     <MakeDir Directories="$(PackagesOutDir)" ContinueOnError="true" />
   </Target>
-  
-  <Target Name="Pack" DependsOnTargets="CreatePackagesDir">
+
+  <Target Name="Test" DependsOnTargets="BuildAll">
+    <Exec WorkingDirectory="$(SrcDir)\Tests\bin\$(BuildConfig)"
+          Command="$(PkgDir)\Nunit.Runners.2.6.4\tools\nunit-console.exe /noshadow /stoponerror Autofac.Extras.Quartz.Tests.dll Autofac.Extras.Quartz.Tests.dll"
+    />          
+  </Target>
+ 
+  <Target Name="Pack" DependsOnTargets="CreatePackagesDir;Test">
     <Exec Command="$(NuGetExe) pack Autofac.Extras.Quartz.csproj -OutputDirectory $(PackagesOutDir) -Build -Prop Configuration=Release"  WorkingDirectory="$(SrcDir)\Autofac.Extras.Quartz" />
   </Target>
 

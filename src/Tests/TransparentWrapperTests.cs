@@ -42,7 +42,7 @@ namespace Autofac.Extras.Quartz.Tests
         [TearDown]
         public void TearDown()
         {
-            _scheduler.Shutdown(true);
+            _scheduler.Shutdown(waitForJobsToComplete: false);
             _container.Dispose();
         }
 
