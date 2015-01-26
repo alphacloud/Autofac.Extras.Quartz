@@ -30,6 +30,7 @@ namespace SimpleService
 
         private static int Main(string[] args)
         {
+            Console.WriteLine("This sample demostrates how to integrate Quartz, TopShelf and Autofac.");
             s_log.Info("Starting...");
             try
             {
