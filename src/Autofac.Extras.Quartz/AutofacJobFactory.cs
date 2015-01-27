@@ -10,6 +10,7 @@
 namespace Autofac.Extras.Quartz
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Globalization;
     using global::Quartz;
     using global::Quartz.Spi;
@@ -24,6 +25,8 @@ namespace Autofac.Extras.Quartz
     {
         private readonly ILifetimeScope _lifetimeScope;
         private readonly string _scopeName;
+
+        readonly ConcurrentDictionary<IJob, ILifetimeScope> scopes = new ConcurrentDictionary<IJob, ILifetimeScope> ();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AutofacJobFactory" /> class.
@@ -65,110 +68,28 @@ namespace Autofac.Extras.Quartz
             if (bundle == null) throw new ArgumentNullException("bundle");
             if (scheduler == null) throw new ArgumentNullException("scheduler");
 
-            var jobType = bundle.JobDetail.JobType;
-            return jobType.IsAssignableTo<IInterruptableJob>()
-                ? new InterruptableJobWrapper(bundle, _lifetimeScope, _scopeName)
-                : new JobWrapper(bundle, _lifetimeScope, _scopeName);
+            try {
+                var scope = _lifetimeScope.BeginLifetimeScope (_scopeName);
+
+                var job = (IJob) scope.Resolve (bundle.JobDetail.JobType);
+                scopes [job] = scope;
+
+                return job;
+            } catch (Exception ex) {
+                throw new SchedulerConfigException (string.Format (CultureInfo.InvariantCulture, "Problem instantiating class '{0}'", bundle.JobDetail.JobType.FullName), ex);
+            }
         }
+
 
         /// <summary>
         ///     Allows the the job factory to destroy/cleanup the job if needed.
         /// </summary>
-        public void ReturnJob(IJob job)
+        public void ReturnJob (IJob job)
         {
-        }
-
-        #region Job Wrappers
-
-        internal sealed class InterruptableJobWrapper : JobWrapper, IInterruptableJob
-        {
-            public InterruptableJobWrapper(TriggerFiredBundle bundle, ILifetimeScope lifetimeScope,
-                string scopeName) : base(bundle, lifetimeScope, scopeName)
-            {
-            }
-
-            public void Interrupt()
-            {
-                var interruptableJob = RunningJob as IInterruptableJob;
-                if (interruptableJob != null)
-                    interruptableJob.Interrupt();
+            ILifetimeScope scope;
+            if (scopes.TryRemove (job, out scope)) {
+                scope.Dispose ();
             }
         }
-
-        /// <summary>
-        ///     Job execution wrapper.
-        /// </summary>
-        /// <remarks>
-        ///     Creates nested lifetime scope per job execution and resolves Job from Autofac.
-        /// </remarks>
-        internal class JobWrapper : IJob
-        {
-            private readonly TriggerFiredBundle _bundle;
-            private readonly ILifetimeScope _lifetimeScope;
-            private readonly string _scopeName;
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
-            /// </summary>
-            public JobWrapper(TriggerFiredBundle bundle, ILifetimeScope lifetimeScope,
-                string scopeName)
-            {
-                if (bundle == null) throw new ArgumentNullException("bundle");
-                if (lifetimeScope == null) throw new ArgumentNullException("lifetimeScope");
-                if (scopeName == null) throw new ArgumentNullException("scopeName");
-
-                _bundle = bundle;
-                _lifetimeScope = lifetimeScope;
-                _scopeName = scopeName;
-            }
-
-            protected IJob RunningJob { get; private set; }
-
-            /// <summary>
-            ///     Called by the <see cref="T:Quartz.IScheduler" /> when a <see cref="T:Quartz.ITrigger" />
-            ///     fires that is associated with the <see cref="T:Quartz.IJob" />.
-            /// </summary>
-            /// <remarks>
-            ///     The implementation may wish to set a  result object on the
-            ///     JobExecutionContext before this method exits.  The result itself
-            ///     is meaningless to Quartz, but may be informative to
-            ///     <see cref="T:Quartz.IJobListener" />s or
-            ///     <see cref="T:Quartz.ITriggerListener" />s that are watching the job's
-            ///     execution.
-            /// </remarks>
-            /// <param name="context">The execution context.</param>
-            /// <exception cref="SchedulerConfigException">Job cannot be instantiated.</exception>
-            public void Execute(IJobExecutionContext context)
-            {
-                var scope = _lifetimeScope.BeginLifetimeScope(_scopeName);
-                try
-                {
-                    try
-                    {
-                        RunningJob = CreateJob(scope);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new SchedulerConfigException(string.Format(CultureInfo.InvariantCulture,
-                            "Failed to instantiate Job '{0}' of type '{1}'",
-                            _bundle.JobDetail.Key, _bundle.JobDetail.JobType), ex);
-                    }
-
-                    RunningJob.Execute(context);
-                }
-                finally
-                {
-                    RunningJob = null;
-                    scope.Dispose();
-                }
-            }
-
-            protected virtual IJob CreateJob(ILifetimeScope scope)
-            {
-                return (IJob) scope.Resolve(_bundle.JobDetail.JobType);
-            }
-        }
-
-        #endregion
     }
 }

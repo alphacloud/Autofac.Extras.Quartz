@@ -26,7 +26,8 @@ namespace Autofac.Extras.Quartz.Tests
         private Mock<IJobDetail> _jobDetail;
         private State _state;
         private Mock<IOperableTrigger> _trigger;
-        private AutofacJobFactory.JobWrapper _wrapper;
+        private Mock<IScheduler> _scheduler;
+        private AutofacJobFactory _factory;
 
         [SetUp]
         public void SetUp()
@@ -51,7 +52,9 @@ namespace Autofac.Extras.Quartz.Tests
             _bundle = new TriggerFiredBundle(_jobDetail.Object, _trigger.Object, _calendar.Object, false, null,
                 null, null, null);
 
-            _wrapper = new AutofacJobFactory.JobWrapper(_bundle, _container.Resolve<ILifetimeScope>(), "nested-scope");
+            _scheduler = new Mock<IScheduler> ();
+
+            _factory = new AutofacJobFactory (_container.Resolve<ILifetimeScope> (), "nested-scope");
         }
 
         [TearDown]
@@ -74,7 +77,9 @@ namespace Autofac.Extras.Quartz.Tests
             };
             _jobDetail.SetupGet(d => d.JobType).Returns(typeof (WrappedJob));
 
-            _wrapper.Execute(_executionContext.Object);
+            var job = _factory.NewJob (_bundle, _scheduler.Object);
+            job.Execute(_executionContext.Object);
+            _factory.ReturnJob (job);
 
             nestedLifetimeScopeTag.Should().NotBeNull();
             nestedScopeWasDisposCount.Should().BeGreaterThan(0);
@@ -85,7 +90,9 @@ namespace Autofac.Extras.Quartz.Tests
         {
             _jobDetail.SetupGet(d => d.JobType).Returns(typeof (WrappedJob));
 
-            _wrapper.Execute(_executionContext.Object);
+            var job = _factory.NewJob (_bundle, _scheduler.Object);
+            job.Execute (_executionContext.Object);
+            _factory.ReturnJob (job);
 
             _state.WasDisposed.Should().BeTrue("Job should be disposed with nested scope");
             _state.WasExecuted.Should().BeTrue("Job was not executed");
@@ -103,7 +110,7 @@ namespace Autofac.Extras.Quartz.Tests
 
             _jobDetail.SetupGet(d => d.JobType).Returns(typeof (WrappedJob));
 
-            Action call = () => _wrapper.Execute(_executionContext.Object);
+            Action call = () => _factory.NewJob (_bundle, _scheduler.Object);
 
             call.ShouldThrow<SchedulerConfigException>();
         }
@@ -114,7 +121,9 @@ namespace Autofac.Extras.Quartz.Tests
             _jobDetail.SetupGet(d => d.JobType).Returns(typeof (WrappedJob));
             _state.ThrowOnExecute = new Exception("Failed to execute job.");
 
-            Action call = () => _wrapper.Execute(_executionContext.Object);
+            var job = _container.Resolve<WrappedJob> ();
+
+            Action call = () => job.Execute (_executionContext.Object);
 
             call.ShouldThrow<Exception>()
                 .And
