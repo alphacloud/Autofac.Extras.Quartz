@@ -10,7 +10,7 @@
 namespace Autofac.Extras.Quartz
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Globalization;
     using global::Quartz;
     using global::Quartz.Spi;
@@ -26,7 +26,7 @@ namespace Autofac.Extras.Quartz
         private readonly ILifetimeScope _lifetimeScope;
         private readonly string _scopeName;
 
-        readonly Dictionary<IJob, ILifetimeScope> scopes = new Dictionary<IJob, ILifetimeScope> ();
+        readonly ConcurrentDictionary<IJob, ILifetimeScope> scopes = new ConcurrentDictionary<IJob, ILifetimeScope> ();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AutofacJobFactory" /> class.
@@ -72,7 +72,7 @@ namespace Autofac.Extras.Quartz
                 var scope = _lifetimeScope.BeginLifetimeScope (_scopeName);
 
                 var job = (IJob) scope.Resolve (bundle.JobDetail.JobType);
-                scopes.Add (job, scope);
+                scopes [job] = scope;
 
                 return job;
             } catch (Exception ex) {
@@ -86,10 +86,9 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         public void ReturnJob (IJob job)
         {
-            if (scopes.ContainsKey (job)) {
-                var scope = scopes [job];
+            ILifetimeScope scope;
+            if (scopes.TryRemove (job, out scope)) {
                 scope.Dispose ();
-                scopes.Remove (job);
             }
         }
     }
