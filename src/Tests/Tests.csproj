@@ -109,11 +109,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AutofacJobFactoryTests.cs" />
-    <Compile Include="JobWrapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuartzAutofacModuleTests.cs" />
     <Compile Include="QuartzAutofacFactoryModuleTests.cs" />
-    <Compile Include="TransparentWrapperTests.cs" />
+    <Compile Include="ScopeTrackerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\keyfile.snk">

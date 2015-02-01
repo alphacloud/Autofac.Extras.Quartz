@@ -10,7 +10,9 @@
 namespace Autofac.Extras.Quartz
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Globalization;
+    using Common.Logging;
     using global::Quartz;
     using global::Quartz.Spi;
 
@@ -20,9 +22,14 @@ namespace Autofac.Extras.Quartz
     /// <remarks>
     ///     Factory retuns wrapper around read job. It wraps job execution in nested lifetime scope.
     /// </remarks>
-    public class AutofacJobFactory : IJobFactory
+    public class AutofacJobFactory : IJobFactory, IDisposable
     {
+        private static readonly ILog s_log = LogManager.GetLogger<AutofacJobFactory>();
         private readonly ILifetimeScope _lifetimeScope;
+
+        private readonly ConcurrentDictionary<object, JobTrackingInfo> _runningJobs =
+            new ConcurrentDictionary<object, JobTrackingInfo>();
+
         private readonly string _scopeName;
 
         /// <summary>
@@ -36,6 +43,25 @@ namespace Autofac.Extras.Quartz
             if (scopeName == null) throw new ArgumentNullException("scopeName");
             _lifetimeScope = lifetimeScope;
             _scopeName = scopeName;
+        }
+
+        internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs
+        {
+            get { return _runningJobs; }
+        }
+
+        /// <summary>
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            var runningJobs = RunningJobs.ToArray();
+            RunningJobs.Clear();
+
+            if (runningJobs.Length > 0)
+            {
+                s_log.InfoFormat("Cleaned {0} scopes for running jobs", runningJobs.Length);
+            }
         }
 
         /// <summary>
@@ -66,9 +92,35 @@ namespace Autofac.Extras.Quartz
             if (scheduler == null) throw new ArgumentNullException("scheduler");
 
             var jobType = bundle.JobDetail.JobType;
-            return jobType.IsAssignableTo<IInterruptableJob>()
-                ? new InterruptableJobWrapper(bundle, _lifetimeScope, _scopeName)
-                : new JobWrapper(bundle, _lifetimeScope, _scopeName);
+
+            var nestedScope = _lifetimeScope.BeginLifetimeScope(_scopeName);
+
+            IJob newJob = null;
+            try
+            {
+                newJob = (IJob) nestedScope.Resolve(jobType);
+                var jobTrackingInfo = new JobTrackingInfo(nestedScope);
+                RunningJobs[newJob] = jobTrackingInfo;
+
+                if (s_log.IsDebugEnabled)
+                {
+                    s_log.DebugFormat(CultureInfo.InvariantCulture, "Scope 0x{0:x} associated with Job 0x{1:x}",
+                        jobTrackingInfo.Scope.GetHashCode(), newJob.GetHashCode());
+                }
+
+                nestedScope = null;
+            }
+            catch (Exception ex)
+            {
+                if (nestedScope != null)
+                {
+                    DisposeScope(newJob, nestedScope);
+                }
+                throw new SchedulerConfigException(string.Format(CultureInfo.InvariantCulture,
+                    "Failed to instantiate Job '{0}' of type '{1}'",
+                    bundle.JobDetail.Key, bundle.JobDetail.JobType), ex);
+            }
+            return newJob;
         }
 
         /// <summary>
@@ -76,99 +128,42 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         public void ReturnJob(IJob job)
         {
-        }
-
-        #region Job Wrappers
-
-        internal sealed class InterruptableJobWrapper : JobWrapper, IInterruptableJob
-        {
-            public InterruptableJobWrapper(TriggerFiredBundle bundle, ILifetimeScope lifetimeScope,
-                string scopeName) : base(bundle, lifetimeScope, scopeName)
+            JobTrackingInfo trackingInfo;
+            if (!RunningJobs.TryRemove(job, out trackingInfo))
             {
+                s_log.WarnFormat("Tracking info for job 0x{0:x} not found", job.GetHashCode());
             }
 
-            public void Interrupt()
-            {
-                var interruptableJob = RunningJob as IInterruptableJob;
-                if (interruptableJob != null)
-                    interruptableJob.Interrupt();
-            }
+            DisposeScope(job, trackingInfo.Scope);
         }
 
-        /// <summary>
-        ///     Job execution wrapper.
-        /// </summary>
-        /// <remarks>
-        ///     Creates nested lifetime scope per job execution and resolves Job from Autofac.
-        /// </remarks>
-        internal class JobWrapper : IJob
+        private static void DisposeScope(IJob job, ILifetimeScope lifetimeScope)
         {
-            private readonly TriggerFiredBundle _bundle;
-            private readonly ILifetimeScope _lifetimeScope;
-            private readonly string _scopeName;
+            if (s_log.IsDebugEnabled)
+            {
+                s_log.DebugFormat("Disposing Scope 0x{0:x} for Job 0x{1:x}",
+                    lifetimeScope != null ? lifetimeScope.GetHashCode() : 0,
+                    job != null ? job.GetHashCode() : 0);
+            }
+            if (lifetimeScope != null)
+                lifetimeScope.Dispose();
+        }
 
+        #region Job data 
+
+        internal sealed class JobTrackingInfo
+        {
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
-            public JobWrapper(TriggerFiredBundle bundle, ILifetimeScope lifetimeScope,
-                string scopeName)
+            public JobTrackingInfo(ILifetimeScope scope)
             {
-                if (bundle == null) throw new ArgumentNullException("bundle");
-                if (lifetimeScope == null) throw new ArgumentNullException("lifetimeScope");
-                if (scopeName == null) throw new ArgumentNullException("scopeName");
-
-                _bundle = bundle;
-                _lifetimeScope = lifetimeScope;
-                _scopeName = scopeName;
+                Scope = scope;
             }
 
-            protected IJob RunningJob { get; private set; }
-
-            /// <summary>
-            ///     Called by the <see cref="T:Quartz.IScheduler" /> when a <see cref="T:Quartz.ITrigger" />
-            ///     fires that is associated with the <see cref="T:Quartz.IJob" />.
-            /// </summary>
-            /// <remarks>
-            ///     The implementation may wish to set a  result object on the
-            ///     JobExecutionContext before this method exits.  The result itself
-            ///     is meaningless to Quartz, but may be informative to
-            ///     <see cref="T:Quartz.IJobListener" />s or
-            ///     <see cref="T:Quartz.ITriggerListener" />s that are watching the job's
-            ///     execution.
-            /// </remarks>
-            /// <param name="context">The execution context.</param>
-            /// <exception cref="SchedulerConfigException">Job cannot be instantiated.</exception>
-            public void Execute(IJobExecutionContext context)
-            {
-                var scope = _lifetimeScope.BeginLifetimeScope(_scopeName);
-                try
-                {
-                    try
-                    {
-                        RunningJob = CreateJob(scope);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new SchedulerConfigException(string.Format(CultureInfo.InvariantCulture,
-                            "Failed to instantiate Job '{0}' of type '{1}'",
-                            _bundle.JobDetail.Key, _bundle.JobDetail.JobType), ex);
-                    }
-
-                    RunningJob.Execute(context);
-                }
-                finally
-                {
-                    RunningJob = null;
-                    scope.Dispose();
-                }
-            }
-
-            protected virtual IJob CreateJob(ILifetimeScope scope)
-            {
-                return (IJob) scope.Resolve(_bundle.JobDetail.JobType);
-            }
+            public ILifetimeScope Scope { get; private set; }
         }
 
-        #endregion
+        #endregion Job data
     }
 }

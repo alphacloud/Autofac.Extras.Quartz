@@ -19,7 +19,6 @@ namespace SimpleService
     using Quartz.Spi;
     using Topshelf;
     using Topshelf.Autofac;
-    using Topshelf.Common.Logging;
     using Topshelf.Quartz;
     using Topshelf.ServiceConfigurators;
 
@@ -40,7 +39,7 @@ namespace SimpleService
                 {
                     conf.SetServiceName("AutofacExtras.Quartz.Sample");
                     conf.SetDisplayName("Quartz.Net integration for autofac");
-                    conf.UseCommonLogging();
+                    conf.UseLog4Net();
                     conf.UseAutofacContainer(_container);
 
                     conf.Service<ServiceCore>(svc =>

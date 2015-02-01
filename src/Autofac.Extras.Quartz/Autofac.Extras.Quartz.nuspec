@@ -11,8 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      
-      https://github.com/alphacloud/Autofac.Extras.Quartz/issues?q=milestone%3Av1.2+is%3Aclosed
+      https://github.com/alphacloud/Autofac.Extras.Quartz/issues?q=milestone%3Av1.3+is%3Aclosed
     </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>alphacloud quartz autofac</tags>

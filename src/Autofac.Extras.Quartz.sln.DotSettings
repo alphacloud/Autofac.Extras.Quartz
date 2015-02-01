@@ -9,7 +9,7 @@
 	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue">Autofac Quartz integration&#xD;
 https://github.com/alphacloud/Autofac.Extras.Quartz&#xD;
 Licensed under MIT license.&#xD;
-Copyright (c) $CREATED_YEAR$-$CURRENT_YEAR$ Alphacloud.Net&#xD;
+Copyright (c) 2014-$CURRENT_YEAR$ Alphacloud.Net&#xD;
 </s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/PredefinedNamingRules/=PrivateStaticReadonly/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="s_" Suffix="" Style="aaBb" /&gt;</s:String>
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/SolBuilderDuo/RequiredBuildEventImportance/@EntryValue">Normal</s:String>

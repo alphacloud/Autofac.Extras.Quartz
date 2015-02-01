@@ -68,8 +68,8 @@
     <Reference Include="Topshelf.Autofac">
       <HintPath>..\..\packages\Topshelf.Autofac.1.0.0\lib\net40\Topshelf.Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Topshelf.Common.Logging">
-      <HintPath>..\..\packages\Topshelf.Common.Logging.1.0\lib\net40\Topshelf.Common.Logging.dll</HintPath>
+    <Reference Include="Topshelf.Log4Net">
+      <HintPath>..\..\packages\Topshelf.Log4Net.3.1.4\lib\net40-full\Topshelf.Log4Net.dll</HintPath>
     </Reference>
     <Reference Include="Topshelf.Quartz">
       <HintPath>..\..\packages\Topshelf.Quartz.0.3.0.0\lib\net45\Topshelf.Quartz.dll</HintPath>
