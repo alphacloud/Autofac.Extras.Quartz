@@ -11,14 +11,14 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      Update dependencies (Common.Logging to 3.1.0, Quartz to 2.3.2).
+      Update Quartz to 2.3.3.
     </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
       <dependency id="Autofac" version="[3.5.2,4.0.0)" />
       <dependency id="Common.Logging" version="[3.1.0,4.0.0)" />
-      <dependency id="Quartz" version="[2.3.2,3.0.0)" />
+      <dependency id="Quartz" version="[2.3.3,3.0.0)" />
     </dependencies>
   </metadata>
 </package>
