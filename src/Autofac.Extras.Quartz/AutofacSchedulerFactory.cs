@@ -28,7 +28,7 @@ namespace Autofac.Extras.Quartz
         /// <param name="jobFactory">Job factory.</param>
         public AutofacSchedulerFactory(AutofacJobFactory jobFactory)
         {
-            if (jobFactory == null) throw new ArgumentNullException("jobFactory");
+            if (jobFactory == null) throw new ArgumentNullException(nameof(jobFactory));
             _jobFactory = jobFactory;
         }
 

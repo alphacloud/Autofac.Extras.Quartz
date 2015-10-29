@@ -37,8 +37,7 @@ namespace Autofac.Extras.Quartz.Tests
         [TearDown]
         public void TearDown()
         {
-            if (_container != null)
-                _container.Dispose();
+            _container?.Dispose();
         }
 
         [Test]

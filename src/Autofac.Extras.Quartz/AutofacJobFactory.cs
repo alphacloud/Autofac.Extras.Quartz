@@ -27,9 +27,6 @@ namespace Autofac.Extras.Quartz
         private static readonly ILog s_log = LogManager.GetLogger<AutofacJobFactory>();
         private readonly ILifetimeScope _lifetimeScope;
 
-        private readonly ConcurrentDictionary<object, JobTrackingInfo> _runningJobs =
-            new ConcurrentDictionary<object, JobTrackingInfo>();
-
         private readonly string _scopeName;
 
         /// <summary>
@@ -39,16 +36,13 @@ namespace Autofac.Extras.Quartz
         /// <param name="scopeName">Name of the scope.</param>
         public AutofacJobFactory(ILifetimeScope lifetimeScope, string scopeName)
         {
-            if (lifetimeScope == null) throw new ArgumentNullException("lifetimeScope");
-            if (scopeName == null) throw new ArgumentNullException("scopeName");
+            if (lifetimeScope == null) throw new ArgumentNullException(nameof(lifetimeScope));
+            if (scopeName == null) throw new ArgumentNullException(nameof(scopeName));
             _lifetimeScope = lifetimeScope;
             _scopeName = scopeName;
         }
 
-        internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs
-        {
-            get { return _runningJobs; }
-        }
+        internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs { get; } = new ConcurrentDictionary<object, JobTrackingInfo>();
 
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -88,8 +82,8 @@ namespace Autofac.Extras.Quartz
         /// </returns>
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            if (bundle == null) throw new ArgumentNullException("bundle");
-            if (scheduler == null) throw new ArgumentNullException("scheduler");
+            if (bundle == null) throw new ArgumentNullException(nameof(bundle));
+            if (scheduler == null) throw new ArgumentNullException(nameof(scheduler));
 
             var jobType = bundle.JobDetail.JobType;
 
@@ -128,13 +122,15 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         public void ReturnJob(IJob job)
         {
+            if (job == null)
+                return;
+
             JobTrackingInfo trackingInfo;
             if (!RunningJobs.TryRemove(job, out trackingInfo))
             {
                 s_log.WarnFormat("Tracking info for job 0x{0:x} not found", job.GetHashCode());
                 var disposableJob = job as IDisposable;
-                if (disposableJob != null)
-                    disposableJob.Dispose();
+                disposableJob?.Dispose();
             }
             else
             {
@@ -148,11 +144,10 @@ namespace Autofac.Extras.Quartz
             if (s_log.IsDebugEnabled)
             {
                 s_log.DebugFormat("Disposing Scope 0x{0:x} for Job 0x{1:x}",
-                    lifetimeScope != null ? lifetimeScope.GetHashCode() : 0,
-                    job != null ? job.GetHashCode() : 0);
+                    lifetimeScope?.GetHashCode() ?? 0,
+                    job?.GetHashCode() ?? 0);
             }
-            if (lifetimeScope != null)
-                lifetimeScope.Dispose();
+            lifetimeScope?.Dispose();
         }
 
         #region Job data 

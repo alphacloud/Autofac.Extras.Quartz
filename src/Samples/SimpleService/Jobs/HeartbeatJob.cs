@@ -21,7 +21,7 @@ namespace SimpleService.Jobs
 
         public HeartbeatJob(IHeartbeatService hearbeat)
         {
-            if (hearbeat == null) throw new ArgumentNullException("hearbeat");
+            if (hearbeat == null) throw new ArgumentNullException(nameof(hearbeat));
             _hearbeat = hearbeat;
         }
 
