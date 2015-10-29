@@ -132,6 +132,9 @@ namespace Autofac.Extras.Quartz
             if (!RunningJobs.TryRemove(job, out trackingInfo))
             {
                 s_log.WarnFormat("Tracking info for job 0x{0:x} not found", job.GetHashCode());
+                var disposableJob = job as IDisposable;
+                if (disposableJob != null)
+                    disposableJob.Dispose();
             }
             else
             {
