@@ -16,17 +16,12 @@ namespace Autofac.Extras.Quartz.Tests
     using global::Quartz;
     using global::Quartz.Impl;
     using JetBrains.Annotations;
+    using Moq;
     using NUnit.Framework;
 
     [TestFixture]
     internal class ScopeTrackerTests
     {
-        private IContainer _container;
-        private StdSchedulerFactory _factory;
-        private AutofacJobFactory _jobFactory;
-        private ILifetimeScope _lifetimeScope;
-        private IScheduler _scheduler;
-
         [SetUp]
         public void SetUp()
         {
@@ -50,35 +45,11 @@ namespace Autofac.Extras.Quartz.Tests
             _container.Dispose();
         }
 
-        [Test]
-        public void ShouldDisposeScopeAfterJobCompletion()
-        {
-            var key = new JobKey("disposable", "grp2");
-            var job1 = JobBuilder.Create<SampleJob>().WithIdentity(key).StoreDurably(true)
-                .Build();
-            var trigger =
-                TriggerBuilder.Create().WithSimpleSchedule(s => s.WithIntervalInSeconds(1).WithRepeatCount(1)).Build();
-
-            var scopesCreated = 0;
-            var scopesDisposed = 0;
-            DisposableDependency dependency = null;
-
-            _lifetimeScope.ChildLifetimeScopeBeginning += (sender, args) =>
-            {
-                scopesCreated++;
-                dependency = args.LifetimeScope.Resolve<DisposableDependency>();
-                args.LifetimeScope.CurrentScopeEnding += (o, eventArgs) => { scopesDisposed++; };
-            };
-
-            _scheduler.ScheduleJob(job1, trigger);
-            _scheduler.Start();
-
-            Thread.Sleep(3.Seconds());
-
-            _jobFactory.RunningJobs.Should().BeEmpty("Scope was not disposed after job completion");
-            dependency.Disposed.Should().BeTrue("Dependency must be disposed");
-            scopesDisposed.Should().Be(scopesCreated, "All scopes must be disposed");
-        }
+        private IContainer _container;
+        private StdSchedulerFactory _factory;
+        private AutofacJobFactory _jobFactory;
+        private ILifetimeScope _lifetimeScope;
+        private IScheduler _scheduler;
 
         [UsedImplicitly]
         [PersistJobDataAfterExecution]
@@ -114,6 +85,57 @@ namespace Autofac.Extras.Quartz.Tests
                 Debug.WriteLine("Disposing dependency 0x{0:x}", GetHashCode());
                 Disposed = true;
             }
+        }
+
+        [Test]
+        [Description("See #17")]
+        public void ReturnJob_Should_DisposeJobIfMatchingScopeIsMissing()
+        {
+            var job = new Mock<IJob>();
+            var disposableJob = job.As<IDisposable>();
+            _jobFactory.ReturnJob(job.Object);
+            
+            disposableJob.Verify(d=>d.Dispose(), Times.Once, "Job was not disposed");
+        }
+
+
+        [Test]
+        [Description("See #17")]
+        public void ReturnJob_Should_HandleMissingMatchingScope()
+        {
+            var job = new Mock<IJob>();
+            Action returnJob = () => _jobFactory.ReturnJob(job.Object);
+            returnJob.ShouldNotThrow("Failed to handle missing job.");
+        }
+
+        [Test]
+        public void ShouldDisposeScopeAfterJobCompletion()
+        {
+            var key = new JobKey("disposable", "grp2");
+            var job1 = JobBuilder.Create<SampleJob>().WithIdentity(key).StoreDurably(true)
+                .Build();
+            var trigger =
+                TriggerBuilder.Create().WithSimpleSchedule(s => s.WithIntervalInSeconds(1).WithRepeatCount(1)).Build();
+
+            var scopesCreated = 0;
+            var scopesDisposed = 0;
+            DisposableDependency dependency = null;
+
+            _lifetimeScope.ChildLifetimeScopeBeginning += (sender, args) =>
+            {
+                scopesCreated++;
+                dependency = args.LifetimeScope.Resolve<DisposableDependency>();
+                args.LifetimeScope.CurrentScopeEnding += (o, eventArgs) => { scopesDisposed++; };
+            };
+
+            _scheduler.ScheduleJob(job1, trigger);
+            _scheduler.Start();
+
+            Thread.Sleep(3.Seconds());
+
+            _jobFactory.RunningJobs.Should().BeEmpty("Scope was not disposed after job completion");
+            dependency.Disposed.Should().BeTrue("Dependency must be disposed");
+            scopesDisposed.Should().Be(scopesCreated, "All scopes must be disposed");
         }
     }
 }

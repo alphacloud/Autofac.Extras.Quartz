@@ -28,7 +28,7 @@ namespace Autofac.Extras.Quartz
         /// <exception cref="System.ArgumentNullException">assembliesToScan</exception>
         public QuartzAutofacJobsModule(params Assembly[] assembliesToScan)
         {
-            if (assembliesToScan == null) throw new ArgumentNullException("assembliesToScan");
+            if (assembliesToScan == null) throw new ArgumentNullException(nameof(assembliesToScan));
             _assembliesToScan = assembliesToScan;
         }
 
