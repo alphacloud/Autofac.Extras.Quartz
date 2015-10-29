@@ -16,6 +16,7 @@ namespace Autofac.Extras.Quartz.Tests
     using global::Quartz;
     using global::Quartz.Impl;
     using JetBrains.Annotations;
+    using Moq;
     using NUnit.Framework;
 
     [TestFixture]
@@ -80,6 +81,15 @@ namespace Autofac.Extras.Quartz.Tests
             scopesDisposed.Should().Be(scopesCreated, "All scopes must be disposed");
         }
 
+
+        [Test]
+        public void ReturnJob_Should_HandleMissingScope()
+        {
+            var job= new Mock<IJob>();
+            Action returnJob = () => _jobFactory.ReturnJob(job.Object);
+            returnJob.ShouldNotThrow("Failed to handle missing job.");
+
+        }
         [UsedImplicitly]
         [PersistJobDataAfterExecution]
         private class SampleJob : IJob

@@ -133,8 +133,11 @@ namespace Autofac.Extras.Quartz
             {
                 s_log.WarnFormat("Tracking info for job 0x{0:x} not found", job.GetHashCode());
             }
-
-            DisposeScope(job, trackingInfo.Scope);
+            else
+            {
+                DisposeScope(job, trackingInfo.Scope);
+            }
+            
         }
 
         private static void DisposeScope(IJob job, ILifetimeScope lifetimeScope)
