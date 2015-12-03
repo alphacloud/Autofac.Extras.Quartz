@@ -14,10 +14,12 @@ namespace Autofac.Extras.Quartz
     using global::Quartz;
     using global::Quartz.Impl;
     using global::Quartz.Spi;
+    using JetBrains.Annotations;
 
     /// <summary>
     ///     Registers <see cref="ISchedulerFactory" /> and default <see cref="IScheduler" />.
     /// </summary>
+    [PublicAPI]
     public class QuartzAutofacFactoryModule : Module
     {
         /// <summary>
@@ -25,7 +27,7 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         public const string LifetimeScopeName = "quartz.job";
 
-        private readonly string _lifetimeScopeName;
+        readonly string _lifetimeScopeName;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="QuartzAutofacFactoryModule" /> class with a default lifetime scope
@@ -42,7 +44,7 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         /// <param name="lifetimeScopeName">Name of the lifetime scope to wrap job resolution and execution.</param>
         /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
-        public QuartzAutofacFactoryModule(string lifetimeScopeName)
+        public QuartzAutofacFactoryModule([NotNull] string lifetimeScopeName)
         {
             if (lifetimeScopeName == null) throw new ArgumentNullException(nameof(lifetimeScopeName));
             _lifetimeScopeName = lifetimeScopeName;
@@ -54,6 +56,7 @@ namespace Autofac.Extras.Quartz
         ///     <para>See http://quartz-scheduler.org/documentation/quartz-2.x/configuration/ for settings description.</para>
         ///     <seealso cref="StdSchedulerFactory" /> for some configuration property names.
         /// </summary>
+        [CanBeNull]
         public Func<NameValueCollection> ConfigurationProvider { get; set; }
 
         /// <summary>
@@ -66,7 +69,7 @@ namespace Autofac.Extras.Quartz
         ///     The builder through which components can be
         ///     registered.
         /// </param>
-        protected override void Load(ContainerBuilder builder)
+        protected override void Load([NotNull] ContainerBuilder builder)
         {
             builder.Register(c => new AutofacJobFactory(c.Resolve<ILifetimeScope>(), _lifetimeScopeName))
                 .AsSelf()
@@ -77,7 +80,7 @@ namespace Autofac.Extras.Quartz
             {
                 var cfgProvider = ConfigurationProvider;
 
-                var autofacSchedulerFactory = (cfgProvider != null)
+                var autofacSchedulerFactory = cfgProvider != null
                     ? new AutofacSchedulerFactory(cfgProvider(), c.Resolve<AutofacJobFactory>())
                     : new AutofacSchedulerFactory(c.Resolve<AutofacJobFactory>());
                 return autofacSchedulerFactory;
