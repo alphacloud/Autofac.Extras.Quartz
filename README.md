@@ -38,5 +38,12 @@ internal static ContainerBuilder ConfigureContainer(ContainerBuilder cb)
 }
 ```
 
+## Starting Quartz
+Make sure to start the scheduler after it was resolved from Autofac. E.g.
+```
+var scheduler = _container.Resolve<IScheduler>();
+scheduler.Start();
+```
+
 ## Sample project
 See src/Samples/SampleService for windows service implementation based on [TopShelf](https://github.com/Topshelf/Topshelf).
