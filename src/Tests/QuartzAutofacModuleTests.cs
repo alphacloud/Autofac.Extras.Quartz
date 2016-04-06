@@ -7,6 +7,10 @@
 
 #endregion
 
+// ReSharper disable InternalMembersMustHaveComments
+// ReSharper disable HeapView.ObjectAllocation
+// ReSharper disable HeapView.ClosureAllocation
+// ReSharper disable HeapView.DelegateAllocation
 namespace Autofac.Extras.Quartz.Tests
 {
     using System.Reflection;

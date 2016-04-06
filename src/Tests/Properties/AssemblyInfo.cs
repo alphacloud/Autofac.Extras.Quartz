@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("LPL Financial")]
 [assembly: AssemblyProduct("Tests")]
-[assembly: AssemblyCopyright("Copyright © LPL Financial 2014")]
+[assembly: AssemblyCopyright("Copyright © Alphacloud 2014-2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

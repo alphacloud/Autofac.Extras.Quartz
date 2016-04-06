@@ -46,7 +46,7 @@
 
   <Target Name="Test" DependsOnTargets="BuildAll">
     <Exec WorkingDirectory="$(SrcDir)\Tests\bin\$(BuildConfig)"
-          Command="$(PkgDir)\Nunit.Runners.2.6.4\tools\nunit-console.exe /noshadow /stoponerror Autofac.Extras.Quartz.Tests.dll Autofac.Extras.Quartz.Tests.dll"
+          Command="$(PkgDir)\Nunit.ConsoleRunner.3.2.0\tools\nunit3-console.exe Autofac.Extras.Quartz.Tests.dll /stoponerror --dispose-runners --noheader"
     />          
   </Target>
  

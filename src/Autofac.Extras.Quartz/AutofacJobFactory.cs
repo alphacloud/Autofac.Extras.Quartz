@@ -15,6 +15,7 @@ namespace Autofac.Extras.Quartz
     using Common.Logging;
     using global::Quartz;
     using global::Quartz.Spi;
+    using JetBrains.Annotations;
 
     /// <summary>
     ///     Resolve Quartz Job and it's dependencies from Autofac container.
@@ -24,16 +25,20 @@ namespace Autofac.Extras.Quartz
     /// </remarks>
     public class AutofacJobFactory : IJobFactory, IDisposable
     {
-        private static readonly ILog s_log = LogManager.GetLogger<AutofacJobFactory>();
-        private readonly ILifetimeScope _lifetimeScope;
+        static readonly ILog s_log = LogManager.GetLogger<AutofacJobFactory>();
+        readonly ILifetimeScope _lifetimeScope;
 
-        private readonly string _scopeName;
+        readonly string _scopeName;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AutofacJobFactory" /> class.
         /// </summary>
         /// <param name="lifetimeScope">The lifetime scope.</param>
         /// <param name="scopeName">Name of the scope.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="lifetimeScope" /> or <paramref name="scopeName" /> is
+        ///     <see langword="null" />.
+        /// </exception>
         public AutofacJobFactory(ILifetimeScope lifetimeScope, string scopeName)
         {
             if (lifetimeScope == null) throw new ArgumentNullException(nameof(lifetimeScope));
@@ -42,7 +47,8 @@ namespace Autofac.Extras.Quartz
             _scopeName = scopeName;
         }
 
-        internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs { get; } = new ConcurrentDictionary<object, JobTrackingInfo>();
+        internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs { get; } =
+            new ConcurrentDictionary<object, JobTrackingInfo>();
 
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -80,6 +86,10 @@ namespace Autofac.Extras.Quartz
         /// <returns>
         ///     the newly instantiated Job
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="bundle"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="scheduler"/> is <see langword="null" />.</exception>
+        /// <exception cref="SchedulerConfigException">Error resolving exception. Original exception will be stored in <see cref="Exception.InnerException"/>.</exception>
+        [NotNull]
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
             if (bundle == null) throw new ArgumentNullException(nameof(bundle));
@@ -120,7 +130,7 @@ namespace Autofac.Extras.Quartz
         /// <summary>
         ///     Allows the the job factory to destroy/cleanup the job if needed.
         /// </summary>
-        public void ReturnJob(IJob job)
+        public void ReturnJob([CanBeNull] IJob job)
         {
             if (job == null)
                 return;
@@ -136,10 +146,9 @@ namespace Autofac.Extras.Quartz
             {
                 DisposeScope(job, trackingInfo.Scope);
             }
-            
         }
 
-        private static void DisposeScope(IJob job, ILifetimeScope lifetimeScope)
+        static void DisposeScope(IJob job, ILifetimeScope lifetimeScope)
         {
             if (s_log.IsDebugEnabled)
             {
@@ -162,7 +171,7 @@ namespace Autofac.Extras.Quartz
                 Scope = scope;
             }
 
-            public ILifetimeScope Scope { get; private set; }
+            public ILifetimeScope Scope { get; }
         }
 
         #endregion Job data

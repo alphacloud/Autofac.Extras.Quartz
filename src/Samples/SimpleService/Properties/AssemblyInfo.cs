@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SimpleService")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © Alphacloud 2014-2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

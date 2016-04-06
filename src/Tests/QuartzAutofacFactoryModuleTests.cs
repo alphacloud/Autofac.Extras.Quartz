@@ -7,6 +7,10 @@
 
 #endregion
 
+// ReSharper disable InternalMembersMustHaveComments
+// ReSharper disable HeapView.ObjectAllocation
+// ReSharper disable HeapView.ClosureAllocation
+// ReSharper disable HeapView.DelegateAllocation
 namespace Autofac.Extras.Quartz.Tests
 {
     using System;
@@ -85,7 +89,7 @@ namespace Autofac.Extras.Quartz.Tests
             var customSchedulerName = Guid.NewGuid().ToString();
             configuration[StdSchedulerFactory.PropertySchedulerInstanceName] = customSchedulerName;
 
-            _quartzAutofacFactoryModule.ConfigurationProvider = () => configuration;
+            _quartzAutofacFactoryModule.ConfigurationProvider = context => configuration;
 
             var scheduler = _container.Resolve<IScheduler>();
             scheduler.SchedulerName.Should().BeEquivalentTo(customSchedulerName);
