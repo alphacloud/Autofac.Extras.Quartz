@@ -11,6 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
+Pass Autofac IComponentContext to configuration builder.
 Upgrade dependencies.      
     </releaseNotes>
     <copyright>Copyright 2014-2015</copyright>

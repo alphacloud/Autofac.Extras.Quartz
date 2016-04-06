@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Alphacloud.net")]
 [assembly: AssemblyProduct("Autofac.Extras.Quartz")]
-[assembly: AssemblyCopyright("Copyright © Alphacloud 2014-2015")]
+[assembly: AssemblyCopyright("Copyright © Alphacloud 2014-2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,8 +33,8 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
 [assembly: Guid("b7307028-45b4-495c-8c38-8a60dbef8aca")]
-[assembly: AssemblyVersion("1.7.0.0")]
-[assembly: AssemblyFileVersion("1.7.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
 [assembly: InternalsVisibleTo("Autofac.Extras.Quartz.Tests, PublicKey=" +
     "00240000048000009400000006020000002400005253413100040000010001003b6b2a7202e9a5"
     + "c9b62e49f9f05bebbfd23fc6f08f0ec853d0857fc6cd3ca06d524c96651f82c6cddec44b9c0a20"
