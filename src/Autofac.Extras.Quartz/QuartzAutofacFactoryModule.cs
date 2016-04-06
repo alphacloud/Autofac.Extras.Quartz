@@ -57,7 +57,7 @@ namespace Autofac.Extras.Quartz
         ///     <seealso cref="StdSchedulerFactory" /> for some configuration property names.
         /// </summary>
         [CanBeNull]
-        public Func<NameValueCollection> ConfigurationProvider { get; set; }
+        public Func<IComponentContext, NameValueCollection> ConfigurationProvider { get; set; }
 
         /// <summary>
         ///     Override to add registrations to the container.
@@ -81,7 +81,7 @@ namespace Autofac.Extras.Quartz
                 var cfgProvider = ConfigurationProvider;
 
                 var autofacSchedulerFactory = cfgProvider != null
-                    ? new AutofacSchedulerFactory(cfgProvider(), c.Resolve<AutofacJobFactory>())
+                    ? new AutofacSchedulerFactory(cfgProvider(c), c.Resolve<AutofacJobFactory>())
                     : new AutofacSchedulerFactory(c.Resolve<AutofacJobFactory>());
                 return autofacSchedulerFactory;
             })
