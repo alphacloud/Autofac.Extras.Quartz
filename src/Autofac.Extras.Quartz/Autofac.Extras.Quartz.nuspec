@@ -14,7 +14,7 @@
 Pass Autofac IComponentContext to configuration builder.
 Upgrade dependencies.      
     </releaseNotes>
-    <copyright>Copyright 2014-2015</copyright>
+    <copyright>Copyright 2014-2016</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
       <dependency id="Autofac" version="[3.5.2,4.0.0)" />

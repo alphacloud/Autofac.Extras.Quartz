@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("LPL Financial")]
+[assembly: AssemblyCompany("Alphacloud")]
 [assembly: AssemblyProduct("Tests")]
 [assembly: AssemblyCopyright("Copyright © Alphacloud 2014-2016")]
 [assembly: AssemblyTrademark("")]
