@@ -1,4 +1,4 @@
-version: 2.0.1-beta-{build}
+version: 2.1.0-beta-{build}
 clone_depth: 3
 clone_folder: c:\work\autofac.extras.quartz
 pull_requests:
@@ -6,8 +6,6 @@ pull_requests:
 nuget:
   disable_publish_on_pr: true
 os: Visual Studio 2015
-install:
-- set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 before_build:
 - cmd: nuget restore src/Autofac.Extras.Quartz.sln
 build_script:
