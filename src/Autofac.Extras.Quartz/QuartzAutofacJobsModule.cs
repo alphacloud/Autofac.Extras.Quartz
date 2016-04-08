@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2015 Alphacloud.Net
+// Copyright (c) 2014-2016 Alphacloud.Net
 
 #endregion
 
@@ -23,16 +23,34 @@ namespace Autofac.Extras.Quartz
     {
         readonly Assembly[] _assembliesToScan;
 
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="QuartzAutofacJobsModule" /> class.
         /// </summary>
         /// <param name="assembliesToScan">The assemblies to scan for jobs.</param>
         /// <exception cref="System.ArgumentNullException">assembliesToScan</exception>
-        public QuartzAutofacJobsModule(params Assembly[] assembliesToScan)
+        public QuartzAutofacJobsModule([NotNull] params Assembly[] assembliesToScan)
         {
             if (assembliesToScan == null) throw new ArgumentNullException(nameof(assembliesToScan));
             _assembliesToScan = assembliesToScan;
         }
+
+        /// <summary>
+        ///     Instructs Autofac whether registered types should be injected into properties.
+        /// </summary>
+        /// <remarks>
+        ///     Default is <c>false</c>.
+        /// </remarks>
+        public bool AutoWireProperties { get; set; }
+
+        /// <summary>
+        ///     Property wiring options.
+        ///     Used if <see cref="AutoWireProperties" /> is <c>true</c>.
+        /// </summary>
+        /// <remarks>
+        ///     See Autofac API documentation http://autofac.org/apidoc/html/33ED0D92.htm for details.
+        /// </remarks>
+        public PropertyWiringOptions PropertyWiringOptions { get; set; } = PropertyWiringOptions.None;
 
         /// <summary>
         ///     Override to add registrations to the container.
@@ -46,9 +64,12 @@ namespace Autofac.Extras.Quartz
         /// </param>
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(_assembliesToScan)
+            var registrationBuilder = builder.RegisterAssemblyTypes(_assembliesToScan)
                 .Where(type => !type.IsAbstract && typeof (IJob).IsAssignableFrom(type))
                 .AsSelf().InstancePerLifetimeScope();
+
+            if (AutoWireProperties)
+                registrationBuilder.PropertiesAutowired(PropertyWiringOptions);
         }
     }
 }

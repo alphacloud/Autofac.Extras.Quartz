@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014 Alphacloud.Net
+// Copyright (c) 2014-2016 Alphacloud.Net
 
 #endregion
 
@@ -22,15 +22,12 @@ namespace Autofac.Extras.Quartz.Tests
     [TestFixture]
     internal class QuartzAutofacJobsModuleTests
     {
-        private IContainer _container;
-
         [SetUp]
         public void SetUp()
         {
-            var cb = new ContainerBuilder();
-            cb.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()));
-
-            _container = cb.Build();
+            var builder = new ContainerBuilder();
+            builder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()));
+            _container = builder.Build();
         }
 
         [TearDown]
@@ -39,12 +36,7 @@ namespace Autofac.Extras.Quartz.Tests
             _container?.Dispose();
         }
 
-        [Test]
-        public void ShouldRegisterJobsFromAssembly()
-        {
-            _container.IsRegistered<TestJob>()
-                .Should().BeTrue();
-        }
+        private IContainer _container;
 
         [UsedImplicitly]
         private class TestJob : IJob
@@ -52,6 +44,13 @@ namespace Autofac.Extras.Quartz.Tests
             public void Execute(IJobExecutionContext context)
             {
             }
+        }
+
+        [Test]
+        public void ShouldRegisterJobsFromAssembly()
+        {
+            _container.IsRegistered<TestJob>()
+                .Should().BeTrue();
         }
     }
 }
