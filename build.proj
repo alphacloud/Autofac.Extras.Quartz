@@ -50,8 +50,8 @@
     />          
   </Target>
  
-  <Target Name="Pack" DependsOnTargets="CreatePackagesDir;Test">
-    <Exec Command="$(NuGetExe) pack Autofac.Extras.Quartz.csproj -OutputDirectory $(PackagesOutDir) -Build -Prop Configuration=Release"  WorkingDirectory="$(SrcDir)\Autofac.Extras.Quartz" />
+  <Target Name="Pack" DependsOnTargets="CreatePackagesDir">
+    <Exec Command="$(NuGetExe) pack Autofac.Extras.Quartz.csproj -OutputDirectory $(PackagesOutDir) -Prop Configuration=Release -MSBuildVersion 14" WorkingDirectory="$(SrcDir)\Autofac.Extras.Quartz" />
   </Target>
 
 </Project>
