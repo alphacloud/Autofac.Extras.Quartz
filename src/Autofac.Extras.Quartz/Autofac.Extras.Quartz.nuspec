@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>$version$</version>
+    <version>3.0.0-beta-1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -11,12 +11,12 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Optional dependencies support.
+Autofac 4 beta support.
     </releaseNotes>
     <copyright>Copyright 2014-2016</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
-      <dependency id="Autofac" version="[3.5.2,4.0.0)" />
+      <dependency id="Autofac" version="[4.0.0-rc3-280,5.0.0)" />
       <dependency id="Common.Logging" version="[3.3.1,4.0.0)" />
       <dependency id="Quartz" version="[2.3.3,3.0.0)" />
     </dependencies>
