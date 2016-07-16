@@ -11,6 +11,7 @@ namespace Autofac.Extras.Quartz
 {
     using System;
     using System.Reflection;
+    using Core;
     using global::Quartz;
     using JetBrains.Annotations;
     using Module = Autofac.Module;
@@ -65,7 +66,7 @@ namespace Autofac.Extras.Quartz
         protected override void Load(ContainerBuilder builder)
         {
             var registrationBuilder = builder.RegisterAssemblyTypes(_assembliesToScan)
-                .Where(type => !type.IsAbstract && typeof (IJob).IsAssignableFrom(type))
+                .Where(type => !type.IsAbstract && typeof(IJob).IsAssignableFrom(type))
                 .AsSelf().InstancePerLifetimeScope();
 
             if (AutoWireProperties)

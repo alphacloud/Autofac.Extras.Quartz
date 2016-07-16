@@ -11,7 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Optional dependencies support.
+Decrease scope tracking log level to Trace.
+Upgrade depdencies.
     </releaseNotes>
     <copyright>Copyright 2014-2016</copyright>
     <tags>alphacloud quartz autofac</tags>

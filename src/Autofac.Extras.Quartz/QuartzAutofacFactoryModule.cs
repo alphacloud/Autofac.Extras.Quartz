@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2015 Alphacloud.Net
+// Copyright (c) 2014-2016 Alphacloud.Net
 
 #endregion
 
@@ -76,8 +76,7 @@ namespace Autofac.Extras.Quartz
                 .As<IJobFactory>()
                 .SingleInstance();
 
-            builder.Register<ISchedulerFactory>(c =>
-            {
+            builder.Register<ISchedulerFactory>(c => {
                 var cfgProvider = ConfigurationProvider;
 
                 var autofacSchedulerFactory = cfgProvider != null

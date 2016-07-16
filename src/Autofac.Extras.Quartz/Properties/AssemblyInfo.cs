@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2015 Alphacloud.Net
+// Copyright (c) 2014-2016 Alphacloud.Net
 
 #endregion
 
@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following 
+// General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
@@ -24,8 +24,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
+// Setting ComVisible to false makes the types in this assembly not visible
+// to COM components.  If you need to access a type in this assembly from
 // COM, set the ComVisible attribute to true on that type.
 
 [assembly: ComVisible(false)]
@@ -33,8 +33,9 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
 [assembly: Guid("b7307028-45b4-495c-8c38-8a60dbef8aca")]
-[assembly: AssemblyVersion("2.1.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyVersion("2.1.1.0")]
+[assembly: AssemblyFileVersion("2.1.1.0")]
+[assembly: AssemblyInformationalVersion("2.1.1.0")]
 [assembly: InternalsVisibleTo("Autofac.Extras.Quartz.Tests, PublicKey=" +
     "00240000048000009400000006020000002400005253413100040000010001003b6b2a7202e9a5"
     + "c9b62e49f9f05bebbfd23fc6f08f0ec853d0857fc6cd3ca06d524c96651f82c6cddec44b9c0a20"
