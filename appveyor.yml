@@ -9,6 +9,9 @@ nuget:
   
 os: Visual Studio 2015
 
+install:
+  - choco install gitversion.portable -y
+
 before_build:
   - cmd: nuget restore src/Autofac.Extras.Quartz.sln
   - ps: gitversion /l console /output buildserver /updateAssemblyInfo
