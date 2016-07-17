@@ -1,23 +1,34 @@
-version: 2.1.0-beta-{build}
 clone_depth: 3
 clone_folder: c:\work\autofac.extras.quartz
+
 pull_requests:
   do_not_increment_build_number: true
+  
 nuget:
   disable_publish_on_pr: true
+  
 os: Visual Studio 2015
+
 before_build:
-- cmd: nuget restore src/Autofac.Extras.Quartz.sln
+  - cmd: nuget restore src/Autofac.Extras.Quartz.sln
+  - ps: gitversion /l console /output buildserver /updateAssemblyInfo
+
 build_script:
   - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" build.proj /t:BuildAll;Pack /p:BuildConfig=Release'
+  
 artifacts:
 - path: out/packages/*.nupkg
   name: Nugets
+  
 test_script:
 - cmd: >-
     cd src/Tests/bin/Release 
 
     nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
+    
+after_build:    
+- cmd: ECHO nuget pack <Project>\<NuSpec>.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
+    
 deploy:
 - provider: NuGet
   api_key:
