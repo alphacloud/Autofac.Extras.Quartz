@@ -172,5 +172,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
 /src/.nuget/NuGet.exe
-/appveyor.gitversion.yml
+.vs/

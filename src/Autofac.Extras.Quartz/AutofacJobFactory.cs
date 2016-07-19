@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2015 Alphacloud.Net
+// Copyright (c) 2014-2016 Alphacloud.Net
 
 #endregion
 
@@ -86,9 +86,12 @@ namespace Autofac.Extras.Quartz
         /// <returns>
         ///     the newly instantiated Job
         /// </returns>
-        /// <exception cref="ArgumentNullException"><paramref name="bundle"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="scheduler"/> is <see langword="null" />.</exception>
-        /// <exception cref="SchedulerConfigException">Error resolving exception. Original exception will be stored in <see cref="Exception.InnerException"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="bundle" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="scheduler" /> is <see langword="null" />.</exception>
+        /// <exception cref="SchedulerConfigException">
+        ///     Error resolving exception. Original exception will be stored in
+        ///     <see cref="Exception.InnerException" />.
+        /// </exception>
         [NotNull]
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
@@ -106,9 +109,9 @@ namespace Autofac.Extras.Quartz
                 var jobTrackingInfo = new JobTrackingInfo(nestedScope);
                 RunningJobs[newJob] = jobTrackingInfo;
 
-                if (s_log.IsDebugEnabled)
+                if (s_log.IsTraceEnabled)
                 {
-                    s_log.DebugFormat(CultureInfo.InvariantCulture, "Scope 0x{0:x} associated with Job 0x{1:x}",
+                    s_log.TraceFormat(CultureInfo.InvariantCulture, "Scope 0x{0:x} associated with Job 0x{1:x}",
                         jobTrackingInfo.Scope.GetHashCode(), newJob.GetHashCode());
                 }
 
@@ -139,6 +142,7 @@ namespace Autofac.Extras.Quartz
             if (!RunningJobs.TryRemove(job, out trackingInfo))
             {
                 s_log.WarnFormat("Tracking info for job 0x{0:x} not found", job.GetHashCode());
+                // ReSharper disable once SuspiciousTypeConversion.Global
                 var disposableJob = job as IDisposable;
                 disposableJob?.Dispose();
             }
@@ -150,16 +154,16 @@ namespace Autofac.Extras.Quartz
 
         static void DisposeScope(IJob job, ILifetimeScope lifetimeScope)
         {
-            if (s_log.IsDebugEnabled)
+            if (s_log.IsTraceEnabled)
             {
-                s_log.DebugFormat("Disposing Scope 0x{0:x} for Job 0x{1:x}",
+                s_log.TraceFormat("Disposing Scope 0x{0:x} for Job 0x{1:x}",
                     lifetimeScope?.GetHashCode() ?? 0,
                     job?.GetHashCode() ?? 0);
             }
             lifetimeScope?.Dispose();
         }
 
-        #region Job data 
+        #region Job data
 
         internal sealed class JobTrackingInfo
         {

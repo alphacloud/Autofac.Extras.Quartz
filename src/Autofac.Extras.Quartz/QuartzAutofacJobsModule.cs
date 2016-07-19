@@ -70,7 +70,7 @@ namespace Autofac.Extras.Quartz
                 .AsSelf().InstancePerLifetimeScope();
 
             if (AutoWireProperties)
-                registrationBuilder.PropertiesAutowired(new DefaultPropertySelector(PropertyWiringOptions == PropertyWiringOptions.PreserveSetValues));
+                registrationBuilder.PropertiesAutowired(PropertyWiringOptions);
         }
     }
 }
