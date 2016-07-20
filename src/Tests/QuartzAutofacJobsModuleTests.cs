@@ -25,9 +25,6 @@ namespace Autofac.Extras.Quartz.Tests
         [SetUp]
         public void SetUp()
         {
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()));
-            _container = builder.Build();
         }
 
         [TearDown]
@@ -36,10 +33,20 @@ namespace Autofac.Extras.Quartz.Tests
             _container?.Dispose();
         }
 
-        private IContainer _container;
+        IContainer _container;
+
 
         [UsedImplicitly]
-        private class TestJob : IJob
+        class TestJob2 : IJob
+        {
+            public void Execute(IJobExecutionContext context)
+            {
+            }
+        }
+
+
+        [UsedImplicitly]
+        class TestJob : IJob
         {
             public void Execute(IJobExecutionContext context)
             {
@@ -47,8 +54,24 @@ namespace Autofac.Extras.Quartz.Tests
         }
 
         [Test]
-        public void ShouldRegisterJobsFromAssembly()
+        public void ShouldApplyJobRegistrationFilter()
         {
+            var builder = new ContainerBuilder();
+            builder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()) {
+                JobFilter = type => type != typeof(TestJob2)
+            });
+            _container = builder.Build();
+
+            _container.IsRegistered<TestJob2>().Should().BeFalse();
+        }
+
+        [Test]
+        public void ShouldRegisterAllJobsFromAssembly()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()));
+            _container = builder.Build();
+
             _container.IsRegistered<TestJob>()
                 .Should().BeTrue();
         }

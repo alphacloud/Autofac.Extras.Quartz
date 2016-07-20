@@ -15,6 +15,9 @@
   cache:
     - src\packages -> src\**\packages.config
 
+  install:
+    - ps: choco install GitVersion.Portable -pre -y
+
   before_build:
     - ps: nuget restore src/Autofac.Extras.Quartz.sln
     - ps: gitversion /l console /output buildserver /updateAssemblyInfo
@@ -48,6 +51,9 @@
 
   cache:
     - src\packages -> src\**\packages.config
+
+  install:
+    - ps: choco install GitVersion.Portable -pre -y
 
   before_build:
     - ps: nuget restore src/Autofac.Extras.Quartz.sln
