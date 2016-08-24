@@ -81,7 +81,6 @@
     <None Include="..\keyfile.snk">
       <Link>keyfile.snk</Link>
     </None>
-    <None Include="app.config" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
