@@ -11,15 +11,16 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Decrease scope tracking log level to Trace.
-Upgrade depdencies.
+Upgradeed:
+Autofac 4.0;
+Quartz 2.4.
     </releaseNotes>
     <copyright>Copyright 2014-2016</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
-      <dependency id="Autofac" version="[3.5.2,4.0.0)" />
+      <dependency id="Autofac" version="[4.0.0,5.0.0)" />
       <dependency id="Common.Logging" version="[3.3.1,4.0.0)" />
-      <dependency id="Quartz" version="[2.3.3,3.0.0)" />
+      <dependency id="Quartz" version="[2.4.0,3.0.0)" />
     </dependencies>
   </metadata>
 </package>

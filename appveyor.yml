@@ -1,26 +1,69 @@
-version: 2.1.1.{build}
-clone_depth: 3
-clone_folder: c:\work\autofac.extras.quartz
-pull_requests:
-  do_not_increment_build_number: true
-nuget:
-  disable_publish_on_pr: true
-os: Visual Studio 2015
-before_build:
-- cmd: nuget restore src/Autofac.Extras.Quartz.sln
-build_script:
-  - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" build.proj /t:BuildAll;Pack /p:BuildConfig=Release'
-artifacts:
-- path: out/packages/*.nupkg
-  name: Nugets
-test_script:
-- cmd: >-
-    cd src/Tests/bin/Release 
+-
+  branches:
+    only:
+      - master
+      - develop
 
-    nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
-deploy:
-- provider: NuGet
-  api_key:
-    secure: yHJuxI0TVZU+g90YoGwOm8Zug7bxKNibC84NLkLusrMMNMcR86qizmvJR81KHtCS
-  on:
-    branch: master
+  pull_requests:
+    do_not_increment_build_number: true
+
+  nuget:
+    disable_publish_on_pr: true
+
+  os: Visual Studio 2015
+
+  cache:
+    - src\packages -> src\**\packages.config
+
+  install:
+    - ps: choco install GitVersion.Portable -pre -y
+
+  before_build:
+    - ps: nuget restore src/Autofac.Extras.Quartz.sln
+    - ps: gitversion /l console /output buildserver /updateAssemblyInfo
+
+  build_script:
+    - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release'
+
+  test_script:
+  - cmd: >-
+      cd src/Tests/bin/Release
+
+      nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
+
+  artifacts:
+    - path: out/packages/*.nupkg
+
+  deploy:
+    - provider: NuGet
+      api_key:
+        secure: yHJuxI0TVZU+g90YoGwOm8Zug7bxKNibC84NLkLusrMMNMcR86qizmvJR81KHtCS
+
+
+-
+  pull_requests:
+    do_not_increment_build_number: true
+
+  nuget:
+    disable_publish_on_pr: true
+
+  os: Visual Studio 2015
+
+  cache:
+    - src\packages -> src\**\packages.config
+
+  install:
+    - ps: choco install GitVersion.Portable -pre -y
+
+  before_build:
+    - ps: nuget restore src/Autofac.Extras.Quartz.sln
+    - ps: gitversion /l console /output buildserver /updateAssemblyInfo
+
+  build_script:
+    - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" build.proj /t:BuildAll /p:BuildConfig=Release'
+
+  test_script:
+  - cmd: >-
+      cd src/Tests/bin/Release
+
+      nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor

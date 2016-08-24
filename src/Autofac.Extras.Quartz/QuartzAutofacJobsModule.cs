@@ -11,10 +11,17 @@ namespace Autofac.Extras.Quartz
 {
     using System;
     using System.Reflection;
-    using Core;
+    using System.Runtime.CompilerServices;
     using global::Quartz;
     using JetBrains.Annotations;
     using Module = Autofac.Module;
+
+    /// <summary>
+    ///     Predicate to filter jobs to be registered.
+    /// </summary>
+    /// <param name="jobType">Job type class.</param>
+    /// <returns><c>true</c> if job should be registered, <c>false</c> otherwise.</returns>
+    public delegate bool JobRegistrationFilter(Type jobType);
 
     /// <summary>
     ///     Registers Quartz jobs from specified assemblies.
@@ -54,6 +61,12 @@ namespace Autofac.Extras.Quartz
         public PropertyWiringOptions PropertyWiringOptions { get; set; } = PropertyWiringOptions.None;
 
         /// <summary>
+        ///     Job registration filter callback.
+        /// </summary>
+        /// <seealso cref="JobRegistrationFilter" />
+        public JobRegistrationFilter JobFilter { get; set; }
+
+        /// <summary>
         ///     Override to add registrations to the container.
         /// </summary>
         /// <remarks>
@@ -66,11 +79,17 @@ namespace Autofac.Extras.Quartz
         protected override void Load(ContainerBuilder builder)
         {
             var registrationBuilder = builder.RegisterAssemblyTypes(_assembliesToScan)
-                .Where(type => !type.IsAbstract && typeof(IJob).IsAssignableFrom(type))
+                .Where(type => !type.IsAbstract && typeof(IJob).IsAssignableFrom(type) && FilterJob(type))
                 .AsSelf().InstancePerLifetimeScope();
 
             if (AutoWireProperties)
                 registrationBuilder.PropertiesAutowired(PropertyWiringOptions);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        bool FilterJob(Type jobType)
+        {
+            return JobFilter == null || JobFilter(jobType);
         }
     }
 }
