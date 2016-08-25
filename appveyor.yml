@@ -3,6 +3,7 @@
     only:
       - /release/.*/
       - develop
+      - master
 
   pull_requests:
     do_not_increment_build_number: true
@@ -36,6 +37,7 @@
 
   deploy:
     - provider: NuGet
+      appveyor_repo_tag: true
       api_key:
         secure: yHJuxI0TVZU+g90YoGwOm8Zug7bxKNibC84NLkLusrMMNMcR86qizmvJR81KHtCS
 
