@@ -1,7 +1,7 @@
 -
   branches:
     only:
-      - master
+      - /release/.*/
       - develop
 
   pull_requests:
@@ -16,7 +16,7 @@
     - src\packages -> src\**\packages.config
 
   install:
-    - ps: choco install GitVersion.Portable -pre -y
+    - ps: choco install GitVersion.Portable -y
 
   before_build:
     - ps: nuget restore src/Autofac.Extras.Quartz.sln
@@ -53,7 +53,7 @@
     - src\packages -> src\**\packages.config
 
   install:
-    - ps: choco install GitVersion.Portable -pre -y
+    - ps: choco install GitVersion.Portable -y
 
   before_build:
     - ps: nuget restore src/Autofac.Extras.Quartz.sln
