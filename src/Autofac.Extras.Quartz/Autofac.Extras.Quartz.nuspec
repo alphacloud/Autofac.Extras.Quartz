@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-Upgrade dependencies
+Upgrade dependencies:
 Autofac 4.1.1;
 Quartz 2.4.1
     </releaseNotes>
