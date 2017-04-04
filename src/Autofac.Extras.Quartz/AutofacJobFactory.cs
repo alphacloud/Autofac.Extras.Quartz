@@ -28,23 +28,23 @@ namespace Autofac.Extras.Quartz
         static readonly ILog s_log = LogManager.GetLogger<AutofacJobFactory>();
         readonly ILifetimeScope _lifetimeScope;
 
-        readonly string _scopeName;
+        readonly object _scopeTag;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AutofacJobFactory" /> class.
         /// </summary>
         /// <param name="lifetimeScope">The lifetime scope.</param>
-        /// <param name="scopeName">Name of the scope.</param>
+        /// <param name="scopeTag">The tag to use for new scopes.</param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="lifetimeScope" /> or <paramref name="scopeName" /> is
+        ///     <paramref name="lifetimeScope" /> or <paramref name="scopeTag" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public AutofacJobFactory(ILifetimeScope lifetimeScope, string scopeName)
+        public AutofacJobFactory(ILifetimeScope lifetimeScope, object scopeTag)
         {
             if (lifetimeScope == null) throw new ArgumentNullException(nameof(lifetimeScope));
-            if (scopeName == null) throw new ArgumentNullException(nameof(scopeName));
+            if (scopeTag == null) throw new ArgumentNullException(nameof(scopeTag));
             _lifetimeScope = lifetimeScope;
-            _scopeName = scopeName;
+            _scopeTag = scopeTag;
         }
 
         internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs { get; } =
@@ -100,7 +100,7 @@ namespace Autofac.Extras.Quartz
 
             var jobType = bundle.JobDetail.JobType;
 
-            var nestedScope = _lifetimeScope.BeginLifetimeScope(_scopeName);
+            var nestedScope = _lifetimeScope.BeginLifetimeScope(_scopeTag);
 
             IJob newJob = null;
             try
