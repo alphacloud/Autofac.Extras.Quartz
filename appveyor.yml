@@ -39,7 +39,7 @@
     - provider: NuGet
       appveyor_repo_tag: true
       api_key:
-        secure: yDtlwZxOr+meDM0iMA3pWo3VO+t2oRDIjf+accbVz3N2NO74W6yhF7lgRjw9B2Ek
+        secure: HmgvMFl5yUvms5wcIZDCiBIZYyNWoTdouBwxuWJbYU7d0WVPTm6hnrIxhI4Xhcpl
 
 
 -
