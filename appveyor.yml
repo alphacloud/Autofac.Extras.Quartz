@@ -11,7 +11,7 @@
   nuget:
     disable_publish_on_pr: true
 
-  os: Visual Studio 2015
+  os: Visual Studio 2017
 
   cache:
     - src\packages -> src\**\packages.config
@@ -20,15 +20,15 @@
     - ps: choco install GitVersion.Portable -y
 
   before_build:
-    - ps: nuget restore src/Autofac.Extras.Quartz.sln
+    - cmd: cd src && dotnet restore
     - ps: gitversion /l console /output buildserver /updateAssemblyInfo
 
   build_script:
-    - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release'
+    - cmd: 'MSBuild.exe build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release'
 
   test_script:
   - cmd: >-
-      cd src/Tests/bin/Release
+      cd src/Tests/bin/Release/net462
 
       nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
 
@@ -49,7 +49,7 @@
   nuget:
     disable_publish_on_pr: true
 
-  os: Visual Studio 2015
+  os: Visual Studio 2017
 
   cache:
     - src\packages -> src\**\packages.config
@@ -62,7 +62,7 @@
     - ps: gitversion /l console /output buildserver /updateAssemblyInfo
 
   build_script:
-    - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" build.proj /t:BuildAll /p:BuildConfig=Release'
+    - cmd: 'MSBuild.exe build.proj /t:BuildAll /p:BuildConfig=Release'
 
   test_script:
   - cmd: >-

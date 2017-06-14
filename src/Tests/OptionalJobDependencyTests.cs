@@ -70,8 +70,7 @@ namespace Autofac.Extras.Quartz.Tests
         [Test]
         public void ShouldWireRegisteredOptionalDependencies()
         {
-            _containerBuilder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly())
-            {
+            _containerBuilder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()) {
                 AutoWireProperties = true
             });
             _container = _containerBuilder.Build();
