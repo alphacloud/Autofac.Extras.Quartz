@@ -51,7 +51,7 @@
  
   <Target Name="Pack" DependsOnTargets="CreatePackagesDir">
     <Message Text="src: $(SrcDir)" />
-    <Exec Command="$(NuGetExe) pack Autofac.Extras.Quartz.csproj -OutputDirectory $(PackagesOutDir) -Prop Configuration=Release -version &quot;$(PackageVersion)&quot; " WorkingDirectory="$(SrcDir)\Autofac.Extras.Quartz" />
+    <Exec Command="$(NuGetExe) pack Autofac.Extras.Quartz.nuspec -OutputDirectory $(PackagesOutDir) -Prop Configuration=Release -version &quot;$(PackageVersion)&quot; " WorkingDirectory="$(SrcDir)\Autofac.Extras.Quartz" />
   </Target>
 
 </Project>
