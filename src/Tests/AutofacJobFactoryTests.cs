@@ -20,7 +20,7 @@ namespace Autofac.Extras.Quartz.Tests
     using NUnit.Framework;
 
     [TestFixture]
-    public class AutofacJobFactoryTests : MockedTestsBase
+    internal class AutofacJobFactoryTests : MockedTestsBase
     {
         private IContainer _container;
         private AutofacJobFactory _factory;
@@ -36,7 +36,7 @@ namespace Autofac.Extras.Quartz.Tests
 
         private TriggerFiredBundle CreateBundle<TJob>()
         {
-            var jobDetailImpl = new JobDetailImpl {JobType = typeof (TJob)};
+            var jobDetailImpl = new JobDetailImpl {JobType = typeof(TJob)};
             var trigger = Mockery.Create<IOperableTrigger>();
             var calendar = Mockery.Create<ICalendar>();
             return new TriggerFiredBundle(jobDetailImpl, trigger.Object, calendar.Object, false, DateTimeOffset.Now,
