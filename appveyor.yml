@@ -14,7 +14,7 @@
   os: Visual Studio 2017
 
   install:
-    - ps: choco install GitVersion.Portable -y --no-progress
+    - ps: choco install GitVersion.Portable opencover -y --no-progress
 
   before_build:
   - ps: >-
@@ -28,11 +28,17 @@
   - cmd: >-
       cd /projects/autofac-extras-quartz
 
+      msbuild build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Debug
       msbuild build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release
 
   test_script:
   - cmd: >-
-      cd src/Tests/bin/Release/net462
+
+      cd src/Tests/bin/Debug/net462
+  
+      OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml --dispose-runners --nocolor" -output:".\coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
+  
+      cd /projects/autofac-extras-quartz/src/Tests/bin/Release/net462
 
       nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
 
@@ -56,10 +62,7 @@
   os: Visual Studio 2017
 
   install:
-  - cmd: >-
-      choco install GitVersion.Portable -y --no-progress
-      
-      choco install opencover -y --no-progress
+    - ps: choco install GitVersion.Portable opencover -y --no-progress
 
   before_build:
   - cmd: >-
@@ -73,12 +76,11 @@
     - cmd: >-
         cd /projects/autofac-extras-quartz
 
-        msbuild build.proj /t:BuildAll /p:BuildConfig=Release
+        msbuild build.proj /t:BuildAll /p:BuildConfig=Debug
 
   test_script:
   - cmd: >-
-      cd src/Tests/bin/Release/net462
+      cd src/Tests/bin/Debug/net462
 
       OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor" -output:".\coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
       
-#      nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
