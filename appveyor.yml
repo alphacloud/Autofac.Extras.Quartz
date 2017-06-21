@@ -79,6 +79,6 @@
   - cmd: >-
       cd src/Tests/bin/Release/net462
 
-      opencover.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor" -output:".\coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
+      OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor" -output:".\coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
       
 #      nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
