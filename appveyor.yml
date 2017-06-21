@@ -56,7 +56,10 @@
   os: Visual Studio 2017
 
   install:
-    - ps: choco install GitVersion.Portable -y --no-progress
+  - cmd: >-
+      choco install GitVersion.Portable -y --no-progress
+      
+      choco install opencover -y --no-progress
 
   before_build:
   - cmd: >-
@@ -76,4 +79,6 @@
   - cmd: >-
       cd src/Tests/bin/Release/net462
 
-      nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
+      opencover.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor" -output:".\coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
+      
+#      nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
