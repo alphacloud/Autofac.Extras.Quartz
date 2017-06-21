@@ -9,10 +9,14 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\net462\Autofac.Extras.Quartz.xml</DocumentationFile>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\net462\Autofac.Extras.Quartz.xml</DocumentationFile>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>

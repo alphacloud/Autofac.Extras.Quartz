@@ -13,8 +13,12 @@
 
   os: Visual Studio 2017
 
+  environment:
+    codecov_token:
+      secure: g2QQUWGm6CtMd9M+AjcjOs7mkCoyGTW962Z5WepMi9Jd4BqqsI2vp3VkYGZgahUX
+      
   install:
-    - ps: choco install GitVersion.Portable -y --no-progress
+    - ps: choco install GitVersion.Portable opencover -y --no-progress
 
   before_build:
   - ps: >-
@@ -28,14 +32,30 @@
   - cmd: >-
       cd /projects/autofac-extras-quartz
 
+      msbuild build.proj /t:BuildAll /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Debug
+      
       msbuild build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release
 
   test_script:
   - cmd: >-
-      cd src/Tests/bin/Release/net462
+
+      cd src/Tests/bin/Debug/net462
+  
+      OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml --dispose-runners --nocolor" -output:".\coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
+  
+      cd /projects/autofac-extras-quartz/src/Tests/bin/Release/net462
 
       nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
 
+  after_test:
+  - cmd: >- 
+      SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%
+      
+      pip install codecov
+      
+      codecov -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t %codecov_token%
+      
+      
   artifacts:
     - path: out/packages/*.nupkg
 
@@ -50,13 +70,14 @@
   pull_requests:
     do_not_increment_build_number: true
 
-  nuget:
-    disable_publish_on_pr: true
-
   os: Visual Studio 2017
-
+  
+  environment:
+    codecov_token:
+      secure: g2QQUWGm6CtMd9M+AjcjOs7mkCoyGTW962Z5WepMi9Jd4BqqsI2vp3VkYGZgahUX
+      
   install:
-    - ps: choco install GitVersion.Portable -y --no-progress
+    - ps: choco install GitVersion.Portable opencover -y --no-progress
 
   before_build:
   - cmd: >-
@@ -70,10 +91,18 @@
     - cmd: >-
         cd /projects/autofac-extras-quartz
 
-        msbuild build.proj /t:BuildAll /p:BuildConfig=Release
+        msbuild build.proj /t:BuildAll /p:BuildConfig=Debug
 
   test_script:
   - cmd: >-
-      cd src/Tests/bin/Release/net462
+      cd src/Tests/bin/Debug/net462
 
-      nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
+      OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor" -output:".\coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
+      
+  after_test:
+  - cmd: >- 
+      SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%
+      
+      pip install codecov
+      
+      codecov -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t %codecov_token%
