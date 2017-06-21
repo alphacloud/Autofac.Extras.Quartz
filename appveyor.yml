@@ -5,6 +5,8 @@
       - develop
       - master
 
+  disable_publish_on_pr: true
+  
   pull_requests:
     do_not_increment_build_number: true
 
@@ -28,7 +30,7 @@
   - cmd: >-
       cd /projects/autofac-extras-quartz
 
-      msbuild build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Debug
+      msbuild build.proj /t:BuildAll /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Debug
       
       msbuild build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release
 
