@@ -29,6 +29,7 @@
       cd /projects/autofac-extras-quartz
 
       msbuild build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Debug
+      
       msbuild build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release
 
   test_script:
