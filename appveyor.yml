@@ -5,8 +5,6 @@
       - develop
       - master
 
-  disable_publish_on_pr: true
-  
   pull_requests:
     do_not_increment_build_number: true
 
@@ -45,6 +43,15 @@
 
       nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
 
+  after_test:
+  - cmd: >- 
+      SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%
+      
+      pip install codecov
+      
+      codecov -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t %codecov_token%
+      
+      
   artifacts:
     - path: out/packages/*.nupkg
 
@@ -58,9 +65,6 @@
 -
   pull_requests:
     do_not_increment_build_number: true
-
-  nuget:
-    disable_publish_on_pr: true
 
   os: Visual Studio 2017
   
