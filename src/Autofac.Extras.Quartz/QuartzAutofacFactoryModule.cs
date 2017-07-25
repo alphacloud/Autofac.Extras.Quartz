@@ -46,8 +46,7 @@ namespace Autofac.Extras.Quartz
         /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
         public QuartzAutofacFactoryModule([NotNull] string lifetimeScopeName)
         {
-            if (lifetimeScopeName == null) throw new ArgumentNullException(nameof(lifetimeScopeName));
-            _lifetimeScopeName = lifetimeScopeName;
+            _lifetimeScopeName = lifetimeScopeName ?? throw new ArgumentNullException(nameof(lifetimeScopeName));
         }
 
         /// <summary>

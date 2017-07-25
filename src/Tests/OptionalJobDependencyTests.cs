@@ -41,7 +41,7 @@ namespace Autofac.Extras.Quartz.Tests
         [UsedImplicitly]
         class TestJobWithOptionalDependency : IJob
         {
-            public IJobDependency Dependency { get; set; }
+            public IJobDependency Dependency { get; [UsedImplicitly] set; }
 
             public void Execute(IJobExecutionContext context)
             {

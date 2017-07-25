@@ -59,19 +59,18 @@ namespace Autofac.Extras.Quartz.Tests
         [PersistJobDataAfterExecution]
         private class SampleJob : IJob
         {
-            private readonly DisposableDependency _dependency;
+            [UsedImplicitly] private readonly DisposableDependency _dependency;
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
-            public SampleJob(DisposableDependency dependency)
+            public SampleJob([NotNull] DisposableDependency dependency)
             {
-                _dependency = dependency;
+                _dependency = dependency ?? throw new ArgumentNullException(nameof(dependency));
             }
 
             public void Execute(IJobExecutionContext context)
             {
-                var data = context.JobDetail.JobDataMap;
                 Debug.WriteLine("SampleJob started");
             }
         }

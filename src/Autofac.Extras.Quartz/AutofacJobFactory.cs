@@ -41,10 +41,8 @@ namespace Autofac.Extras.Quartz
         /// </exception>
         public AutofacJobFactory(ILifetimeScope lifetimeScope, object scopeTag)
         {
-            if (lifetimeScope == null) throw new ArgumentNullException(nameof(lifetimeScope));
-            if (scopeTag == null) throw new ArgumentNullException(nameof(scopeTag));
-            _lifetimeScope = lifetimeScope;
-            _scopeTag = scopeTag;
+            _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
+            _scopeTag = scopeTag ?? throw new ArgumentNullException(nameof(scopeTag));
         }
 
         internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs { get; } =
