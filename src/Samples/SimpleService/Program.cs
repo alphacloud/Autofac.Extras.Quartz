@@ -15,8 +15,12 @@ namespace SimpleService
     using Autofac;
     using Autofac.Extras.Quartz;
     using Common.Logging;
+    using Common.Logging.Serilog;
+    using JetBrains.Annotations;
     using Jobs;
     using Quartz;
+    using Serilog;
+    using Serilog.Sinks.SystemConsole.Themes;
     using Topshelf;
     using Topshelf.Autofac;
     using Topshelf.Quartz;
@@ -24,12 +28,17 @@ namespace SimpleService
 
     internal static class Program
     {
-        static readonly ILog s_log = LogManager.GetLogger(typeof(Program));
-        static IContainer _container;
+        static ILog s_log;
+        [NotNull] static IContainer _container;
 
         static int Main(string[] args)
         {
-            Console.WriteLine("This sample demostrates how to integrate Quartz, TopShelf and Autofac.");
+            var log = new LoggerConfiguration()
+                .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                .CreateLogger();
+            LogManager.Adapter = new SerilogFactoryAdapter(log);
+            s_log = LogManager.GetLogger(typeof(Program));
+            Console.WriteLine("This sample demonstrates how to integrate Quartz, TopShelf and Autofac.");
             s_log.Info("Starting...");
             try
             {
@@ -40,7 +49,7 @@ namespace SimpleService
                 HostFactory.Run(conf => {
                     conf.SetServiceName("AutofacExtras.Quartz.Sample");
                     conf.SetDisplayName("Quartz.Net integration for Autofac");
-                    conf.UseLog4Net();
+                    conf.UseSerilog(log);
                     conf.UseAutofacContainer(_container);
 
                     conf.Service<ServiceCore>(svc => {
@@ -55,14 +64,14 @@ namespace SimpleService
                 });
 
                 s_log.Info("Shutting down...");
-                log4net.LogManager.Shutdown();
+                log.Dispose();
                 return 0;
             }
 
             catch (Exception ex)
             {
                 s_log.Fatal("Unhandled exception", ex);
-                log4net.LogManager.Shutdown();
+                log.Dispose();
                 return 1;
             }
         }
