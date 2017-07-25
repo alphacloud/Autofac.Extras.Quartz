@@ -20,9 +20,7 @@ namespace SimpleService
 
         public ServiceCore(IScheduler scheduler)
         {
-            if (scheduler == null) throw new ArgumentNullException(nameof(scheduler));
-
-            _scheduler = scheduler;
+            _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
         }
 
         public bool Start()

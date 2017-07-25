@@ -11,23 +11,20 @@ namespace SimpleService.Jobs
 {
     using System;
     using AppServices;
-    using Common.Logging;
     using Quartz;
 
     public class HeartbeatJob : IJob
     {
-        private readonly IHeartbeatService _hearbeat;
-        private static readonly ILog s_log = LogManager.GetLogger<HeartbeatJob>();
+        private readonly IHeartbeatService _heartbeat;
 
-        public HeartbeatJob(IHeartbeatService hearbeat)
+        public HeartbeatJob(IHeartbeatService heartbeat)
         {
-            if (hearbeat == null) throw new ArgumentNullException(nameof(hearbeat));
-            _hearbeat = hearbeat;
+            _heartbeat = heartbeat ?? throw new ArgumentNullException(nameof(heartbeat));
         }
 
         public void Execute(IJobExecutionContext context)
         {
-            _hearbeat.UpdateServiceState("alive");
+            _heartbeat.UpdateServiceState("alive");
         }
     }
 }

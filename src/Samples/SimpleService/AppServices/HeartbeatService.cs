@@ -14,7 +14,7 @@ namespace SimpleService.AppServices
 
         public void UpdateServiceState(string state)
         {
-            s_log.InfoFormat("Service state: {0}.", state);
+            s_log.InfoFormat("Service state: {serviceState}.", state);
         }
     }
 

@@ -14,7 +14,6 @@ namespace Autofac.Extras.Quartz
     using System.Runtime.CompilerServices;
     using global::Quartz;
     using JetBrains.Annotations;
-    using Module = Autofac.Module;
 
     /// <summary>
     ///     Predicate to filter jobs to be registered.
@@ -27,7 +26,7 @@ namespace Autofac.Extras.Quartz
     ///     Registers Quartz jobs from specified assemblies.
     /// </summary>
     [PublicAPI]
-    public class QuartzAutofacJobsModule : Module
+    public class QuartzAutofacJobsModule : Autofac.Module
     {
         readonly Assembly[] _assembliesToScan;
 
@@ -39,8 +38,7 @@ namespace Autofac.Extras.Quartz
         /// <exception cref="System.ArgumentNullException">assembliesToScan</exception>
         public QuartzAutofacJobsModule([NotNull] params Assembly[] assembliesToScan)
         {
-            if (assembliesToScan == null) throw new ArgumentNullException(nameof(assembliesToScan));
-            _assembliesToScan = assembliesToScan;
+            _assembliesToScan = assembliesToScan ?? throw new ArgumentNullException(nameof(assembliesToScan));
         }
 
         /// <summary>

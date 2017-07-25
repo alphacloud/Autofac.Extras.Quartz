@@ -84,7 +84,7 @@ namespace Autofac.Extras.Quartz.Tests
         }
 
         [UsedImplicitly]
-        private class InterruptableJob : IJob, IInterruptableJob
+        private class InterruptableJob : IInterruptableJob
         {
             public void Interrupt()
             {
