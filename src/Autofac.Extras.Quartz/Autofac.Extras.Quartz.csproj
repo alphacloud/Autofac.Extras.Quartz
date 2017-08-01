@@ -1,20 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>netstandard1.3;net462</TargetFrameworks>
     <SignAssembly>True</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyOriginatorKeyFile>..\keyfile.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>NETSTANDARD1_3</DefineConstants>
+  </PropertyGroup>
+   
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net462' ">
+    <DefineConstants>NETFULL</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\net462\Autofac.Extras.Quartz.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\$(TargetFramework)\Autofac.Extras.Quartz.xml</DocumentationFile>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\net462\Autofac.Extras.Quartz.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\$(TargetFramework)\Autofac.Extras.Quartz.xml</DocumentationFile>
     <DebugType>portable</DebugType>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
@@ -24,10 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.6.0" />
-    <PackageReference Include="Common.Logging" Version="3.3.1" />
+    <PackageReference Include="Autofac" Version="4.6.1" />
+    <PackageReference Include="Common.Logging" Version="3.4.0-RC1" />
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
-    <PackageReference Include="Quartz" Version="2.5.0" />
+    <PackageReference Include="Quartz" Version="3.0.0-alpha3" />
   </ItemGroup>
 
 </Project>

@@ -10,6 +10,7 @@
 namespace SimpleService.Jobs
 {
     using System;
+    using System.Threading.Tasks;
     using AppServices;
     using Quartz;
 
@@ -22,9 +23,10 @@ namespace SimpleService.Jobs
             _heartbeat = heartbeat ?? throw new ArgumentNullException(nameof(heartbeat));
         }
 
-        public void Execute(IJobExecutionContext context)
+        public Task Execute(IJobExecutionContext context)
         {
             _heartbeat.UpdateServiceState("alive");
+            return Task.CompletedTask;
         }
     }
 }

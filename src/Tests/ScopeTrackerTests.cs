@@ -16,6 +16,7 @@ namespace Autofac.Extras.Quartz.Tests
     using System;
     using System.Diagnostics;
     using System.Threading;
+    using System.Threading.Tasks;
     using FluentAssertions;
     using global::Quartz;
     using global::Quartz.Impl;
@@ -36,7 +37,7 @@ namespace Autofac.Extras.Quartz.Tests
             _container = cb.Build();
 
             _factory = new StdSchedulerFactory();
-            _scheduler = _factory.GetScheduler();
+            _scheduler = _factory.GetScheduler().Result;
             _lifetimeScope = _container.Resolve<ILifetimeScope>();
             _jobFactory = new AutofacJobFactory(_lifetimeScope, QuartzAutofacFactoryModule.LifetimeScopeName);
             _scheduler.JobFactory = _jobFactory;
@@ -69,9 +70,10 @@ namespace Autofac.Extras.Quartz.Tests
                 _dependency = dependency ?? throw new ArgumentNullException(nameof(dependency));
             }
 
-            public void Execute(IJobExecutionContext context)
+            public Task Execute(IJobExecutionContext context)
             {
                 Debug.WriteLine("SampleJob started");
+                return Task.CompletedTask;
             }
         }
 
