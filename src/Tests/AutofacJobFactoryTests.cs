@@ -10,6 +10,7 @@
 namespace Autofac.Extras.Quartz.Tests
 {
     using System;
+    using System.Threading.Tasks;
     using Alphacloud.Common.Testing.Nunit;
     using FluentAssertions;
     using global::Quartz;
@@ -53,46 +54,19 @@ namespace Autofac.Extras.Quartz.Tests
         {
             var cb = new ContainerBuilder();
             cb.RegisterType<NonInterruptableJob>().AsSelf();
-            cb.RegisterType<InterruptableJob>().AsSelf();
 
             return cb.Build();
         }
 
-        [Test]
-        public void Should_Create_InterruptableWrapper_For_InterruptableJob()
-        {
-            var bundle = CreateBundle<InterruptableJob>();
-            var job = _factory.NewJob(bundle, _scheduler.Object);
-            (job as IInterruptableJob).Should()
-                .NotBeNull("wrapper should implement IInterruptableJob for interruptable jobs");
-        }
-
-        [Test]
-        public void Should_Create_NonInterruptableWrapper_For_NonInterruptableJob()
-        {
-            var bundle = CreateBundle<NonInterruptableJob>();
-            var job = _factory.NewJob(bundle, _scheduler.Object);
-            (job as IInterruptableJob).Should().BeNull("wrapper should not implement IInterruptableJob");
-        }
 
         [UsedImplicitly]
         private class NonInterruptableJob : IJob
         {
-            public void Execute(IJobExecutionContext context)
+            public Task Execute(IJobExecutionContext context)
             {
+                return Task.CompletedTask;
             }
         }
 
-        [UsedImplicitly]
-        private class InterruptableJob : IInterruptableJob
-        {
-            public void Interrupt()
-            {
-            }
-
-            public void Execute(IJobExecutionContext context)
-            {
-            }
-        }
     }
 }

@@ -14,6 +14,7 @@ namespace Autofac.Extras.Quartz
     using System.Runtime.CompilerServices;
     using global::Quartz;
     using JetBrains.Annotations;
+    using Module = Autofac.Module;
 
     /// <summary>
     ///     Predicate to filter jobs to be registered.
@@ -26,7 +27,7 @@ namespace Autofac.Extras.Quartz
     ///     Registers Quartz jobs from specified assemblies.
     /// </summary>
     [PublicAPI]
-    public class QuartzAutofacJobsModule : Autofac.Module
+    public class QuartzAutofacJobsModule : Module
     {
         readonly Assembly[] _assembliesToScan;
 
@@ -77,7 +78,7 @@ namespace Autofac.Extras.Quartz
         protected override void Load(ContainerBuilder builder)
         {
             var registrationBuilder = builder.RegisterAssemblyTypes(_assembliesToScan)
-                .Where(type => !type.IsAbstract && typeof(IJob).IsAssignableFrom(type) && FilterJob(type))
+                .Where(type => !IsAbstract(type) && typeof(IJob).IsAssignableFrom(type) && FilterJob(type))
                 .AsSelf().InstancePerLifetimeScope();
 
             if (AutoWireProperties)
@@ -88,6 +89,16 @@ namespace Autofac.Extras.Quartz
         bool FilterJob(Type jobType)
         {
             return JobFilter == null || JobFilter(jobType);
+        }
+
+        private static bool IsAbstract(Type type)
+        {
+#if NETSTANDARD1_3
+            return type.GetTypeInfo().IsAbstract;
+#endif
+#if NETFULL
+            return type.IsAbstract;
+#endif
         }
     }
 }

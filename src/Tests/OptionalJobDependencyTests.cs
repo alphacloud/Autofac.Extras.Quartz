@@ -14,6 +14,7 @@
 namespace Autofac.Extras.Quartz.Tests
 {
     using System.Reflection;
+    using System.Threading.Tasks;
     using FluentAssertions;
     using global::Quartz;
     using JetBrains.Annotations;
@@ -43,9 +44,7 @@ namespace Autofac.Extras.Quartz.Tests
         {
             public IJobDependency Dependency { get; [UsedImplicitly] set; }
 
-            public void Execute(IJobExecutionContext context)
-            {
-            }
+            public Task Execute(IJobExecutionContext context) => Task.CompletedTask;
         }
 
         interface IJobDependency
