@@ -52,5 +52,8 @@ var scheduler = _container.Resolve<IScheduler>();
 scheduler.Start();
 ```
 
-## Sample project
-See src/Samples/SampleService for windows service implementation based on [TopShelf](https://github.com/Topshelf/Topshelf).
+## Sample projects
+* See ``src/Samples/Service`` for windows service implementation based on [TopShelf](https://github.com/Topshelf/Topshelf). **Note:** As of version 0.4.0 TopShelf does not support Quartz.Net v3, so application will throw exception.
+* See ``src/Samples/Console`` for .NetCore console application.
+* ``src/Samples/Shared`` contains source code shared between samples.
+

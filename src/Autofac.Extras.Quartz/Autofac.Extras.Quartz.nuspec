@@ -11,14 +11,15 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Autofac integration for Quartz.Net</description>
     <releaseNotes>
-Migrate to Visual Studio 2017
+* Migrate to Visual Studio 2017.
+* NetStandard support.
+* Upgrade to Quartz.Net 3 beta.
     </releaseNotes>
     <copyright>Copyright 2014-2017</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
       <group>
         <dependency id="Autofac" version="[4.6.1,5.0.0)" />
-        <dependency id="Common.Logging" version="[3.4.0-RC1,4.0.0)" />
         <dependency id="Quartz" version="[3.0.0-alpha3,4.0.0)" />
       </group>
       <group targetFramework=".NETStandard1.3">
