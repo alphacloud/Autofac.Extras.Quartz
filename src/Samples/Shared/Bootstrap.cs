@@ -1,13 +1,12 @@
-using Autofac;
-
 namespace SimpleService.Configuration
 {
     using System.Collections.Specialized;
     using System.Reflection;
     using AppServices;
+    using Autofac;
     using Autofac.Extras.Quartz;
-    using JetBrains.Annotations;
     using Jobs;
+    using Logging;
     using Logging.LogProviders;
     using Serilog;
     using Serilog.Sinks.SystemConsole.Themes;
@@ -20,9 +19,7 @@ namespace SimpleService.Configuration
                 .WriteTo.Console(theme: AnsiConsoleTheme.Code)
                 .CreateLogger();
             Log.Logger = log;
-            var serilogLogProvider = new SerilogLogProvider();
-            SimpleService.Logging.LogProvider.SetCurrentLogProvider(serilogLogProvider);
-            Quartz.Logging.LogProvider.SetCurrentLogProvider(serilogLogProvider);
+            LogProvider.SetCurrentLogProvider(new SerilogLogProvider());
         }
 
         internal static ContainerBuilder ConfigureContainer(ContainerBuilder cb)
@@ -33,8 +30,7 @@ namespace SimpleService.Configuration
                 {"quartz.scheduler.threadName", "Scheduler"}
             };
 
-            cb.RegisterModule(new QuartzAutofacFactoryModule
-            {
+            cb.RegisterModule(new QuartzAutofacFactoryModule {
                 ConfigurationProvider = c => schedulerConfig
             });
 #if NETCOREAPP1_1
@@ -52,6 +48,5 @@ namespace SimpleService.Configuration
             // register dependencies
             cb.RegisterType<HeartbeatService>().As<IHeartbeatService>();
         }
-
     }
 }
