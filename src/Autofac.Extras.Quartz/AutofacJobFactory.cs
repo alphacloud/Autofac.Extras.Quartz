@@ -12,7 +12,6 @@ namespace Autofac.Extras.Quartz
     using System;
     using System.Collections.Concurrent;
     using System.Globalization;
-    using Common.Logging;
     using global::Quartz;
     using global::Quartz.Spi;
     using JetBrains.Annotations;
@@ -25,7 +24,7 @@ namespace Autofac.Extras.Quartz
     /// </remarks>
     public class AutofacJobFactory : IJobFactory, IDisposable
     {
-        static readonly ILog s_log = LogManager.GetLogger<AutofacJobFactory>();
+        //static readonly ILog s_log = LogManager.GetLogger<AutofacJobFactory>();
         readonly ILifetimeScope _lifetimeScope;
 
         readonly object _scopeTag;
@@ -53,13 +52,13 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         public void Dispose()
         {
-            var runningJobs = RunningJobs.ToArray();
+            //var runningJobs = RunningJobs.ToArray();
             RunningJobs.Clear();
 
-            if (runningJobs.Length > 0)
-            {
-                s_log.InfoFormat("Cleaned {0} scopes for running jobs", runningJobs.Length);
-            }
+            //if (runningJobs.Length > 0)
+            //{
+            //    s_log.InfoFormat("Cleaned {0} scopes for running jobs", runningJobs.Length);
+            //}
         }
 
         /// <summary>
@@ -106,13 +105,11 @@ namespace Autofac.Extras.Quartz
                 newJob = (IJob) nestedScope.Resolve(jobType);
                 var jobTrackingInfo = new JobTrackingInfo(nestedScope);
                 RunningJobs[newJob] = jobTrackingInfo;
-
-                if (s_log.IsTraceEnabled)
-                {
-                    s_log.TraceFormat(CultureInfo.InvariantCulture, "Scope 0x{0:x} associated with Job 0x{1:x}",
-                        jobTrackingInfo.Scope.GetHashCode(), newJob.GetHashCode());
-                }
-
+                //if (s_log.IsTraceEnabled)
+                //{
+                //    s_log.TraceFormat(CultureInfo.InvariantCulture, "Scope 0x{0:x} associated with Job 0x{1:x}",
+                //        jobTrackingInfo.Scope.GetHashCode(), newJob.GetHashCode());
+                //}
                 nestedScope = null;
             }
             catch (Exception ex)
@@ -139,7 +136,7 @@ namespace Autofac.Extras.Quartz
             JobTrackingInfo trackingInfo;
             if (!RunningJobs.TryRemove(job, out trackingInfo))
             {
-                s_log.WarnFormat("Tracking info for job 0x{0:x} not found", job.GetHashCode());
+                //s_log.WarnFormat("Tracking info for job 0x{0:x} not found", job.GetHashCode());
                 // ReSharper disable once SuspiciousTypeConversion.Global
                 var disposableJob = job as IDisposable;
                 disposableJob?.Dispose();
@@ -152,12 +149,12 @@ namespace Autofac.Extras.Quartz
 
         static void DisposeScope(IJob job, ILifetimeScope lifetimeScope)
         {
-            if (s_log.IsTraceEnabled)
-            {
-                s_log.TraceFormat("Disposing Scope 0x{0:x} for Job 0x{1:x}",
-                    lifetimeScope?.GetHashCode() ?? 0,
-                    job?.GetHashCode() ?? 0);
-            }
+            //if (s_log.IsTraceEnabled)
+            //{
+            //    s_log.TraceFormat("Disposing Scope 0x{0:x} for Job 0x{1:x}",
+            //        lifetimeScope?.GetHashCode() ?? 0,
+            //        job?.GetHashCode() ?? 0);
+            //}
             lifetimeScope?.Dispose();
         }
 

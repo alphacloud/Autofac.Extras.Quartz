@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.6.1" />
-    <PackageReference Include="Common.Logging" Version="3.4.0-RC1" />
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
     <PackageReference Include="Quartz" Version="3.0.0-alpha3" />
   </ItemGroup>

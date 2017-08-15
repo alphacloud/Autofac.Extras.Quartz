@@ -6,11 +6,11 @@
 #endregion
 namespace SimpleService.AppServices
 {
-    using Common.Logging;
+    using Logging;
 
     internal class HeartbeatService: IHeartbeatService
     {
-        private static readonly ILog s_log = LogManager.GetLogger<HeartbeatService>();
+        static readonly ILog s_log = LogProvider.GetLogger(typeof(HeartbeatService));
 
         public void UpdateServiceState(string state)
         {
