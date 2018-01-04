@@ -93,10 +93,10 @@ namespace Autofac.Extras.Quartz
 
         private static bool IsAbstract(Type type)
         {
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 
             return type.GetTypeInfo().IsAbstract;
 #endif
-#if NETFULL
+#if NETFULL || NETSTANDARD2_0
             return type.IsAbstract;
 #endif
         }
