@@ -12,24 +12,19 @@
     <description>Autofac integration for Quartz.Net</description>
     <releaseNotes>
 * Migrate to Visual Studio 2017.
-* NetStandard support.
-* Upgrade to Quartz.Net 3 beta.
+* NetStandard 2.0 support.
+* Upgraded to Quartz.Net 3.0.
     </releaseNotes>
     <copyright>Copyright 2014-2018</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
       <group>
-        <dependency id="Autofac" version="[4.6.1,5.0.0)" />
-        <dependency id="Quartz" version="[3.0.0-alpha3,4.0.0)" />
-      </group>
-      <group targetFramework="netstandard1.3">
-        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
-        <dependency id="Autofac" version="[4.6.1,5.0.0)" />
-        <dependency id="Quartz" version="[3.0.0-alpha3,4.0.0)" />
+        <dependency id="Autofac" version="[4.6.2,5.0.0)" />
+        <dependency id="Quartz" version="[3.0.0,4.0.0)" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="Autofac" version="[4.6.1,5.0.0)" />
-        <dependency id="Quartz" version="[3.0.0-alpha3,4.0.0)" />
+        <dependency id="Autofac" version="[4.6.2,5.0.0)" />
+        <dependency id="Quartz" version="[3.0.0,4.0.0)" />
       </group>
     </dependencies>
   </metadata>
@@ -37,9 +32,6 @@
     <file src="bin\Release\net462\Autofac.Extras.Quartz.dll " target="lib\net462\" />
     <file src="bin\Release\net462\Autofac.Extras.Quartz.pdb " target="lib\net462\" />
     <file src="bin\Release\net462\Autofac.Extras.Quartz.xml " target="lib\net462\" />
-    <file src="bin\Release\netstandard1.3\Autofac.Extras.Quartz.dll " target="lib\netstandard1.3\" />
-    <file src="bin\Release\netstandard1.3\Autofac.Extras.Quartz.pdb " target="lib\netstandard1.3\" />
-    <file src="bin\Release\netstandard1.3\Autofac.Extras.Quartz.xml " target="lib\netstandard1.3\" />
     <file src="bin\Release\netstandard2.0\Autofac.Extras.Quartz.dll " target="lib\netstandard2.0\" />
     <file src="bin\Release\netstandard2.0\Autofac.Extras.Quartz.pdb " target="lib\netstandard2.0\" />
     <file src="bin\Release\netstandard2.0\Autofac.Extras.Quartz.xml " target="lib\netstandard2.0\" />
