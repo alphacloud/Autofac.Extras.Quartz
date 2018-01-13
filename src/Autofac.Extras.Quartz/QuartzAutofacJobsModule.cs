@@ -29,7 +29,7 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class QuartzAutofacJobsModule : Module
     {
-        readonly Assembly[] _assembliesToScan;
+        [NotNull] readonly Assembly[] _assembliesToScan;
 
 
         /// <summary>
@@ -63,6 +63,7 @@ namespace Autofac.Extras.Quartz
         ///     Job registration filter callback.
         /// </summary>
         /// <seealso cref="JobRegistrationFilter" />
+        [CanBeNull]
         public JobRegistrationFilter JobFilter { get; set; }
 
         /// <summary>
@@ -86,19 +87,14 @@ namespace Autofac.Extras.Quartz
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        bool FilterJob(Type jobType)
+        private bool FilterJob([NotNull] Type jobType)
         {
             return JobFilter == null || JobFilter(jobType);
         }
 
-        private static bool IsAbstract(Type type)
+        private static bool IsAbstract([NotNull] Type type)
         {
-#if NETSTANDARD1_3 
-            return type.GetTypeInfo().IsAbstract;
-#endif
-#if NETFULL || NETSTANDARD2_0
             return type.IsAbstract;
-#endif
         }
     }
 }

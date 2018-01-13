@@ -1,7 +1,6 @@
 namespace SimpleService.Configuration
 {
     using System.Collections.Specialized;
-    using System.Reflection;
     using AppServices;
     using Autofac;
     using Autofac.Extras.Quartz;
@@ -33,11 +32,7 @@ namespace SimpleService.Configuration
             cb.RegisterModule(new QuartzAutofacFactoryModule {
                 ConfigurationProvider = c => schedulerConfig
             });
-#if NETCOREAPP1_1
-            cb.RegisterModule(new QuartzAutofacJobsModule(typeof(HeartbeatJob).GetTypeInfo().Assembly));
-#else
             cb.RegisterModule(new QuartzAutofacJobsModule(typeof(HeartbeatJob).Assembly));
-#endif
 
             RegisterComponents(cb);
             return cb;
