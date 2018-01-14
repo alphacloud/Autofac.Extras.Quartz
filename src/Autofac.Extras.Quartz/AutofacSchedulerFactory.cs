@@ -22,7 +22,7 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class AutofacSchedulerFactory : StdSchedulerFactory
     {
-        readonly AutofacJobFactory _jobFactory;
+        [NotNull] readonly AutofacJobFactory _jobFactory;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:Quartz.Impl.StdSchedulerFactory" /> class.
@@ -31,8 +31,7 @@ namespace Autofac.Extras.Quartz
         /// <exception cref="ArgumentNullException"><paramref name="jobFactory" /> is <see langword="null" />.</exception>
         public AutofacSchedulerFactory([NotNull] AutofacJobFactory jobFactory)
         {
-            if (jobFactory == null) throw new ArgumentNullException(nameof(jobFactory));
-            _jobFactory = jobFactory;
+            _jobFactory = jobFactory ?? throw new ArgumentNullException(nameof(jobFactory));
         }
 
         /// <summary>
@@ -44,8 +43,7 @@ namespace Autofac.Extras.Quartz
         public AutofacSchedulerFactory(NameValueCollection props, [NotNull] AutofacJobFactory jobFactory)
             : base(props)
         {
-            if (jobFactory == null) throw new ArgumentNullException(nameof(jobFactory));
-            _jobFactory = jobFactory;
+            _jobFactory = jobFactory ?? throw new ArgumentNullException(nameof(jobFactory));
         }
 
         /// <summary>

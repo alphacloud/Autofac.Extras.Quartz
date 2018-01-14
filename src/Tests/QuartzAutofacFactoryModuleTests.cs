@@ -15,6 +15,7 @@ namespace Autofac.Extras.Quartz.Tests
 {
     using System;
     using System.Collections.Specialized;
+    using System.Threading.Tasks;
     using FluentAssertions;
     using global::Quartz;
     using global::Quartz.Impl;
@@ -98,9 +99,7 @@ namespace Autofac.Extras.Quartz.Tests
         [UsedImplicitly]
         private class TestJob : IJob
         {
-            public void Execute(IJobExecutionContext context)
-            {
-            }
+            public Task Execute(IJobExecutionContext context) => Task.CompletedTask;
         }
     }
 }
