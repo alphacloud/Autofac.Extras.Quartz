@@ -46,8 +46,7 @@ namespace Autofac.Extras.Quartz
         /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
         public QuartzAutofacFactoryModule([NotNull] string lifetimeScopeName)
         {
-            if (lifetimeScopeName == null) throw new ArgumentNullException(nameof(lifetimeScopeName));
-            _lifetimeScopeName = lifetimeScopeName;
+            _lifetimeScopeName = lifetimeScopeName ?? throw new ArgumentNullException(nameof(lifetimeScopeName));
         }
 
         /// <summary>
@@ -77,16 +76,20 @@ namespace Autofac.Extras.Quartz
                 .SingleInstance();
 
             builder.Register<ISchedulerFactory>(c => {
-                var cfgProvider = ConfigurationProvider;
+                    var cfgProvider = ConfigurationProvider;
 
-                var autofacSchedulerFactory = cfgProvider != null
-                    ? new AutofacSchedulerFactory(cfgProvider(c), c.Resolve<AutofacJobFactory>())
-                    : new AutofacSchedulerFactory(c.Resolve<AutofacJobFactory>());
-                return autofacSchedulerFactory;
-            })
+                    var autofacSchedulerFactory = cfgProvider != null
+                        ? new AutofacSchedulerFactory(cfgProvider(c), c.Resolve<AutofacJobFactory>())
+                        : new AutofacSchedulerFactory(c.Resolve<AutofacJobFactory>());
+                    return autofacSchedulerFactory;
+                })
                 .SingleInstance();
 
-            builder.Register(c => c.Resolve<ISchedulerFactory>().GetScheduler())
+            builder.Register(c => {
+                    var getScheduler = c.Resolve<ISchedulerFactory>().GetScheduler();
+                    getScheduler.Wait();
+                    return getScheduler.Result;
+                })
                 .SingleInstance();
         }
     }

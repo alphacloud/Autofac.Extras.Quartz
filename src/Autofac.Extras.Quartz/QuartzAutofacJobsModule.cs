@@ -29,7 +29,7 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class QuartzAutofacJobsModule : Module
     {
-        readonly Assembly[] _assembliesToScan;
+        [NotNull] readonly Assembly[] _assembliesToScan;
 
 
         /// <summary>
@@ -39,8 +39,7 @@ namespace Autofac.Extras.Quartz
         /// <exception cref="System.ArgumentNullException">assembliesToScan</exception>
         public QuartzAutofacJobsModule([NotNull] params Assembly[] assembliesToScan)
         {
-            if (assembliesToScan == null) throw new ArgumentNullException(nameof(assembliesToScan));
-            _assembliesToScan = assembliesToScan;
+            _assembliesToScan = assembliesToScan ?? throw new ArgumentNullException(nameof(assembliesToScan));
         }
 
         /// <summary>
@@ -64,6 +63,7 @@ namespace Autofac.Extras.Quartz
         ///     Job registration filter callback.
         /// </summary>
         /// <seealso cref="JobRegistrationFilter" />
+        [CanBeNull]
         public JobRegistrationFilter JobFilter { get; set; }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Autofac.Extras.Quartz
         protected override void Load(ContainerBuilder builder)
         {
             var registrationBuilder = builder.RegisterAssemblyTypes(_assembliesToScan)
-                .Where(type => !type.IsAbstract && typeof(IJob).IsAssignableFrom(type) && FilterJob(type))
+                .Where(type => !IsAbstract(type) && typeof(IJob).IsAssignableFrom(type) && FilterJob(type))
                 .AsSelf().InstancePerLifetimeScope();
 
             if (AutoWireProperties)
@@ -87,9 +87,14 @@ namespace Autofac.Extras.Quartz
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        bool FilterJob(Type jobType)
+        private bool FilterJob([NotNull] Type jobType)
         {
             return JobFilter == null || JobFilter(jobType);
+        }
+
+        private static bool IsAbstract([NotNull] Type type)
+        {
+            return type.IsAbstract;
         }
     }
 }

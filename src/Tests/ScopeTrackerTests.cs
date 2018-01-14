@@ -16,6 +16,7 @@ namespace Autofac.Extras.Quartz.Tests
     using System;
     using System.Diagnostics;
     using System.Threading;
+    using System.Threading.Tasks;
     using FluentAssertions;
     using global::Quartz;
     using global::Quartz.Impl;
@@ -36,7 +37,7 @@ namespace Autofac.Extras.Quartz.Tests
             _container = cb.Build();
 
             _factory = new StdSchedulerFactory();
-            _scheduler = _factory.GetScheduler();
+            _scheduler = _factory.GetScheduler().Result;
             _lifetimeScope = _container.Resolve<ILifetimeScope>();
             _jobFactory = new AutofacJobFactory(_lifetimeScope, QuartzAutofacFactoryModule.LifetimeScopeName);
             _scheduler.JobFactory = _jobFactory;
@@ -59,20 +60,20 @@ namespace Autofac.Extras.Quartz.Tests
         [PersistJobDataAfterExecution]
         private class SampleJob : IJob
         {
-            private readonly DisposableDependency _dependency;
+            [UsedImplicitly] private readonly DisposableDependency _dependency;
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
-            public SampleJob(DisposableDependency dependency)
+            public SampleJob([NotNull] DisposableDependency dependency)
             {
-                _dependency = dependency;
+                _dependency = dependency ?? throw new ArgumentNullException(nameof(dependency));
             }
 
-            public void Execute(IJobExecutionContext context)
+            public Task Execute(IJobExecutionContext context)
             {
-                var data = context.JobDetail.JobDataMap;
                 Debug.WriteLine("SampleJob started");
+                return Task.CompletedTask;
             }
         }
 
@@ -98,8 +99,8 @@ namespace Autofac.Extras.Quartz.Tests
             var job = new Mock<IJob>();
             var disposableJob = job.As<IDisposable>();
             _jobFactory.ReturnJob(job.Object);
-            
-            disposableJob.Verify(d=>d.Dispose(), Times.Once, "Job was not disposed");
+
+            disposableJob.Verify(d => d.Dispose(), Times.Once, "Job was not disposed");
         }
 
 
@@ -125,8 +126,7 @@ namespace Autofac.Extras.Quartz.Tests
             var scopesDisposed = 0;
             DisposableDependency dependency = null;
 
-            _lifetimeScope.ChildLifetimeScopeBeginning += (sender, args) =>
-            {
+            _lifetimeScope.ChildLifetimeScopeBeginning += (sender, args) => {
                 scopesCreated++;
                 dependency = args.LifetimeScope.Resolve<DisposableDependency>();
                 args.LifetimeScope.CurrentScopeEnding += (o, eventArgs) => { scopesDisposed++; };
