@@ -22,7 +22,7 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class AutofacSchedulerFactory : StdSchedulerFactory
     {
-        readonly AutofacJobFactory _jobFactory;
+        [NotNull] readonly AutofacJobFactory _jobFactory;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:Quartz.Impl.StdSchedulerFactory" /> class.

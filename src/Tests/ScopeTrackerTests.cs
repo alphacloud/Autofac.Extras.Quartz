@@ -11,6 +11,8 @@
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable HeapView.ClosureAllocation
 // ReSharper disable HeapView.DelegateAllocation
+// ReSharper disable MissingAnnotation
+#pragma warning disable 169
 namespace Autofac.Extras.Quartz.Tests
 {
     using System;
@@ -80,13 +82,21 @@ namespace Autofac.Extras.Quartz.Tests
         [UsedImplicitly]
         private class DisposableDependency : IDisposable
         {
+            public DisposableDependency()
+            {
+                CreateCount++;
+            }
+
             public bool Disposed { get; private set; }
+            public static int DisposeCount = 0;
+            public static int CreateCount = 0;
 
             /// <summary>
             ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
             /// </summary>
             public void Dispose()
             {
+                DisposeCount++;
                 Debug.WriteLine("Disposing dependency 0x{0:x}", GetHashCode());
                 Disposed = true;
             }
@@ -114,7 +124,7 @@ namespace Autofac.Extras.Quartz.Tests
         }
 
         [Test]
-        public void ShouldDisposeScopeAfterJobCompletion()
+        public async Task ShouldDisposeScopeAfterJobCompletion()
         {
             var key = new JobKey("disposable", "grp2");
             var job1 = JobBuilder.Create<SampleJob>().WithIdentity(key).StoreDurably(true)
@@ -122,24 +132,16 @@ namespace Autofac.Extras.Quartz.Tests
             var trigger =
                 TriggerBuilder.Create().WithSimpleSchedule(s => s.WithIntervalInSeconds(1).WithRepeatCount(1)).Build();
 
-            var scopesCreated = 0;
-            var scopesDisposed = 0;
-            DisposableDependency dependency = null;
+            await _scheduler.ScheduleJob(job1, trigger).ConfigureAwait(true);
+            await _scheduler.Start().ConfigureAwait(true);
 
-            _lifetimeScope.ChildLifetimeScopeBeginning += (sender, args) => {
-                scopesCreated++;
-                dependency = args.LifetimeScope.Resolve<DisposableDependency>();
-                args.LifetimeScope.CurrentScopeEnding += (o, eventArgs) => { scopesDisposed++; };
-            };
-
-            _scheduler.ScheduleJob(job1, trigger);
-            _scheduler.Start();
-
-            Thread.Sleep(3.Seconds());
+            // wait until scheduled job fires...
+            await Task.Delay(3.Seconds()).ConfigureAwait(true);
 
             _jobFactory.RunningJobs.Should().BeEmpty("Scope was not disposed after job completion");
-            dependency.Disposed.Should().BeTrue("Dependency must be disposed");
-            scopesDisposed.Should().Be(scopesCreated, "All scopes must be disposed");
+            DisposableDependency.CreateCount.Should().BeGreaterThan(0, "No dependencies were created");
+            DisposableDependency.DisposeCount.Should().BeGreaterThan(0, "Scoped dependencies were not disposed")
+                .And.Be(DisposableDependency.CreateCount, "Not all dependencies were disposed");
         }
     }
 }

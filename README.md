@@ -28,7 +28,7 @@ Autofac configuration for Quartz consists of two steps:
 
 ## Scheduler registration
 
-`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container.
+`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container. Both factory and schedulere are registered as singletones.
 
 Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
 
@@ -53,7 +53,7 @@ scheduler.Start();
 ```
 
 ## Sample projects
-* See ``src/Samples/Service`` for windows service implementation based on [TopShelf](https://github.com/Topshelf/Topshelf). **Note:** As of version 0.4.0 TopShelf does not support Quartz.Net v3, so application will throw exception.
 * See ``src/Samples/Console`` for .NetCore console application.
 * ``src/Samples/Shared`` contains source code shared between samples.
 
+TopShelf-based sample was removed since Topshelf.Quartz is not compatible with Quartz 3 as af now.

@@ -20,7 +20,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
     <PackageReference Include="FluentAssertions" Version="4.19.4" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
-    <PackageReference Include="Moq" Version="4.8.0" />
+    <PackageReference Include="Moq" Version="4.8.1" />
     <PackageReference Include="Quartz" Version="3.0.0" />
   </ItemGroup>
 

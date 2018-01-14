@@ -13,12 +13,14 @@
     <releaseNotes>
 * Migrate to Visual Studio 2017.
 * NetStandard 2.0 support.
+BREAKING:
 * Upgraded to Quartz.Net 3.0.
+* Removed logging.
     </releaseNotes>
     <copyright>Copyright 2014-2018</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
-      <group>
+      <group targetFramework="net462">
         <dependency id="Autofac" version="[4.6.2,5.0.0)" />
         <dependency id="Quartz" version="[3.0.0,4.0.0)" />
       </group>

@@ -11,6 +11,7 @@ namespace Autofac.Extras.Quartz
 {
     using System;
     using System.Collections.Specialized;
+    using System.Threading.Tasks;
     using global::Quartz;
     using global::Quartz.Impl;
     using global::Quartz.Spi;
@@ -68,7 +69,7 @@ namespace Autofac.Extras.Quartz
         ///     The builder through which components can be
         ///     registered.
         /// </param>
-        protected override void Load([NotNull] ContainerBuilder builder)
+        protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => new AutofacJobFactory(c.Resolve<ILifetimeScope>(), _lifetimeScopeName))
                 .AsSelf()
@@ -86,9 +87,8 @@ namespace Autofac.Extras.Quartz
                 .SingleInstance();
 
             builder.Register(c => {
-                    var getScheduler = c.Resolve<ISchedulerFactory>().GetScheduler();
-                    getScheduler.Wait();
-                    return getScheduler.Result;
+                    var factory = c.Resolve<ISchedulerFactory>();
+                    return factory.GetScheduler().ConfigureAwait(false).GetAwaiter().GetResult();
                 })
                 .SingleInstance();
         }

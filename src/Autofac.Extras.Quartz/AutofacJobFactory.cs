@@ -24,10 +24,9 @@ namespace Autofac.Extras.Quartz
     /// </remarks>
     public class AutofacJobFactory : IJobFactory, IDisposable
     {
-        //static readonly ILog s_log = LogManager.GetLogger<AutofacJobFactory>();
-        readonly ILifetimeScope _lifetimeScope;
+        [NotNull] readonly ILifetimeScope _lifetimeScope;
 
-        readonly object _scopeTag;
+        [NotNull] readonly object _scopeTag;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AutofacJobFactory" /> class.
@@ -38,7 +37,7 @@ namespace Autofac.Extras.Quartz
         ///     <paramref name="lifetimeScope" /> or <paramref name="scopeTag" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public AutofacJobFactory(ILifetimeScope lifetimeScope, object scopeTag)
+        public AutofacJobFactory([NotNull] ILifetimeScope lifetimeScope, [NotNull] object scopeTag)
         {
             _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
             _scopeTag = scopeTag ?? throw new ArgumentNullException(nameof(scopeTag));
@@ -52,13 +51,7 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         public void Dispose()
         {
-            //var runningJobs = RunningJobs.ToArray();
             RunningJobs.Clear();
-
-            //if (runningJobs.Length > 0)
-            //{
-            //    s_log.InfoFormat("Cleaned {0} scopes for running jobs", runningJobs.Length);
-            //}
         }
 
         /// <summary>
@@ -99,24 +92,19 @@ namespace Autofac.Extras.Quartz
 
             var nestedScope = _lifetimeScope.BeginLifetimeScope(_scopeTag);
 
-            IJob newJob = null;
+            IJob newJob;
             try
             {
                 newJob = (IJob) nestedScope.Resolve(jobType);
                 var jobTrackingInfo = new JobTrackingInfo(nestedScope);
                 RunningJobs[newJob] = jobTrackingInfo;
-                //if (s_log.IsTraceEnabled)
-                //{
-                //    s_log.TraceFormat(CultureInfo.InvariantCulture, "Scope 0x{0:x} associated with Job 0x{1:x}",
-                //        jobTrackingInfo.Scope.GetHashCode(), newJob.GetHashCode());
-                //}
                 nestedScope = null;
             }
             catch (Exception ex)
             {
                 if (nestedScope != null)
                 {
-                    DisposeScope(newJob, nestedScope);
+                    nestedScope?.Dispose();
                 }
                 throw new SchedulerConfigException(string.Format(CultureInfo.InvariantCulture,
                     "Failed to instantiate Job '{0}' of type '{1}'",
@@ -128,34 +116,20 @@ namespace Autofac.Extras.Quartz
         /// <summary>
         ///     Allows the the job factory to destroy/cleanup the job if needed.
         /// </summary>
-        public void ReturnJob([CanBeNull] IJob job)
+        public void ReturnJob(IJob job)
         {
             if (job == null)
                 return;
 
-            JobTrackingInfo trackingInfo;
-            if (!RunningJobs.TryRemove(job, out trackingInfo))
+            if (!RunningJobs.TryRemove(job, out var trackingInfo))
             {
-                //s_log.WarnFormat("Tracking info for job 0x{0:x} not found", job.GetHashCode());
                 // ReSharper disable once SuspiciousTypeConversion.Global
-                var disposableJob = job as IDisposable;
-                disposableJob?.Dispose();
+                (job as IDisposable)?.Dispose();
             }
             else
             {
-                DisposeScope(job, trackingInfo.Scope);
+                trackingInfo.Scope?.Dispose();
             }
-        }
-
-        static void DisposeScope(IJob job, ILifetimeScope lifetimeScope)
-        {
-            //if (s_log.IsTraceEnabled)
-            //{
-            //    s_log.TraceFormat("Disposing Scope 0x{0:x} for Job 0x{1:x}",
-            //        lifetimeScope?.GetHashCode() ?? 0,
-            //        job?.GetHashCode() ?? 0);
-            //}
-            lifetimeScope?.Dispose();
         }
 
         #region Job data

@@ -1,4 +1,15 @@
-mode: ContinuousDelivery
-branches: {}
+assembly-versioning-scheme: MajorMinorPatch
+branches:
+  release:
+    mode: ContinuousDeployment
+    tag: beta
+    increment: Patch
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: false
+    regex: releases?[/-]
+    tracks-release-branches: false
+    is-release-branch: true
+    is-mainline: false
+
 ignore:
   sha: []
