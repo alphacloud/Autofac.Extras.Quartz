@@ -83,7 +83,7 @@ namespace Autofac.Extras.Quartz
         ///     <see cref="Exception.InnerException" />.
         /// </exception>
         [NotNull]
-        public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
+        public virtual IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
             if (bundle == null) throw new ArgumentNullException(nameof(bundle));
             if (scheduler == null) throw new ArgumentNullException(nameof(scheduler));
