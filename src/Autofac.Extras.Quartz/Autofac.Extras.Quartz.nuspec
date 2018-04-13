@@ -3,17 +3,15 @@
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <title>$id$</title>
+    <authors>shatl</authors>
+    <owners>Alphacloud.net</owners>
     <licenseUrl>http://mit-license.org/</licenseUrl>
     <projectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Autofac integration for Quartz.Net</description>
     <releaseNotes>
-Upgrade dependencies:
-Autofac 4.4.0;
-Quartz 2.5.0.
+Made AutofacJobFactory virtual.
     </releaseNotes>
     <copyright>Copyright 2014-2017</copyright>
     <tags>alphacloud quartz autofac</tags>

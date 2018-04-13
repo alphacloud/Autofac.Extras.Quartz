@@ -2,6 +2,7 @@
   branches:
     only:
       - /release/.*/
+      - /releases/.*/
       - develop
       - master
 
@@ -21,10 +22,10 @@
 
   before_build:
     - ps: nuget restore src/Autofac.Extras.Quartz.sln
-    - ps: gitversion /l console /output buildserver /updateAssemblyInfo
+    - ps: gitversion /l console /output buildserver
 
   build_script:
-    - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release'
+    - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" build.proj /t:BuildAll;Pack /p:PackageVersion="3.5.0" /p:BuildConfig=Release'
 
   test_script:
   - cmd: >-
@@ -39,7 +40,7 @@
     - provider: NuGet
       appveyor_repo_tag: true
       api_key:
-        secure: HmgvMFl5yUvms5wcIZDCiBIZYyNWoTdouBwxuWJbYU7d0WVPTm6hnrIxhI4Xhcpl
+        secure: 5FAczco1LJbj5t+ZMDNUxk038T5gvmYwU+7Z28GiL4JiA6qF/SuxhONPerg/UHvg
 
 
 -
