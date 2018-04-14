@@ -20,7 +20,7 @@ namespace Autofac.Extras.Quartz
     ///     Resolve Quartz Job and it's dependencies from Autofac container.
     /// </summary>
     /// <remarks>
-    ///     Factory retuns wrapper around read job. It wraps job execution in nested lifetime scope.
+    ///     Factory returns wrapper around read job. It wraps job execution in nested lifetime scope.
     /// </remarks>
     public class AutofacJobFactory : IJobFactory, IDisposable
     {
@@ -83,7 +83,7 @@ namespace Autofac.Extras.Quartz
         ///     <see cref="Exception.InnerException" />.
         /// </exception>
         [NotNull]
-        public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
+        public virtual IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
             if (bundle == null) throw new ArgumentNullException(nameof(bundle));
             if (scheduler == null) throw new ArgumentNullException(nameof(scheduler));
