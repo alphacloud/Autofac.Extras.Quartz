@@ -11,29 +11,26 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Autofac integration for Quartz.Net</description>
     <releaseNotes>
-* Migrate to Visual Studio 2017.
-* NetStandard 2.0 support.
-BREAKING:
-* Upgraded to Quartz.Net 3.0.
-* Removed logging.
+* Upgrade Autofac to 4.7.0;
+* Support .NET 4.5.2 and NetStandard 2.0.
     </releaseNotes>
     <copyright>Copyright 2014-2018</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
-      <group targetFramework="net462">
-        <dependency id="Autofac" version="[4.6.2,5.0.0)" />
+      <group targetFramework="net452">
+        <dependency id="Autofac" version="[4.7.0,5.0.0)" />
         <dependency id="Quartz" version="[3.0.0,4.0.0)" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="Autofac" version="[4.6.2,5.0.0)" />
+        <dependency id="Autofac" version="[4.7.0,5.0.0)" />
         <dependency id="Quartz" version="[3.0.0,4.0.0)" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\net462\Autofac.Extras.Quartz.dll " target="lib\net462\" />
-    <file src="bin\Release\net462\Autofac.Extras.Quartz.pdb " target="lib\net462\" />
-    <file src="bin\Release\net462\Autofac.Extras.Quartz.xml " target="lib\net462\" />
+    <file src="bin\Release\net452\Autofac.Extras.Quartz.dll " target="lib\net452\" />
+    <file src="bin\Release\net452\Autofac.Extras.Quartz.pdb " target="lib\net452\" />
+    <file src="bin\Release\net452\Autofac.Extras.Quartz.xml " target="lib\net452\" />
     <file src="bin\Release\netstandard2.0\Autofac.Extras.Quartz.dll " target="lib\netstandard2.0\" />
     <file src="bin\Release\netstandard2.0\Autofac.Extras.Quartz.pdb " target="lib\netstandard2.0\" />
     <file src="bin\Release\netstandard2.0\Autofac.Extras.Quartz.xml " target="lib\netstandard2.0\" />

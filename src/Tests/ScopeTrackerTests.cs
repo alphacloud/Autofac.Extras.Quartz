@@ -20,6 +20,7 @@ namespace Autofac.Extras.Quartz.Tests
     using System.Threading;
     using System.Threading.Tasks;
     using FluentAssertions;
+    using FluentAssertions.Extensions;
     using global::Quartz;
     using global::Quartz.Impl;
     using JetBrains.Annotations;
@@ -120,7 +121,7 @@ namespace Autofac.Extras.Quartz.Tests
         {
             var job = new Mock<IJob>();
             Action returnJob = () => _jobFactory.ReturnJob(job.Object);
-            returnJob.ShouldNotThrow("Failed to handle missing job.");
+            returnJob.Should().NotThrow("Failed to handle missing job.");
         }
 
         [Test]
