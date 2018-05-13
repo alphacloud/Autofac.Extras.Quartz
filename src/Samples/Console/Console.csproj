@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.7.0" />
+    <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="LibLog" Version="4.2.6" />
     <PackageReference Include="Quartz" Version="3.0.4" />
