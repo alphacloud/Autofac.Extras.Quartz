@@ -28,7 +28,9 @@ Autofac configuration for Quartz consists of two steps:
 
 ## Scheduler registration
 
-`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container. Both factory and schedulere are registered as singletones.
+`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container.
+Both factory and schedulere are registered as singletones.
+*Note:* Is is important to resolve `IScheduler` from container, rather than using default one to get jobs resolved by Autofac.
 
 Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
 
