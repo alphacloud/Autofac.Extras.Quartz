@@ -11,20 +11,18 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Autofac integration for Quartz.Net</description>
     <releaseNotes>
-* Upgrade Autofac to 4.8.1;
-* Upgrade Quartz.Net to 3.0.4;
-* Support .NET 4.5.2 and NetStandard 2.0.
+Upgraded Quartz.Net to 3.0.5
     </releaseNotes>
     <copyright>Copyright 2014-2018</copyright>
     <tags>alphacloud quartz autofac</tags>
     <dependencies>
       <group targetFramework="net452">
         <dependency id="Autofac" version="[4.8.1,5.0.0)" />
-        <dependency id="Quartz" version="[3.0.4,4.0.0)" />
+        <dependency id="Quartz" version="[3.0.5,4.0.0)" />
       </group>
       <group targetFramework="netstandard2.0">
         <dependency id="Autofac" version="[4.8.1,5.0.0)" />
-        <dependency id="Quartz" version="[3.0.4,4.0.0)" />
+        <dependency id="Quartz" version="[3.0.5,4.0.0)" />
       </group>
     </dependencies>
   </metadata>

@@ -1,3 +1,12 @@
+#region copyright
+
+// Autofac Quartz integration
+// https://github.com/alphacloud/Autofac.Extras.Quartz
+// Licensed under MIT license.
+// Copyright (c) 2014-2018 Alphacloud.Net
+
+#endregion
+
 namespace SimpleService.Configuration
 {
     using System.Collections.Specialized;
@@ -5,10 +14,9 @@ namespace SimpleService.Configuration
     using Autofac;
     using Autofac.Extras.Quartz;
     using Jobs;
-    using Logging;
-    using Logging.LogProviders;
     using Serilog;
     using Serilog.Sinks.SystemConsole.Themes;
+
 
     internal class Bootstrap
     {
@@ -18,7 +26,6 @@ namespace SimpleService.Configuration
                 .WriteTo.Console(theme: AnsiConsoleTheme.Code)
                 .CreateLogger();
             Log.Logger = log;
-            LogProvider.SetCurrentLogProvider(new SerilogLogProvider());
         }
 
         internal static ContainerBuilder ConfigureContainer(ContainerBuilder cb)

@@ -2,11 +2,13 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014 Alphacloud.Net
+// Copyright (c) 2014-2018 Alphacloud.Net
 #endregion
+
 namespace SimpleService.AppServices
 {
-    using Logging;
+    using Shared.Log.Logging;
+
 
     internal class HeartbeatService: IHeartbeatService
     {
