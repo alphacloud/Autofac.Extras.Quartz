@@ -13,21 +13,20 @@
     <PkgDir>$(SrcDir)\packages</PkgDir>
     <NuGetExe>nuget.exe</NuGetExe>
     <PackagesOutDir>$(RootDir)\out\packages</PackagesOutDir>
-    <TargetFrameworks>net462</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
-	<SolutionDir>$(SrcDir)</SolutionDir>
-	<DownloadNuGetExe>true</DownloadNuGetExe>
+    <SolutionDir>$(SrcDir)</SolutionDir>
+    <DownloadNuGetExe>true</DownloadNuGetExe>
     <MainSolution>$(SrcDir)\Autofac.Extras.Quartz.sln</MainSolution>
   </PropertyGroup>
 
   <Target Name="Prepare">
-	<!--<Exec WorkingDirectory="$(SrcDir)"
-		Command="$(NuGetCommand) restore $(MainSolution)"
-	/>-->
+    <!--<Exec WorkingDirectory="$(SrcDir)"
+        Command="$(NuGetCommand) restore $(MainSolution)"
+    />-->
   </Target>
-  
+
   <Target Name="BuildAll" DependsOnTargets="Prepare">
     <MSBuild Projects="$(MainSolution)" Properties="Configuration=$(BuildConfig);" Targets="$(BuildTarget)"
              BuildInParallel="true" />
@@ -46,9 +45,9 @@
   <Target Name="Test" DependsOnTargets="BuildAll">
     <Exec WorkingDirectory="$(SrcDir)\Tests\bin\$(BuildConfig)"
           Command="$(PkgDir)\Nunit.ConsoleRunner.3.5.0\tools\nunit3-console.exe Autofac.Extras.Quartz.Tests.dll /stoponerror --dispose-runners --noheader"
-    />          
+    />
   </Target>
- 
+
   <Target Name="Pack" DependsOnTargets="CreatePackagesDir">
     <Message Text="src: $(SrcDir)" />
     <Exec Command="$(NuGetExe) pack Autofac.Extras.Quartz.nuspec -OutputDirectory $(PackagesOutDir) -Prop Configuration=Release -version &quot;$(PackageVersion)&quot; " WorkingDirectory="$(SrcDir)\Autofac.Extras.Quartz" />
