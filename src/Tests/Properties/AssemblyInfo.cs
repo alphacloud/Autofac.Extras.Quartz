@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014 Alphacloud.Net
+// Copyright (c) 2014-2018 Alphacloud.Net
 
 #endregion
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Alphacloud")]
 [assembly: AssemblyProduct("Tests")]
-[assembly: AssemblyCopyright("Copyright © Alphacloud 2014-2017")]
+[assembly: AssemblyCopyright("Copyright © Alphacloud 2014-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

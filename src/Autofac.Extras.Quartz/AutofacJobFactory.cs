@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2016 Alphacloud.Net
+// Copyright (c) 2014-2018 Alphacloud.Net
 
 #endregion
 
@@ -22,6 +22,7 @@ namespace Autofac.Extras.Quartz
     /// <remarks>
     ///     Factory returns wrapper around read job. It wraps job execution in nested lifetime scope.
     /// </remarks>
+    [PublicAPI]
     public class AutofacJobFactory : IJobFactory, IDisposable
     {
         [NotNull] readonly ILifetimeScope _lifetimeScope;
@@ -102,10 +103,7 @@ namespace Autofac.Extras.Quartz
             }
             catch (Exception ex)
             {
-                if (nestedScope != null)
-                {
-                    nestedScope?.Dispose();
-                }
+                nestedScope?.Dispose();
                 throw new SchedulerConfigException(string.Format(CultureInfo.InvariantCulture,
                     "Failed to instantiate Job '{0}' of type '{1}'",
                     bundle.JobDetail.Key, bundle.JobDetail.JobType), ex);

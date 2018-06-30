@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2016 Alphacloud.Net
+// Copyright (c) 2014-2018 Alphacloud.Net
 
 #endregion
 
@@ -11,7 +11,6 @@ namespace Autofac.Extras.Quartz
 {
     using System;
     using System.Collections.Specialized;
-    using System.Threading.Tasks;
     using global::Quartz;
     using global::Quartz.Impl;
     using global::Quartz.Spi;
