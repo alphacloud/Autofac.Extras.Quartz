@@ -17,20 +17,19 @@
     <Compile Include="..\Shared\Bootstrap.cs" Link="Shared\Bootstrap.cs" />
     <Compile Include="..\Shared\HeartbeatJob.cs" Link="Shared\HeartbeatJob.cs" />
     <Compile Include="..\Shared\HeartbeatService.cs" Link="Shared\HeartbeatService.cs" />
-    <Compile Include="..\Shared\LibLog.cs" Link="Shared\LibLog.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
-    <PackageReference Include="LibLog" Version="4.2.6" />
-    <PackageReference Include="Quartz" Version="3.0.4" />
+    <PackageReference Include="Quartz" Version="3.0.5" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Autofac.Extras.Quartz\Autofac.Extras.Quartz.csproj" />
+    <ProjectReference Include="..\Log\Shared.Log\Shared.Log.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -64,7 +64,8 @@ artifacts:
 deploy:
   - provider: NuGet
     name: Release builds
-    appveyor_repo_tag: true
+    on:
+      appveyor_repo_tag: true
     api_key:
       secure: kowlqJXuOSlpN/QJzkeiypWYK+XeXGkp1jeOl2XgfeyYmOwmqyzNQVhCAgzWymvP
     skip_symbols: true
@@ -75,7 +76,6 @@ deploy:
       branch:
         - /release/.*/
         - develop
-    appveyor_repo_tag: true
     api_key:
       secure: kowlqJXuOSlpN/QJzkeiypWYK+XeXGkp1jeOl2XgfeyYmOwmqyzNQVhCAgzWymvP
     skip_symbols: true

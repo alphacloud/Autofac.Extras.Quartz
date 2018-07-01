@@ -1,4 +1,12 @@
-﻿
+﻿#region copyright
+
+// Autofac Quartz integration
+// https://github.com/alphacloud/Autofac.Extras.Quartz
+// Licensed under MIT license.
+// Copyright (c) 2014-2018 Alphacloud.Net
+
+#endregion
+
 // ReSharper disable MethodSupportsCancellation
 
 namespace ConsoleScheduler
@@ -7,9 +15,9 @@ namespace ConsoleScheduler
     using System.Threading;
     using Autofac;
     using Quartz;
+    using Shared.Log.Logging;
     using SimpleService.Configuration;
     using SimpleService.Jobs;
-    using SimpleService.Logging;
 
     static class Program
     {
