@@ -53,7 +53,7 @@ after_test:
 
     pip install codecov
 
-    codecov.exe -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t $Env:CODECOV_TOKEN
+    & codecov.exe -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t $Env:CODECOV_TOKEN
 
 
 artifacts:
