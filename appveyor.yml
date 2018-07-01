@@ -54,7 +54,7 @@ after_test:
       $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
       cd /projects/autofac-extras-quartz/
       Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
-      pwd
+      Get-ChildItem *.xml
       bash codecov.sh -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t $Env:CODECOV_TOKEN
 
 artifacts:
