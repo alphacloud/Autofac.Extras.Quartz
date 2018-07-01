@@ -31,7 +31,7 @@ before_build:
     C:\ProgramData\chocolatey\bin\gfv.exe /l console /output buildserver /updateAssemblyInfo
 
 build_script:
-- cmd: >-
+- ps: >-
     cd /projects/autofac-extras-quartz
 
     msbuild build.proj /t:BuildAll /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Debug
@@ -39,7 +39,7 @@ build_script:
     msbuild build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release
 
 test_script:
-- cmd: >-
+- ps: >-
 
     cd src/Tests/bin/Debug/net462
 
@@ -50,12 +50,12 @@ test_script:
     nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
 
 after_test:
-- cmd: >-
-    SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%
+- ps: >-
+    $Env:PATH="C:\\Python34;C:\\Python34\\Scripts;$Env:PATH"
 
     pip install codecov
 
-    codecov -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t %codecov_token%
+    codecov -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t $Env:CODECOV_TOKEN
 
 
 artifacts:
