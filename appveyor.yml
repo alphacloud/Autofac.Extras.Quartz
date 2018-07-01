@@ -47,7 +47,7 @@ test_script:
 
     cd /projects/autofac-extras-quartz/src/Tests/bin/Release/net462
 
-    nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
+    nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml`;format=AppVeyor --dispose-runners --nocolor
 
 after_test:
 - ps: >-
