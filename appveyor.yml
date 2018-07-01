@@ -51,11 +51,14 @@ test_script:
 
 after_test:
  - ps: |
+    if (Test-Path '$env:APPVEYOR_PULL_REQUEST_NUMBER') {
+      Write-Output "Skipping coverage upload for PR"
+    } else {  
       $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
       cd /projects/autofac-extras-quartz/
       Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
-      ls ./coverage.xml
       bash codecov.sh -f "./coverage.xml" -t $Env:CODECOV_TOKEN
+    }
 
 artifacts:
   - path: out/packages/*.nupkg
