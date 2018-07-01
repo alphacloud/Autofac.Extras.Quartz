@@ -28,7 +28,7 @@ before_build:
 
     C:\ProgramData\chocolatey\bin\gfv.exe /version
 
-    C:\ProgramData\chocolatey\bin\gfv.exe /l console /output buildserver /updateAssemblyInfo
+    C:\ProgramData\chocolatey\bin\gfv.exe /output buildserver /updateAssemblyInfo
 
 build_script:
 - ps: >-
@@ -53,6 +53,8 @@ after_test:
 - ps: >-
     $Env:PATH="C:\\Python34;C:\\Python34\\Scripts;$Env:PATH"
 
+    Write-Output $Env:PATH
+    
     pip install codecov
 
     codecov -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t $Env:CODECOV_TOKEN
