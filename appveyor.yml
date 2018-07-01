@@ -52,7 +52,7 @@ test_script:
 after_test:
  - ps: |
     if (Test-Path '$env:APPVEYOR_PULL_REQUEST_NUMBER') {
-      Write-Output "Skipping coverage upload for PR"
+      Add-AppveyorMessage  "Skipping coverage upload for PR" -Category Warning
     } else {  
       codecov.exe -f "./coverage.xml" -t $Env:CODECOV_TOKEN
     }
