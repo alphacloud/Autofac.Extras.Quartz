@@ -18,7 +18,7 @@ install:
 - ps: >-
     choco install GitVersion.Portable GitReleaseManager.Portable -y -pre -no-progress
 
-    choco install opencover -y --no-progress
+    choco install opencover codecov -y --no-progress
 
 before_build:
 - ps: >-
@@ -54,10 +54,7 @@ after_test:
     if (Test-Path '$env:APPVEYOR_PULL_REQUEST_NUMBER') {
       Write-Output "Skipping coverage upload for PR"
     } else {  
-      $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
-      cd /projects/autofac-extras-quartz/
-      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
-      bash codecov.sh -f "./coverage.xml" -t $Env:CODECOV_TOKEN
+      codecov.exe -f "./coverage.xml" -t $Env:CODECOV_TOKEN
     }
 
 artifacts:
