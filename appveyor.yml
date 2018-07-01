@@ -36,8 +36,6 @@ build_script:
 
     msbuild.exe build.proj /t:BuildAll /p:PackageVersion="$Env:GitVersion_NuGetVersion" /p:BuildConfig=Debug
 
-    msbuild.exe build.proj /t:BuildAll`;Pack /p:PackageVersion="$Env:GitVersion_NuGetVersion" /p:BuildConfig=Release
-
 test_script:
 - ps: >-
 
@@ -55,7 +53,7 @@ after_test:
 
     pip install codecov
 
-    codecov -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t $Env:CODECOV_TOKEN
+    codecov.exe -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t $Env:CODECOV_TOKEN
 
 
 artifacts:
