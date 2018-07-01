@@ -18,7 +18,7 @@ install:
 - ps: >-
     choco install GitVersion.Portable GitReleaseManager.Portable -y -pre -no-progress
 
-    choco install opencover -y --no-progress
+    choco install opencover codecov -y --no-progress
 
 before_build:
 - ps: >-
@@ -28,35 +28,34 @@ before_build:
 
     C:\ProgramData\chocolatey\bin\gfv.exe /version
 
-    C:\ProgramData\chocolatey\bin\gfv.exe /l console /output buildserver /updateAssemblyInfo
+    C:\ProgramData\chocolatey\bin\gfv.exe /output buildserver /updateAssemblyInfo
 
 build_script:
-- cmd: >-
+- ps: >-
     cd /projects/autofac-extras-quartz
 
-    msbuild build.proj /t:BuildAll /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Debug
+    msbuild.exe build.proj /t:BuildAll /p:PackageVersion="$Env:GitVersion_NuGetVersion" /p:BuildConfig=Debug /verbosity:minimal
 
-    msbuild build.proj /t:BuildAll;Pack /p:PackageVersion="%GitVersion_NuGetVersion%" /p:BuildConfig=Release
+    msbuild.exe build.proj /t:BuildAll`;Pack /p:PackageVersion="$Env:GitVersion_NuGetVersion" /p:BuildConfig=Release /verbosity:minimal
 
 test_script:
-- cmd: >-
+- ps: >-
 
     cd src/Tests/bin/Debug/net462
 
-    OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml --dispose-runners --nocolor" -output:".\coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
+    OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml --dispose-runners --nocolor" -output:"/projects/autofac-extras-quartz/coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
 
     cd /projects/autofac-extras-quartz/src/Tests/bin/Release/net462
 
-    nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml;format=AppVeyor --dispose-runners --nocolor
+    nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml`;format=AppVeyor --dispose-runners --nocolor
 
 after_test:
-- cmd: >-
-    SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%
-
-    pip install codecov
-
-    codecov -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t %codecov_token%
-
+ - ps: |
+    if (Test-Path '$env:APPVEYOR_PULL_REQUEST_NUMBER') {
+      Add-AppveyorMessage  "Skipping coverage upload for PR" -Category Warning
+    } else {  
+      codecov.exe -f "./coverage.xml" -t $Env:CODECOV_TOKEN
+    }
 
 artifacts:
   - path: out/packages/*.nupkg
