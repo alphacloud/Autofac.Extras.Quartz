@@ -43,7 +43,7 @@ test_script:
 
     cd src/Tests/bin/Debug/net462
 
-    OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml --dispose-runners --nocolor" -output:".\coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
+    OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml --dispose-runners --nocolor" -output:"/projects/autofac-extras-quartz/coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
 
     cd /projects/autofac-extras-quartz/src/Tests/bin/Release/net462
 
@@ -55,7 +55,7 @@ after_test:
       cd /projects/autofac-extras-quartz/
       Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
       Get-ChildItem *.xml
-      bash codecov.sh -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t $Env:CODECOV_TOKEN
+      bash codecov.sh -f "/projects/autofac-extras-quartz/coverage.xml" -t $Env:CODECOV_TOKEN
 
 artifacts:
   - path: out/packages/*.nupkg
