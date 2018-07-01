@@ -51,10 +51,8 @@ test_script:
 
 after_test:
 - ps: >-
-    $Env:PATH="C:\\Python34;C:\\Python34\\Scripts;$Env:PATH"
+    $Env:PATH="C:\Python34;C:\Python34\Scripts;$Env:PATH"
 
-    Write-Output $Env:PATH
-    
     pip install codecov
 
     codecov -f "/projects/autofac-extras-quartz/src/Tests/bin/Debug/net462/coverage.xml" -t $Env:CODECOV_TOKEN
