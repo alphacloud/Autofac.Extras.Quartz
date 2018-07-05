@@ -11,7 +11,7 @@
     <RootDir>$(MSBuildProjectDirectory)</RootDir>
     <SrcDir>$(RootDir)\src</SrcDir>
     <PkgDir>$(SrcDir)\packages</PkgDir>
-    <NuGetExe>nuget.exe</NuGetExe>
+    <NuGetExe>"C:\Program Files\Tools\nuget.exe"</NuGetExe>
     <PackagesOutDir>$(RootDir)\out\packages</PackagesOutDir>
   </PropertyGroup>
 
