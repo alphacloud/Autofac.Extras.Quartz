@@ -1,10 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+  <PropertyGroup Label="Build">
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <SignAssembly>True</SignAssembly>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyOriginatorKeyFile>..\keyfile.snk</AssemblyOriginatorKeyFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Autofac.Extras.Quartz.xml</DocumentationFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>True</SignAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Authors>shatl</Authors>
+    <PackageId>Autofac.Extras.Quartz</PackageId>
+    <PackageDescription>Autofac integration for Quartz.Net.</PackageDescription>
+    <PackageLicenseUrl>http://mit-license.org/</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</PackageProjectUrl>
+    <PackageReleaseNotes>Add sourcelink support</PackageReleaseNotes>
+    <PackageTags>alphacloud quartz autofac quartz-net</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <Title>Autofac.Extras.Quartz</Title>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net452' ">
@@ -18,7 +31,6 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
-    <DocumentationFile>bin\Release\$(TargetFramework)\Autofac.Extras.Quartz.xml</DocumentationFile>
     <DebugType>portable</DebugType>
     <DebugSymbols>True</DebugSymbols>
  </PropertyGroup>
@@ -26,9 +38,7 @@
   <PropertyGroup Label="SourceLink">
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-<!--
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
--->
   </PropertyGroup>
   
   <ItemGroup>
@@ -36,10 +46,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.8.1" />
-    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" />
-    <PackageReference Include="Quartz" Version="3.0.5" />
+    <PackageReference Include="Autofac" Version="[4.8.1, 5.0.0)" />
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" PrivateAssets="All" />
+    <PackageReference Include="Quartz" Version="[3.0.5, 4.0.0)" />
   </ItemGroup>
 
 </Project>
