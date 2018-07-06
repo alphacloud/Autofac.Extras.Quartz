@@ -8,7 +8,7 @@
     <owners>Alphacloud.net</owners>
     <licenseUrl>http://mit-license.org/</licenseUrl>
     <projectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</projectUrl>
-<repository type="git" url="https://github.com/alphacloud/Autofac.Extras.Quartz.git" commit="e68534cbbd2f15b2a76bfab2ebb098dfe06f0594" />
+    <repository type="git" url="https://github.com/alphacloud/Autofac.Extras.Quartz.git" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Autofac integration for Quartz.Net</description>
     <releaseNotes>
