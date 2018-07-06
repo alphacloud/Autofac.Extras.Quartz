@@ -54,7 +54,7 @@ after_test:
     if (Test-Path '$env:APPVEYOR_PULL_REQUEST_NUMBER') {
       Add-AppveyorMessage  "Skipping coverage upload for PR" -Category Warning
     } else {  
-      cd src/Tests/bin/Debug/net462
+      cd /projects/autofac-extras-quartz/src/Tests/bin/Debug/net462
       codecov.exe -f "./coverage.xml" -t $Env:CODECOV_TOKEN
     }
 
