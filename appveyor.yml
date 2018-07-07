@@ -53,11 +53,10 @@ test_script:
 
 after_test:
  - ps: |
-    if (Test-Path '$env:APPVEYOR_PULL_REQUEST_NUMBER') {
+    if (Test-Path 'Env:APPVEYOR_PULL_REQUEST_NUMBER') {
       Add-AppveyorMessage  "Skipping coverage upload for PR" -Category Warning
     } else {  
-      cd /projects/autofac-extras-quartz/
-      codecov.exe -f "./coverage.xml" -t $Env:CODECOV_TOKEN
+      codecov.exe -f "/projects/autofac-extras-quartz/coverage.xml" -t $Env:CODECOV_TOKEN
     }
 
 artifacts:
