@@ -33,6 +33,8 @@ before_build:
 build_script:
 - ps: >-
     cd /projects/autofac-extras-quartz
+    
+    Add-AppveyorMessage  "Building version $Env:GitVersion_NuGetVersion" -Category Information
 
     msbuild.exe build.proj /t:BuildAll /p:PackageVersion="$Env:GitVersion_NuGetVersion" /p:BuildConfig=Debug /verbosity:minimal
 
