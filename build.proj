@@ -11,7 +11,6 @@
     <RootDir>$(MSBuildProjectDirectory)</RootDir>
     <SrcDir>$(RootDir)\src</SrcDir>
     <PkgDir>$(SrcDir)\packages</PkgDir>
-    <NuGetExe>nuget.exe</NuGetExe>
     <PackagesOutDir>$(RootDir)\out\packages</PackagesOutDir>
   </PropertyGroup>
 
@@ -49,8 +48,8 @@
   </Target>
 
   <Target Name="Pack" DependsOnTargets="CreatePackagesDir">
-    <Message Text="src: $(SrcDir)" />
-    <Exec Command="$(NuGetExe) pack Autofac.Extras.Quartz.nuspec -OutputDirectory $(PackagesOutDir) -Prop Configuration=Release -version &quot;$(PackageVersion)&quot; " WorkingDirectory="$(SrcDir)\Autofac.Extras.Quartz" />
+    <Message Text="$(SrcDir)\Autofac.Extras.Quartz: dotnet pack -c $(BuildConfig) -version $(PackageVersion) --output $(PackagesOutDir)" />
+    <Exec Command="dotnet pack --no-build -c $(BuildConfig) -p:Version=$(PackageVersion) --output $(PackagesOutDir)" WorkingDirectory="$(SrcDir)\Autofac.Extras.Quartz" />
   </Target>
 
 </Project>
