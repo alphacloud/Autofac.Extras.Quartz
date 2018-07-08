@@ -89,6 +89,7 @@ namespace Autofac.Extras.Quartz
                     var factory = c.Resolve<ISchedulerFactory>();
                     return factory.GetScheduler().ConfigureAwait(false).GetAwaiter().GetResult();
                 })
+                .As<IScheduler>()
                 .SingleInstance();
         }
     }

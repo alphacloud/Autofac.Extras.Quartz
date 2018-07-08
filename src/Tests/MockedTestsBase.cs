@@ -7,65 +7,34 @@
 
 #endregion
 
-namespace Alphacloud.Common.Testing.Nunit
+namespace Autofac.Extras.Quartz.Tests
 {
+    using System;
     using Moq;
-    using NUnit.Framework;
-
-    //// ReSharper disable InconsistentNaming
 
     /// <summary>
-    ///   Base class for tests with mocks.
+    ///     Base class for tests with mocks.
     /// </summary>
-    [TestFixture]
-    internal abstract class MockedTestsBase
+    public abstract class MockedTestsBase : IDisposable
     {
-        #region Setup/Teardown
+        /// <summary>
+        ///     Mock repository.
+        /// </summary>
+        protected MockRepository Mockery { get; }
 
         /// <summary>
-        ///   Setup tests
+        ///     Setup tests
         /// </summary>
-        [SetUp]
-        public void SetUp()
+        public MockedTestsBase()
         {
             Mockery = new MockRepository(MockBehavior.Default);
-            DoSetup();
         }
 
-
-        /// <summary>
-        ///   Cleanup tests
-        /// </summary>
-        /// <exception cref="MockException">One or more mocks had expectations that were not satisfied.</exception>
-        [TearDown]
-        public void TearDown()
+        public virtual void Dispose()
         {
-            DoTearDown();
             Mockery.Verify();
-        }
-
-        #endregion
-
-        /// <summary>
-        ///   Mock repository.
-        /// </summary>
-        protected MockRepository Mockery { get; private set; }
-
-
-        /// <summary>
-        ///   Performs test setup.
-        /// </summary>
-        protected abstract void DoSetup();
-
-
-        /// <summary>
-        ///   Performs test tear-down.
-        /// </summary>
-        protected virtual void DoTearDown()
-        {
-            // do nothing
         }
     }
 
-//// ReSharper restore InconsistentNaming
+
 }

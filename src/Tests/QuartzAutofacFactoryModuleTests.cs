@@ -21,16 +21,26 @@ namespace Autofac.Extras.Quartz.Tests
     using global::Quartz.Impl;
     using global::Quartz.Spi;
     using JetBrains.Annotations;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
-    internal class QuartzAutofacFactoryModuleTests
+
+    public class QuartzAutofacFactoryModuleTests : IDisposable
     {
-        private IContainer _container;
-        private QuartzAutofacFactoryModule _quartzAutofacFactoryModule;
+        private readonly IContainer _container;
+        private readonly QuartzAutofacFactoryModule _quartzAutofacFactoryModule;
 
-        [SetUp]
-        public void SetUp()
+
+        [UsedImplicitly]
+        private class TestJob : IJob
+        {
+            public Task Execute(IJobExecutionContext context)
+            {
+                return Task.CompletedTask;
+            }
+        }
+
+
+        public QuartzAutofacFactoryModuleTests()
         {
             var cb = new ContainerBuilder();
             _quartzAutofacFactoryModule = new QuartzAutofacFactoryModule();
@@ -39,13 +49,12 @@ namespace Autofac.Extras.Quartz.Tests
             _container = cb.Build();
         }
 
-        [TearDown]
-        public void TearDown()
+        public void Dispose()
         {
             _container?.Dispose();
         }
 
-        [Test]
+        [Fact]
         public void CanUseGenericAutofacModuleRegistrationSyntax()
         {
             var cb = new ContainerBuilder();
@@ -53,37 +62,7 @@ namespace Autofac.Extras.Quartz.Tests
             cb.Build();
         }
 
-        [Test]
-        public void ShouldRegisterAutofacSchedulerFactory()
-        {
-            var factory = _container.Resolve<ISchedulerFactory>();
-            factory.Should().BeOfType<AutofacSchedulerFactory>();
-        }
-
-        [Test]
-        public void ShouldRegisterFactoryAsSingleton()
-        {
-            var factory = _container.Resolve<ISchedulerFactory>();
-            _container.Resolve<ISchedulerFactory>().Should().BeSameAs(factory);
-        }
-
-        [Test]
-        public void ShouldRegisterAutofacJobFactory()
-        {
-            _container.Resolve<AutofacJobFactory>().Should().NotBeNull();
-            _container.Resolve<IJobFactory>().Should().BeOfType<AutofacJobFactory>();
-            _container.Resolve<IJobFactory>().Should().BeSameAs(_container.Resolve<AutofacJobFactory>(),
-                "should be singleton");
-        }
-
-        [Test]
-        public void ShouldRegisterSchedulerAsSingleton()
-        {
-            var scheduler = _container.Resolve<IScheduler>();
-            _container.Resolve<IScheduler>().Should().BeSameAs(scheduler);
-        }
-
-        [Test]
+        [Fact]
         public void ShouldExecuteConfigureSchedulerFactoryFunctionIfSet()
         {
             var configuration = new NameValueCollection();
@@ -96,10 +75,34 @@ namespace Autofac.Extras.Quartz.Tests
             scheduler.SchedulerName.Should().BeEquivalentTo(customSchedulerName);
         }
 
-        [UsedImplicitly]
-        private class TestJob : IJob
+        [Fact]
+        public void ShouldRegisterAutofacJobFactory()
         {
-            public Task Execute(IJobExecutionContext context) => Task.CompletedTask;
+            _container.Resolve<AutofacJobFactory>().Should().NotBeNull();
+            _container.Resolve<IJobFactory>().Should().BeOfType<AutofacJobFactory>();
+            _container.Resolve<IJobFactory>().Should().BeSameAs(_container.Resolve<AutofacJobFactory>(),
+                "should be singleton");
+        }
+
+        [Fact]
+        public void ShouldRegisterAutofacSchedulerFactory()
+        {
+            var factory = _container.Resolve<ISchedulerFactory>();
+            factory.Should().BeOfType<AutofacSchedulerFactory>();
+        }
+
+        [Fact]
+        public void ShouldRegisterFactoryAsSingleton()
+        {
+            var factory = _container.Resolve<ISchedulerFactory>();
+            _container.Resolve<ISchedulerFactory>().Should().BeSameAs(factory);
+        }
+
+        [Fact]
+        public void ShouldRegisterSchedulerAsSingleton()
+        {
+            var scheduler = _container.Resolve<IScheduler>();
+            _container.Resolve<IScheduler>().Should().BeSameAs(scheduler);
         }
     }
 }
