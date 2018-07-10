@@ -174,3 +174,4 @@ FakesAssemblies/
 
 /src/.nuget/NuGet.exe
 .vs/
+/output

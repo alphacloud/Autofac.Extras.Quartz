@@ -43,20 +43,19 @@ build_script:
 test_script:
 - ps: >-
 
-    cd src/Tests/bin/Debug/net462
+    cd src/Tests/
 
-    OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"Autofac.Extras.Quartz.Tests.dll --result=test-results.xml --dispose-runners --nocolor" -output:"/projects/autofac-extras-quartz/coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*"
+    OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"xunit -xml ../../output/test-results.xml -c Debug --no-build" -output:"../../output/coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*" -oldStyle -mergeoutput -excludebyattribute:"*.ExcludeFromCodeCoverage*" -excludebyfile:"*/*Designer.cs"
 
-    cd /projects/autofac-extras-quartz/src/Tests/bin/Release/net462
-
-    nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml`;format=AppVeyor --dispose-runners --nocolor
+    dotnet xunit -c Release --no-build    
+#    nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml`;format=AppVeyor --dispose-runners --nocolor
 
 after_test:
  - ps: |
     if (Test-Path 'Env:APPVEYOR_PULL_REQUEST_NUMBER') {
       Add-AppveyorMessage  "Skipping coverage upload for PR" -Category Warning
     } else {  
-      codecov.exe -f "/projects/autofac-extras-quartz/coverage.xml" -t $Env:CODECOV_TOKEN
+      codecov.exe -f "/projects/autofac-extras-quartz/output/coverage.xml" -t $Env:CODECOV_TOKEN
     }
 
 artifacts:
