@@ -18,7 +18,7 @@ install:
 - ps: >-
     choco install GitVersion.Portable GitReleaseManager.Portable -y -pre -no-progress
 
-    choco install opencover codecov -y --no-progress
+    choco install opencover.portable codecov -y --no-progress
 
 before_build:
 - ps: >-
