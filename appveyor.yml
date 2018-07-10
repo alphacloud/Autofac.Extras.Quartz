@@ -45,6 +45,8 @@ test_script:
 
     cd src/Tests/
 
+    choco list --local-only
+
     OpenCover.Console.exe -version
     
     OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"xunit -xml ../../output/test-results.xml -c Debug --no-build" -output:"../../output/coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*" -oldStyle -mergeoutput -excludebyattribute:"*.ExcludeFromCodeCoverage*" -excludebyfile:"*/*Designer.cs"
