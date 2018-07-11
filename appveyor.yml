@@ -45,21 +45,18 @@ test_script:
 
     cd src/Tests/
 
-    choco list --local-only
-
     C:\ProgramData\chocolatey\bin\OpenCover.Console.exe -version
     
-    C:\ProgramData\chocolatey\bin\OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"xunit -xml ../../output/test-results.xml -c Debug --no-build" -output:"../../output/coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*" -oldStyle -mergeoutput -excludebyattribute:"*.ExcludeFromCodeCoverage*" -excludebyfile:"*/*Designer.cs"
+    C:\ProgramData\chocolatey\bin\OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"xunit -xml ../../out/test-results.xml -c Debug --no-build" -output:"../../out/coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*" -oldStyle -mergeoutput -excludebyattribute:"*.ExcludeFromCodeCoverage*" -excludebyfile:"*/*Designer.cs"
 
     dotnet xunit -c Release --no-build    
-#    nunit3-console Autofac.Extras.Quartz.Tests.dll --result=test-results.xml`;format=AppVeyor --dispose-runners --nocolor
 
 after_test:
  - ps: |
     if (Test-Path 'Env:APPVEYOR_PULL_REQUEST_NUMBER') {
       Add-AppveyorMessage  "Skipping coverage upload for PR" -Category Warning
     } else {  
-      codecov.exe -f "/projects/autofac-extras-quartz/output/coverage.xml" -t $Env:CODECOV_TOKEN
+      codecov.exe -f "/projects/autofac-extras-quartz/out/coverage.xml" -t $Env:CODECOV_TOKEN
     }
 
 artifacts:
