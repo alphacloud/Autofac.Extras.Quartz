@@ -32,7 +32,7 @@
   </Target>
 
   <Target Name="CleanAll">
-    <Message Text="Performing full cleanup..." />
+    <Message Text="Performing full clean-up..." />
     <MSBuild Projects="$(MainSolution)" Properties="Configuration=Debug" Targets="Clean"  BuildInParallel="true" />
     <MSBuild Projects="$(MainSolution)" Properties="Configuration=Release" Targets="Clean" BuildInParallel="true" />
   </Target>
@@ -43,7 +43,7 @@
 
   <Target Name="Test" DependsOnTargets="BuildAll">
     <Exec WorkingDirectory="$(SrcDir)\Tests\bin\$(BuildConfig)"
-          Command="$(PkgDir)\Nunit.ConsoleRunner.3.5.0\tools\nunit3-console.exe Autofac.Extras.Quartz.Tests.dll /stoponerror --dispose-runners --noheader"
+          Command="dotnet xunit -c $(BuildConfig) --no-build"
     />
   </Target>
 

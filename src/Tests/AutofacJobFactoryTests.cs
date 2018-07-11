@@ -11,23 +11,21 @@ namespace Autofac.Extras.Quartz.Tests
 {
     using System;
     using System.Threading.Tasks;
-    using Alphacloud.Common.Testing.Nunit;
-    using FluentAssertions;
     using global::Quartz;
     using global::Quartz.Impl;
     using global::Quartz.Spi;
     using JetBrains.Annotations;
     using Moq;
-    using NUnit.Framework;
 
-    [TestFixture]
-    internal class AutofacJobFactoryTests : MockedTestsBase
+
+    [Obsolete("Interruptable jobs are implemented by means of CancellationToken instead of IInterruptableJob now. Will be removed later.")]
+    public class AutofacJobFactoryTests : MockedTestsBase
     {
-        private IContainer _container;
+        private readonly IContainer _container;
         private AutofacJobFactory _factory;
         private Mock<IScheduler> _scheduler;
 
-        protected override void DoSetup()
+        public AutofacJobFactoryTests()
         {
             _container = CreateContainer();
 
@@ -44,10 +42,10 @@ namespace Autofac.Extras.Quartz.Tests
                 DateTimeOffset.Now, null, null);
         }
 
-        protected override void DoTearDown()
+        public sealed override void Dispose()
         {
-            _container.Dispose();
-            base.DoTearDown();
+            _container?.Dispose();
+            base.Dispose();
         }
 
         private static IContainer CreateContainer()
@@ -67,6 +65,5 @@ namespace Autofac.Extras.Quartz.Tests
                 return Task.CompletedTask;
             }
         }
-
     }
 }

@@ -13,31 +13,28 @@
 // ReSharper disable HeapView.DelegateAllocation
 namespace Autofac.Extras.Quartz.Tests
 {
+    using System;
     using System.Reflection;
     using System.Threading.Tasks;
     using FluentAssertions;
     using global::Quartz;
     using JetBrains.Annotations;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
-    internal class OptionalJobDependencyTests
+
+    public class OptionalJobDependencyTests: IDisposable
+
     {
-        [SetUp]
-        public void SetUp()
+       
+        public OptionalJobDependencyTests()
         {
             _containerBuilder = new ContainerBuilder();
             _containerBuilder.RegisterType<JobDependency>().As<IJobDependency>();
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _container?.Dispose();
-        }
 
         private IContainer _container;
-        private ContainerBuilder _containerBuilder;
+        private readonly ContainerBuilder _containerBuilder;
 
         [UsedImplicitly]
         class TestJobWithOptionalDependency : IJob
@@ -56,7 +53,7 @@ namespace Autofac.Extras.Quartz.Tests
         {
         }
 
-        [Test]
+        [Fact]
         public void ShouldIgnoreRegisteredOptionalDependencies_UnlessExplicitlyConfigured()
         {
             _containerBuilder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()));
@@ -66,7 +63,7 @@ namespace Autofac.Extras.Quartz.Tests
             job.Dependency.Should().BeNull();
         }
 
-        [Test]
+        [Fact]
         public void ShouldWireRegisteredOptionalDependencies()
         {
             _containerBuilder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()) {
@@ -77,6 +74,11 @@ namespace Autofac.Extras.Quartz.Tests
 
             var job = _container.Resolve<TestJobWithOptionalDependency>();
             job.Dependency.Should().NotBeNull("should wire optional dependency");
+        }
+
+        public void Dispose()
+        {
+            _container?.Dispose();
         }
     }
 }
