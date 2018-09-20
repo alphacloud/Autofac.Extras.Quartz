@@ -89,14 +89,14 @@ namespace Autofac.Extras.Quartz
             if (bundle == null) throw new ArgumentNullException(nameof(bundle));
             if (scheduler == null) throw new ArgumentNullException(nameof(scheduler));
 
-            var jobType = bundle.JobDetail.JobType;
-
+            var jobDetail = bundle.JobDetail;
             var nestedScope = _lifetimeScope.BeginLifetimeScope(_scopeTag);
 
             IJob newJob;
             try
             {
-                newJob = (IJob) nestedScope.Resolve(jobType);
+                newJob = ResolveJobInstance(nestedScope, jobDetail);
+
                 var jobTrackingInfo = new JobTrackingInfo(nestedScope);
                 RunningJobs[newJob] = jobTrackingInfo;
                 nestedScope = null;
@@ -109,6 +109,23 @@ namespace Autofac.Extras.Quartz
                     bundle.JobDetail.Key, bundle.JobDetail.JobType), ex);
             }
             return newJob;
+        }
+
+        /// <summary>
+        /// Overridable resolve strategy for IJob instance
+        /// </summary>
+        /// <param name="nestedScope">
+        ///     Nested ILifetimeScope for resolving Job instance with other dependences
+        /// </param>
+        /// <param name="jobDetail">
+        ///     The <see cref="T:Quartz.IJobDetail" />
+        ///     and other info about job
+        /// </param>
+        /// <returns></returns>
+        protected virtual IJob ResolveJobInstance(ILifetimeScope nestedScope, IJobDetail jobDetail)
+        {
+            var jobType = jobDetail.JobType;
+            return  (IJob)nestedScope.Resolve(jobType);
         }
 
         /// <summary>
