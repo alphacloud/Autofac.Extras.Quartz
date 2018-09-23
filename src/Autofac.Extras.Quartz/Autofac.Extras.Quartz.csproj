@@ -14,7 +14,7 @@
     <PackageDescription>Autofac integration for Quartz.Net.</PackageDescription>
     <PackageLicenseUrl>http://mit-license.org/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</PackageProjectUrl>
-    <PackageReleaseNotes>Add sourcelink support</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/release%2F4.3.0</PackageReleaseNotes>
     <PackageTags>alphacloud quartz autofac quartz-net</PackageTags>
     <RepositoryType>git</RepositoryType>
     <Title>Autofac.Extras.Quartz</Title>
@@ -47,7 +47,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="[4.8.1, 5.0.0)" />
-    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" PrivateAssets="All" />
     <PackageReference Include="Quartz" Version="[3.0.5, 4.0.0)" />
   </ItemGroup>
