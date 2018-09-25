@@ -7,7 +7,10 @@
 
 // TOOLS
 #tool "GitReleaseManager"
-// #tool "GitVersion.CommandLine"
+#tool "GitVersion.CommandLine"
+#tool "coveralls.io"
+#tool "OpenCover"
+#tool "ReportGenerator"
 #tool "nuget:?package=GitVersion.CommandLine&prerelease"
 
 // ARGUMENTS

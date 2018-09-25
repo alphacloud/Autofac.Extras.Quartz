@@ -177,3 +177,4 @@ FakesAssemblies/
 /output
 /out
 /artifacts
+/src/common/AssemblyVersion.cs
