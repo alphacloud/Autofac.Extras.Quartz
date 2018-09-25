@@ -19,7 +19,7 @@ using Xunit;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Alphacloud")]
-[assembly: AssemblyProduct("Tests")]
+[assembly: AssemblyProduct("Autofac.Extras.Quartz")]
 [assembly: AssemblyCopyright("Copyright © Alphacloud 2014-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

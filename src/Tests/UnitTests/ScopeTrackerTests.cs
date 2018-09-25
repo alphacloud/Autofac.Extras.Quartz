@@ -15,9 +15,9 @@ namespace Autofac.Extras.Quartz.Tests
     using System.Diagnostics;
     using System.Threading.Tasks;
     using FluentAssertions;
-    using FluentAssertions.Extensions;
     using global::Quartz;
     using global::Quartz.Impl;
+    using global::Quartz.Spi;
     using JetBrains.Annotations;
     using Moq;
     using Xunit;
@@ -27,10 +27,8 @@ namespace Autofac.Extras.Quartz.Tests
     public class ScopeTrackerTests : IDisposable
     {
         private readonly IContainer _container;
-        private readonly StdSchedulerFactory _factory;
         private readonly AutofacJobFactory _jobFactory;
         private readonly ILifetimeScope _lifetimeScope;
-        private readonly IScheduler _scheduler;
 
 
         [UsedImplicitly]
@@ -88,16 +86,12 @@ namespace Autofac.Extras.Quartz.Tests
 
             _container = cb.Build();
 
-            _factory = new StdSchedulerFactory();
-            _scheduler = _factory.GetScheduler().Result;
             _lifetimeScope = _container.Resolve<ILifetimeScope>();
             _jobFactory = new AutofacJobFactory(_lifetimeScope, QuartzAutofacFactoryModule.LifetimeScopeName);
-            _scheduler.JobFactory = _jobFactory;
         }
 
         public void Dispose()
         {
-            _scheduler?.Shutdown(false);
             _container?.Dispose();
         }
 
@@ -122,19 +116,18 @@ namespace Autofac.Extras.Quartz.Tests
         }
 
         [Fact]
-        public async Task ShouldDisposeScopeAfterJobCompletion()
+        public void ShouldDisposeScopeAfterJobCompletion()
         {
-            var key = new JobKey("disposable", "grp2");
-            var job1 = JobBuilder.Create<SampleJob>().WithIdentity(key).StoreDurably(true)
-                .Build();
-            var trigger =
-                TriggerBuilder.Create().WithSimpleSchedule(s => s.WithIntervalInSeconds(1).WithRepeatCount(1)).Build();
+            var jobDetail = new JobDetailImpl("test", typeof(SampleJob));
+            var triggerBundle = new TriggerFiredBundle(
+                jobDetail, Mock.Of<IOperableTrigger>(),
+                Mock.Of<ICalendar>(), false,
+                DateTimeOffset.UtcNow,
+                null, null, null
+            );
 
-            await _scheduler.ScheduleJob(job1, trigger).ConfigureAwait(true);
-            await _scheduler.Start().ConfigureAwait(true);
-
-            // wait until scheduled job fires...
-            await Task.Delay(3.Seconds()).ConfigureAwait(true);
+            var job = _jobFactory.NewJob(triggerBundle, Mock.Of<IScheduler>());
+            _jobFactory.ReturnJob(job);
 
             _jobFactory.RunningJobs.Should().BeEmpty("Scope was not disposed after job completion");
             DisposableDependency.CreateCount.Should().BeGreaterThan(0, "No dependencies were created");
