@@ -115,7 +115,7 @@ namespace Autofac.Extras.Quartz
         /// Overridable resolve strategy for IJob instance
         /// </summary>
         /// <param name="nestedScope">
-        ///     Nested ILifetimeScope for resolving Job instance with other dependences
+        ///     Nested ILifetimeScope for resolving Job instance with other dependencies
         /// </param>
         /// <param name="jobDetail">
         ///     The <see cref="T:Quartz.IJobDetail" />
