@@ -17,7 +17,7 @@ issue-labels-include:
 - enhancement
 - documentation
 issue-labels-exclude:
-- Build
+- build
 issue-labels-alias:
     - name:    Documentation
       header:  Documentation
