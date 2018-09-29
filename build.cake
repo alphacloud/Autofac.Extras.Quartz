@@ -227,6 +227,15 @@ Task("Build")
     .IsDependentOn("Restore")
     .Does(() =>
     {
+        if (isReleaseBuild) {
+            Information("Running {0} build for code coverage", "Debug");
+            // need Debug build for code coverage
+            DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
+                NoRestore = true,
+                Configuration = "Debug",
+            });
+        }
+        Information("Running {0} build for code coverage", buildConfig);
         DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
             NoRestore = true,
             Configuration = buildConfig,
