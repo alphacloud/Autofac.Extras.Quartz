@@ -13,6 +13,7 @@ namespace ConsoleScheduler
 {
     using System;
     using System.Threading;
+    using System.Threading.Tasks;
     using Autofac;
     using Quartz;
     using Shared.Log.Logging;
@@ -23,11 +24,11 @@ namespace ConsoleScheduler
     {
         static ILog _log;
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Bootstrap.InitializeLogger();
             _log = LogProvider.GetLogger(typeof(Program));
-            var container = Bootstrap.ConfigureContainer(new ContainerBuilder()).Build();
+            IContainer container = null;
 
             Console.WriteLine("This sample demonstrates how to integrate Quartz and Autofac.");
             _log.Info("Starting...");
@@ -43,9 +44,9 @@ namespace ConsoleScheduler
                 var cts = new CancellationTokenSource();
 
                 var scheduler = container.Resolve<IScheduler>();
-                scheduler.ScheduleJob(job, trigger, cts.Token);
+                await scheduler.ScheduleJob(job, trigger, cts.Token).ConfigureAwait(true);
 
-                scheduler.Start().Wait();
+                await scheduler.Start().ConfigureAwait(true);
 
                 Console.WriteLine("======================");
                 Console.WriteLine("Press Enter to exit...");
@@ -53,14 +54,14 @@ namespace ConsoleScheduler
                 Console.ReadLine();
 
                 cts.Cancel();
-                scheduler.Shutdown().Wait();
+                await scheduler.Shutdown().ConfigureAwait(true);
             }
             catch (Exception ex)
             {
                 _log.FatalException("Unhandled exception caught", ex);
             }
 
-            container.Dispose();
+            container?.Dispose();
         }
     }
 }

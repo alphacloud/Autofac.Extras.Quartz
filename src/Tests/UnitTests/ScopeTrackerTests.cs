@@ -3,61 +3,33 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2015 Alphacloud.Net
+// Copyright (c) 2014-2018 Alphacloud.Net
 
 #endregion
 
-// ReSharper disable InternalMembersMustHaveComments
-// ReSharper disable HeapView.ObjectAllocation
-// ReSharper disable HeapView.ClosureAllocation
-// ReSharper disable HeapView.DelegateAllocation
-// ReSharper disable MissingAnnotation
 #pragma warning disable 169
 namespace Autofac.Extras.Quartz.Tests
 {
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
-    using System.Threading;
     using System.Threading.Tasks;
     using FluentAssertions;
-    using FluentAssertions.Extensions;
     using global::Quartz;
     using global::Quartz.Impl;
+    using global::Quartz.Spi;
     using JetBrains.Annotations;
     using Moq;
-    using NUnit.Framework;
+    using Xunit;
+    using IContainer = Autofac.IContainer;
 
-    [TestFixture]
-    internal class ScopeTrackerTests
+
+    public class ScopeTrackerTests : IDisposable
     {
-        [SetUp]
-        public void SetUp()
-        {
-            var cb = new ContainerBuilder();
-            cb.RegisterType<SampleJob>();
-            cb.RegisterType<DisposableDependency>().InstancePerLifetimeScope();
+        private readonly IContainer _container;
+        private readonly AutofacJobFactory _jobFactory;
+        private readonly ILifetimeScope _lifetimeScope;
 
-            _container = cb.Build();
-
-            _factory = new StdSchedulerFactory();
-            _scheduler = _factory.GetScheduler().Result;
-            _lifetimeScope = _container.Resolve<ILifetimeScope>();
-            _jobFactory = new AutofacJobFactory(_lifetimeScope, QuartzAutofacFactoryModule.LifetimeScopeName);
-            _scheduler.JobFactory = _jobFactory;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _scheduler.Shutdown(waitForJobsToComplete: false);
-            _container.Dispose();
-        }
-
-        private IContainer _container;
-        private StdSchedulerFactory _factory;
-        private AutofacJobFactory _jobFactory;
-        private ILifetimeScope _lifetimeScope;
-        private IScheduler _scheduler;
 
         [UsedImplicitly]
         [PersistJobDataAfterExecution]
@@ -80,17 +52,19 @@ namespace Autofac.Extras.Quartz.Tests
             }
         }
 
+
         [UsedImplicitly]
         private class DisposableDependency : IDisposable
         {
+            public static int DisposeCount;
+            public static int CreateCount;
+
+            public bool Disposed { get; private set; }
+
             public DisposableDependency()
             {
                 CreateCount++;
             }
-
-            public bool Disposed { get; private set; }
-            public static int DisposeCount = 0;
-            public static int CreateCount = 0;
 
             /// <summary>
             ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -103,7 +77,25 @@ namespace Autofac.Extras.Quartz.Tests
             }
         }
 
-        [Test]
+
+        public ScopeTrackerTests()
+        {
+            var cb = new ContainerBuilder();
+            cb.RegisterType<SampleJob>();
+            cb.RegisterType<DisposableDependency>().InstancePerLifetimeScope();
+
+            _container = cb.Build();
+
+            _lifetimeScope = _container.Resolve<ILifetimeScope>();
+            _jobFactory = new AutofacJobFactory(_lifetimeScope, QuartzAutofacFactoryModule.LifetimeScopeName);
+        }
+
+        public void Dispose()
+        {
+            _container?.Dispose();
+        }
+
+        [Fact]
         [Description("See #17")]
         public void ReturnJob_Should_DisposeJobIfMatchingScopeIsMissing()
         {
@@ -114,8 +106,7 @@ namespace Autofac.Extras.Quartz.Tests
             disposableJob.Verify(d => d.Dispose(), Times.Once, "Job was not disposed");
         }
 
-
-        [Test]
+        [Fact]
         [Description("See #17")]
         public void ReturnJob_Should_HandleMissingMatchingScope()
         {
@@ -124,20 +115,19 @@ namespace Autofac.Extras.Quartz.Tests
             returnJob.Should().NotThrow("Failed to handle missing job.");
         }
 
-        [Test]
-        public async Task ShouldDisposeScopeAfterJobCompletion()
+        [Fact]
+        public void ShouldDisposeScopeAfterJobCompletion()
         {
-            var key = new JobKey("disposable", "grp2");
-            var job1 = JobBuilder.Create<SampleJob>().WithIdentity(key).StoreDurably(true)
-                .Build();
-            var trigger =
-                TriggerBuilder.Create().WithSimpleSchedule(s => s.WithIntervalInSeconds(1).WithRepeatCount(1)).Build();
+            var jobDetail = new JobDetailImpl("test", typeof(SampleJob));
+            var triggerBundle = new TriggerFiredBundle(
+                jobDetail, Mock.Of<IOperableTrigger>(),
+                Mock.Of<ICalendar>(), false,
+                DateTimeOffset.UtcNow,
+                null, null, null
+            );
 
-            await _scheduler.ScheduleJob(job1, trigger).ConfigureAwait(true);
-            await _scheduler.Start().ConfigureAwait(true);
-
-            // wait until scheduled job fires...
-            await Task.Delay(3.Seconds()).ConfigureAwait(true);
+            var job = _jobFactory.NewJob(triggerBundle, Mock.Of<IScheduler>());
+            _jobFactory.ReturnJob(job);
 
             _jobFactory.RunningJobs.Should().BeEmpty("Scope was not disposed after job completion");
             DisposableDependency.CreateCount.Should().BeGreaterThan(0, "No dependencies were created");

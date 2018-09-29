@@ -13,27 +13,17 @@
 // ReSharper disable HeapView.DelegateAllocation
 namespace Autofac.Extras.Quartz.Tests
 {
+    using System;
     using System.Reflection;
     using System.Threading.Tasks;
     using FluentAssertions;
     using global::Quartz;
     using JetBrains.Annotations;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
-    internal class QuartzAutofacJobsModuleTests
+
+    public class QuartzAutofacJobsModuleTests: IDisposable
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _container?.Dispose();
-        }
-
         IContainer _container;
 
 
@@ -50,7 +40,7 @@ namespace Autofac.Extras.Quartz.Tests
             public Task Execute(IJobExecutionContext context) => Task.CompletedTask;
         }
 
-        [Test]
+        [Fact]
         public void ShouldApplyJobRegistrationFilter()
         {
             var builder = new ContainerBuilder();
@@ -62,7 +52,7 @@ namespace Autofac.Extras.Quartz.Tests
             _container.IsRegistered<TestJob2>().Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void ShouldRegisterAllJobsFromAssembly()
         {
             var builder = new ContainerBuilder();
@@ -71,6 +61,11 @@ namespace Autofac.Extras.Quartz.Tests
 
             _container.IsRegistered<TestJob>()
                 .Should().BeTrue();
+        }
+
+        public void Dispose()
+        {
+            _container?.Dispose();
         }
     }
 }

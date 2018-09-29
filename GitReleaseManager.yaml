@@ -1,24 +1,60 @@
 create:
   include-footer: true
   footer-heading: Where to get it
-  footer-content: You can download this release from [nuget.org](https://www.nuget.org/packages/autofac.extras.quartz./{milestone})
+  footer-content: You can download this release from [nuget.org](https://www.nuget.org/packages/autofac.extras.quartz/releases/{milestone})
   footer-includes-milestone: true
   milestone-replace-text: '{milestone}'
+
 export:
   include-created-date-in-title: true
   created-date-string-format: MMMM dd, yyyy
   perform-regex-removal: true
   regex-text: '### Where to get it(\r\n)*You can .*\)'
   multiline-regex: true
+
 issue-labels-include:
 - breaking change
-- feature
 - bug
-- enhancement
 - documentation
+- duplicate
+- enhancement
+- feature
+- sample
+
 issue-labels-exclude:
-- Build
+- 0 - Backlog
+- 1 - Ready
+- 2 - Working
+- 3 - Review
+- 4 - Done
+- blocked
+- build
+- invalid
+- no-response
+- question
+- ready
+- wontfix
+
 issue-labels-alias:
-    - name:    Documentation
-      header:  Documentation
-      plural:  Documentation
+  - name: breaking change
+    header: Breaking Change
+    plural: Breaking Changes
+  - name: bug
+    header: Bug fixed
+    plural: Bugs fixed
+  - name:    documentation
+    header:  Documentation
+    plural:  Documentation
+  - name: duplicate
+    header: Duplicate issue closed
+    plural: Duplicate issues closed
+  - name: enhancement
+    header: Enhancement
+    plural: Enhancements
+  - name: feature
+    header: New feature
+    plural: New features
+  - name: sample
+    header: Sample
+    plural: Samples
+    
