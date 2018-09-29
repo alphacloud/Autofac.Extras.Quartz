@@ -122,14 +122,6 @@ Task("UpdateAppVeyorBuildNumber")
 
     }).ReportError(exception =>
     {
-        // When a build starts, the initial identifier is an auto-incremented value supplied by AppVeyor.
-        // As part of the build script, this version in AppVeyor is changed to be the version obtained from
-        // GitVersion. This identifier is purely cosmetic and is used by the core team to correlate a build
-        // with the pull-request. In some circumstances, such as restarting a failed/cancelled build the
-        // identifier in AppVeyor will be already updated and default behaviour is to throw an
-        // exception/cancel the build when in fact it is safe to swallow.
-        // See https://github.com/reactiveui/ReactiveUI/issues/1262
-
         Warning("Build with version {0} already exists.", buildVersion);
     });
 
@@ -246,8 +238,18 @@ Task("Build")
 Task("CreateNugetPackages")
     .Does(() => {
         Action<string> buildPackage = (string projectName) => {
+			var projectFileName = $"{srcDir}/{projectName}/{projectName}.csproj";
+			
+			if (isTagged) {
+				var releaseNotes = $"https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/{milestone}";
+				Information("Updating ReleaseNotes Link for project {0} to {1}", projectName, releaseNotes);
+				XmlPoke(projectFileName,
+					"/Project/PropertyGroup[@Label=\"Package\"]/PackageReleaseNotes",
+					releaseNotes
+				);
+			}
 
-            DotNetCorePack($"{srcDir}/{projectName}/{projectName}.csproj", new DotNetCorePackSettings {
+            DotNetCorePack(projectFileName, new DotNetCorePackSettings {
                 Configuration = buildConfig,
                 OutputDirectory = packagesDir,
                 NoBuild = true,
