@@ -23,7 +23,7 @@ environment:
     secure: 9gArAAMTQRHIsSZcJ+87GM+kaSfsBlouuFHtBR1hWBY=
 
 build_script:
-  - ps: ./build.ps1 -verbosity diagnostic
+  - ps: ./build.ps1
 
 test: off
 
