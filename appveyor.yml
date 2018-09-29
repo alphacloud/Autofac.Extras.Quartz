@@ -1,3 +1,6 @@
+version: .{build}
+clone_folder: c:\work\autofac.extras.quartz
+
 pull_requests:
   do_not_increment_build_number: true
 
@@ -13,81 +16,36 @@ environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   codecov_token:
     secure: g2QQUWGm6CtMd9M+AjcjOs7mkCoyGTW962Z5WepMi9Jd4BqqsI2vp3VkYGZgahUX
-
-install:
-- ps: >-
-    choco install GitVersion.Portable GitReleaseManager.Portable -y -pre -no-progress
-
-    choco install opencover.portable codecov -y --no-progress
-
-before_build:
-- ps: >-
-    cd src
-
-    dotnet restore
-
-    C:\ProgramData\chocolatey\bin\gfv.exe /version
-
-    C:\ProgramData\chocolatey\bin\gfv.exe /output buildserver /updateAssemblyInfo
+  CAKE_SETTINGS_SKIPVERIFICATION: true
+  GITHUB_USER:
+    secure: 5NfHPjw31vB/XxJqwpHp3cl3n/9F7PTUVXhMIqRSDJE=
+  GITHUB_PASSWORD:
+    secure: 9gArAAMTQRHIsSZcJ+87GM+kaSfsBlouuFHtBR1hWBY=
 
 build_script:
-- ps: >-
-    cd /projects/autofac-extras-quartz
-    
-    Add-AppveyorMessage  "Building version $Env:GitVersion_NuGetVersion" -Category Information
+  - ps: ./build.ps1
 
-    msbuild.exe build.proj /t:BuildAll /p:PackageVersion="$Env:GitVersion_NuGetVersion" /p:BuildConfig=Debug /verbosity:minimal
-
-    msbuild.exe build.proj /t:BuildAll`;Pack /p:PackageVersion="$Env:GitVersion_NuGetVersion" /p:BuildConfig=Release /verbosity:minimal
-
-test_script:
-- ps: >-
-
-    cd src/Tests/
-
-    C:\ProgramData\chocolatey\bin\OpenCover.Console.exe -version
-    
-    C:\ProgramData\chocolatey\bin\OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"xunit -xml ../../out/test-results.xml -c Debug --no-build" -output:"../../out/coverage.xml" -filter:"+[Autofac.Extras.Quartz*]* -[Autofac.Extras.Quartz.Tests*]*" -oldStyle -mergeoutput -excludebyattribute:"*.ExcludeFromCodeCoverage*" -excludebyfile:"*/*Designer.cs"
-
-    dotnet xunit -c Release --no-build    
-
-after_test:
- - ps: |
-    if (Test-Path 'Env:APPVEYOR_PULL_REQUEST_NUMBER') {
-      Add-AppveyorMessage  "Skipping coverage upload for PR" -Category Warning
-    } else {  
-      codecov.exe -f "/projects/autofac-extras-quartz/out/coverage.xml" -t $Env:CODECOV_TOKEN
-    }
+test: off
 
 artifacts:
-  - path: out/packages/*.nupkg
+  - path: artifacts/packages/*.nupkg
+    name: Nugets
 
 deploy:
   - provider: NuGet
-    name: Release builds
-    on:
-      appveyor_repo_tag: true
+    name: Pre release
     api_key:
       secure: kowlqJXuOSlpN/QJzkeiypWYK+XeXGkp1jeOl2XgfeyYmOwmqyzNQVhCAgzWymvP
-    skip_symbols: true
-    artifact: /.*\.nupkg/
-  - provider: NuGet
-    name: CI builds
     on:
       branch:
-        - /release/.*/
         - develop
+        - /release\/v.*/
+        - /releases.*/
+        - /hotfixes.*/
+
+  - provider: NuGet
+    name: Tagged release
     api_key:
       secure: kowlqJXuOSlpN/QJzkeiypWYK+XeXGkp1jeOl2XgfeyYmOwmqyzNQVhCAgzWymvP
-    skip_symbols: true
-    artifact: /.*\.nupkg/
-  - provider: GitHub
-    release: $(GitVersion_SemVer)
-    description: 'TODO: Release description'
-    artifact: /.*\.nupkg/
-    draft: true
-    prerelease: false
-    auth_token:
-      secure: Qrn7La5ZrojeX8v9/9+PXInkVyQw/8SJo100d0B4Y4vHRWGcpHfeY0o8zb9XM+p+
     on:
       appveyor_repo_tag: true
