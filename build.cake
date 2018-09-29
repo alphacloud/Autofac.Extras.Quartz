@@ -200,7 +200,11 @@ Task("GenerateCoverageReport")
 Task("UploadTestResults")
     .WithCriteria(() => !local)
     .Does(() => {
-        CoverallsIo(testCoverageOutputFile);
+        CoverallsIo(testCoverageOutputFile, new CoverallsIoSettings()
+            {
+                RepoToken = EnvironmentVariable("codecov_token")
+            }
+        );
         foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
         {
             Information("Uploading xUnit results: {0}", xunitResult);
