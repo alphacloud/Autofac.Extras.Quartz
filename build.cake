@@ -61,10 +61,10 @@ var milestone = semVersion.MajorMinorPatch;
 
 // Artifacts
 var artifactsDir = "./artifacts";
+var artifactsDirAbsolutePath = MakeAbsolute(Directory(artifactsDir));
 
 var testCoverageOutputFile = artifactsDir + "/OpenCover.xml";
 var codeCoverageReportDir = artifactsDir + "/CodeCoverageReport";
-
 
 var packagesDir = artifactsDir + "/packages";
 var srcDir = "./src";
@@ -135,31 +135,35 @@ Task("Restore")
 
 
 Task("RunXunitTests")
-    .DoesForEach(GetFiles($"{testsRootDir}/**/*.csproj"), (testProj) => {
+    .DoesForEach(GetFiles($"{testsRootDir}/**/*.csproj"), 
+    (testProj) => {
         var projectPath = testProj.GetDirectory();
         var projectFilename = testProj.GetFilenameWithoutExtension();
         Information("Calculating code coverage for {0} ...", projectFilename);
+
         var openCoverSettings = new OpenCoverSettings {
             OldStyle = true,
             ReturnTargetCodeOffset = 0,
-            ArgumentCustomization = args => args.Append("-mergeoutput"),
+            ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
             WorkingDirectory = projectPath,
         }
         .WithFilter("+[Autofac.Extras.Quartz]* -[Autofac.Extras.Quartz.Tests]*")
         .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
         .ExcludeByFile("*/*Designer.cs");
 
-        var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
+        Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) =>
+            new ProcessArgumentBuilder()
+                    .AppendSwitch("--configuration", buildCfg)
+                    .AppendSwitch("--filter", "Category!=IntegrationTests")
+                    .AppendSwitch("--results-directory", artifactsDirAbsolutePath.FullPath)
+                    .AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx")
+                    .Append("--no-build");
 
         // run open cover for debug build configuration
         OpenCover(
             tool => tool.DotNetCoreTool(projectPath.ToString(),
-                "xunit",
-                new ProcessArgumentBuilder()
-					.AppendSwitch("-parallel", "none")
-                    .AppendSwitchQuoted("-xml", testOutputAbs.FullPath)
-                    .AppendSwitch("--configuration", "Debug")
-                    .Append("--no-build")
+                "test",
+                buildProcessArgs("Debug")
             ),
             testCoverageOutputFile,
             openCoverSettings);
@@ -168,12 +172,8 @@ Task("RunXunitTests")
         if (isReleaseBuild) {
             Information("Running Release mode tests for {0}", projectFilename.ToString());
             DotNetCoreTool(testProj.FullPath,
-                "xunit",
-                new ProcessArgumentBuilder()
-					.AppendSwitch("-parallel", "none")
-                    .AppendSwitchQuoted("-xml", testOutputAbs.FullPath)
-                    .AppendSwitch("--configuration", "Release")
-                    .Append("--no-build")
+                "test",
+                buildProcessArgs("Release")
             );
         }
     })
@@ -184,7 +184,7 @@ Task("CleanPreviousTestResults")
     {
         if (FileExists(testCoverageOutputFile))
             DeleteFile(testCoverageOutputFile);
-        DeleteFiles(artifactsDir + "/xunitTests-*.xml");
+        DeleteFiles(artifactsDir + "/*.trx");
         if (DirectoryExists(codeCoverageReportDir))
             DeleteDirectory(codeCoverageReportDir, recursive: true);
     });
@@ -197,32 +197,26 @@ Task("GenerateCoverageReport")
     });
 
 
-Task("UploadTestResults")
-    .WithCriteria(() => !local)
-    .Does(() => {
-        CoverallsIo(testCoverageOutputFile, new CoverallsIoSettings()
-            {
-                RepoToken = EnvironmentVariable("codecov_token")
-            }
-        );
-        foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
-        {
-            Information("Uploading xUnit results: {0}", xunitResult);
-            UploadFile("https://ci.appveyor.com/api/testresults/xunit/"+appVeyorJobId, xunitResult);
-        }
-    });
-
-
 Task("RunUnitTests")
     .IsDependentOn("Build")
     .IsDependentOn("CleanPreviousTestResults")
     .IsDependentOn("RunXunitTests")
     .IsDependentOn("GenerateCoverageReport")
-    .IsDependentOn("UploadTestResults")
     .Does(() =>
     {
-    });
+        Information("Done Test");
+    })
+    .Finally(() => {
+        if (!local) {
+            CoverallsIo(testCoverageOutputFile);
 
+            foreach(var trxFile in GetFiles($"{artifactsDir}/*.trx"))
+            {
+                Information("Uploading unit-test results: {0}", trxFile);
+                UploadFile("https://ci.appveyor.com/api/testresults/mstest/" + appVeyorJobId, trxFile);
+            }
+        }
+    });
 
 
 Task("Build")
