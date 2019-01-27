@@ -57,4 +57,6 @@ issue-labels-alias:
   - name: sample
     header: Sample
     plural: Samples
-    
+  - name: dependencies
+    header: Dependency upgraded
+    plural: Dependencies upgraded
