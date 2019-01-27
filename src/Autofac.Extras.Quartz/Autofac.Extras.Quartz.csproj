@@ -3,7 +3,7 @@
   <PropertyGroup Label="Build">
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <AssemblyOriginatorKeyFile>..\keyfile.snk</AssemblyOriginatorKeyFile>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Autofac.Extras.Quartz.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <SignAssembly>True</SignAssembly>
   </PropertyGroup>
@@ -14,7 +14,7 @@
     <PackageDescription>Autofac integration for Quartz.Net.</PackageDescription>
     <PackageLicenseUrl>http://mit-license.org/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/4.3.0</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/4.4.0</PackageReleaseNotes>
     <PackageTags>quartz autofac quartz-net alphacloud</PackageTags>
     <RepositoryType>git</RepositoryType>
     <Title>Autofac.Extras.Quartz</Title>
@@ -44,16 +44,16 @@
   <ItemGroup>
     <Compile Include="..\common\AssemblyVersion.cs" Link="Properties\AssemblyVersion.cs" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="..\keyfile.snk" Link="keyfile.snk" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="[4.8.1, 5.0.0)" />
-    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" PrivateAssets="All" />
-    <PackageReference Include="Quartz" Version="[3.0.5, 4.0.0)" />
+    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
+    <PackageReference Include="Quartz" Version="[3.0.7, 4.0.0)" />
   </ItemGroup>
 
 </Project>
