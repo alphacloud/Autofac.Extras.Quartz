@@ -14,7 +14,7 @@ environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   # Disable sending usage data to Microsoft
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  codecov_token:
+  coveralls_repo_token:
     secure: PuEgFAkWtmyKy5qZYyYdJCSqdL6IZmGzm6fxQfKbOX0T63KQXMbON0azijNuQBC/
   CAKE_SETTINGS_SKIPVERIFICATION: true
   GITHUB_USER:
