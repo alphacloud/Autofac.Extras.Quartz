@@ -7,7 +7,7 @@ daysUntilLock: 120
 exemptLabels: ["help-wanted"]
 
 # Label to add before locking, such as `outdated`. Set to `false` to disable
-lockLabel: true
+lockLabel: outdated
 
 # Comment to post before locking. Set to `false` to disable
 lockComment: >
