@@ -12,7 +12,7 @@
     <Authors>shatl</Authors>
     <PackageId>Autofac.Extras.Quartz</PackageId>
     <PackageDescription>Autofac integration for Quartz.Net.</PackageDescription>
-    <PackageLicenseUrl>http://mit-license.org/</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/4.4.0</PackageReleaseNotes>
     <PackageTags>quartz autofac quartz-net alphacloud</PackageTags>

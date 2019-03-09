@@ -178,3 +178,4 @@ FakesAssemblies/
 /out
 /artifacts
 /src/common/AssemblyVersion.cs
+/tools
