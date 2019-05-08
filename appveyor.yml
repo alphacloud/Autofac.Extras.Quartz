@@ -35,7 +35,7 @@ deploy:
   - provider: NuGet
     name: Pre release
     api_key:
-      secure: kowlqJXuOSlpN/QJzkeiypWYK+XeXGkp1jeOl2XgfeyYmOwmqyzNQVhCAgzWymvP
+      secure: wtc6m+ps2Pq66NgpLPB40CnjWt3UyfoHY4M4avDqHX6Yc7UJOUU3rHjgf6G+24+q
     on:
       branch:
         - develop
@@ -46,6 +46,6 @@ deploy:
   - provider: NuGet
     name: Tagged release
     api_key:
-      secure: kowlqJXuOSlpN/QJzkeiypWYK+XeXGkp1jeOl2XgfeyYmOwmqyzNQVhCAgzWymvP
+      secure: wtc6m+ps2Pq66NgpLPB40CnjWt3UyfoHY4M4avDqHX6Yc7UJOUU3rHjgf6G+24+q
     on:
       appveyor_repo_tag: true
