@@ -1,16 +1,16 @@
 // ADDINS
 #addin nuget:?package=Cake.Coveralls&version=0.10.0
-#addin nuget:?package=Cake.FileHelpers&version=3.2.0
-#addin nuget:?package=Cake.Incubator&version=5.0.1
-#addin nuget:?package=Cake.Issues&version=0.6.2
-#addin nuget:?package=Cake.AppVeyor&version=3.0.0
+#addin nuget:?package=Cake.FileHelpers&version=3.2.1
+#addin nuget:?package=Cake.Incubator&version=5.1.0
+#addin nuget:?package=Cake.Issues&version=0.7.1
+#addin nuget:?package=Cake.AppVeyor&version=4.0.0
 
 // TOOLS
 #tool nuget:?package=GitReleaseManager&version=0.8.0
-#tool nuget:?package=GitVersion.CommandLine&version=5.0.0-beta2-75
+#tool nuget:?package=GitVersion.CommandLine&version=5.0.1
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.1.5
+#tool nuget:?package=ReportGenerator&version=4.2.17
 
 // ARGUMENTS
 var target = Argument("target", "Default");
