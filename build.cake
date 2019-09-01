@@ -64,6 +64,7 @@ var artifactsDirAbsolutePath = MakeAbsolute(Directory(artifactsDir));
 
 var testCoverageOutputFile = artifactsDir + "/OpenCover.xml";
 var codeCoverageReportDir = artifactsDir + "/CodeCoverageReport";
+var coverageFilter = "+[Autofac.Extras.Quartz]* -[Autofac.Extras.Quartz.Tests]*";
 
 var packagesDir = artifactsDir + "/packages";
 var srcDir = "./src";
@@ -144,7 +145,7 @@ Task("RunXunitTests")
             ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
             WorkingDirectory = projectPath,
         }
-        .WithFilter("+[Autofac.Extras.Quartz]* -[Autofac.Extras.Quartz.Tests]*")
+        .WithFilter(coverageFilter)
         .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
         .ExcludeByFile("*/*Designer.cs");
 
@@ -245,7 +246,7 @@ Task("CreateNugetPackages")
 			var projectFileName = $"{srcDir}/{projectName}/{projectName}.csproj";
 
 			if (isTagged) {
-				var releaseNotes = $"https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/{milestone}";
+				var releaseNotes = $"https://github.com/alphacloud/{repoName}/releases/tag/{milestone}";
 				Information("Updating ReleaseNotes Link for project {0} to {1}", projectName, releaseNotes);
 				XmlPoke(projectFileName,
 					"/Project/PropertyGroup[@Label=\"Package\"]/PackageReleaseNotes",

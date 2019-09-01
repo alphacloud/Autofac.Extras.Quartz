@@ -172,7 +172,6 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
-/src/.nuget/NuGet.exe
 .vs/
 /output
 /out
