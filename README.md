@@ -37,7 +37,7 @@ Optionally custom Quartz configuration can be passed using `ConfigurationProvide
 ## Job registration
 `QuartzAutofacJobsModule` scans given assemblies and registers all non-abstract implementors of `IJob` interface as transient instances.
 
-```
+```csharp
 internal static ContainerBuilder ConfigureContainer(ContainerBuilder cb)
 {
 	// 1) Register IScheduler
@@ -49,7 +49,7 @@ internal static ContainerBuilder ConfigureContainer(ContainerBuilder cb)
 
 ## Starting Quartz
 Make sure to start the scheduler after it was resolved from Autofac. E.g.
-```
+```csharp
 var scheduler = _container.Resolve<IScheduler>();
 scheduler.Start();
 ```

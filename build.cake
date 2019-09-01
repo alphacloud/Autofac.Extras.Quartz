@@ -149,13 +149,18 @@ Task("RunXunitTests")
         .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
         .ExcludeByFile("*/*Designer.cs");
 
-        Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) =>
-            new ProcessArgumentBuilder()
+        Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) => {
+				var pb = new ProcessArgumentBuilder()
                     .AppendSwitch("--configuration", buildCfg)
                     .AppendSwitch("--filter", "Category!=IntegrationTests")
                     .AppendSwitch("--results-directory", artifactsDirAbsolutePath.FullPath)
-                    .AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx")
                     .Append("--no-build");
+				if (!local) {
+					pb.AppendSwitch("--test-adapter-path", ".")
+						.AppendSwitch("--logger", $"AppVeyor");
+				}
+				return pb;
+			};
 
         // run open cover for debug build configuration
         OpenCover(
@@ -207,12 +212,6 @@ Task("RunUnitTests")
     .Finally(() => {
         if (!local) {
             CoverallsIo(testCoverageOutputFile);
-
-            foreach(var trxFile in GetFiles($"{artifactsDir}/*.trx"))
-            {
-                Information("Uploading unit-test results: {0}", trxFile);
-                UploadFile("https://ci.appveyor.com/api/testresults/mstest/" + appVeyorJobId, trxFile);
-            }
         }
     });
 
