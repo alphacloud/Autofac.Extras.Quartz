@@ -20,6 +20,7 @@ issue-labels-include:
 - enhancement
 - feature
 - sample
+- dependencies
 
 issue-labels-exclude:
 - 0 - Backlog

@@ -1,16 +1,16 @@
 // ADDINS
 #addin nuget:?package=Cake.Coveralls&version=0.10.0
-#addin nuget:?package=Cake.FileHelpers&version=3.2.0
-#addin nuget:?package=Cake.Incubator&version=5.0.1
-#addin nuget:?package=Cake.Issues&version=0.6.2
-#addin nuget:?package=Cake.AppVeyor&version=3.0.0
+#addin nuget:?package=Cake.FileHelpers&version=3.2.1
+#addin nuget:?package=Cake.Incubator&version=5.1.0
+#addin nuget:?package=Cake.Issues&version=0.7.1
+#addin nuget:?package=Cake.AppVeyor&version=4.0.0
 
 // TOOLS
 #tool nuget:?package=GitReleaseManager&version=0.8.0
-#tool nuget:?package=GitVersion.CommandLine&version=5.0.0-beta2-75
+#tool nuget:?package=GitVersion.CommandLine&version=5.0.1
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.1.5
+#tool nuget:?package=ReportGenerator&version=4.2.17
 
 // ARGUMENTS
 var target = Argument("target", "Default");
@@ -64,6 +64,7 @@ var artifactsDirAbsolutePath = MakeAbsolute(Directory(artifactsDir));
 
 var testCoverageOutputFile = artifactsDir + "/OpenCover.xml";
 var codeCoverageReportDir = artifactsDir + "/CodeCoverageReport";
+var coverageFilter = "+[Autofac.Extras.Quartz]* -[Autofac.Extras.Quartz.Tests]*";
 
 var packagesDir = artifactsDir + "/packages";
 var srcDir = "./src";
@@ -144,17 +145,22 @@ Task("RunXunitTests")
             ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
             WorkingDirectory = projectPath,
         }
-        .WithFilter("+[Autofac.Extras.Quartz]* -[Autofac.Extras.Quartz.Tests]*")
+        .WithFilter(coverageFilter)
         .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
         .ExcludeByFile("*/*Designer.cs");
 
-        Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) =>
-            new ProcessArgumentBuilder()
+        Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) => {
+				var pb = new ProcessArgumentBuilder()
                     .AppendSwitch("--configuration", buildCfg)
                     .AppendSwitch("--filter", "Category!=IntegrationTests")
                     .AppendSwitch("--results-directory", artifactsDirAbsolutePath.FullPath)
-                    .AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx")
                     .Append("--no-build");
+				if (!local) {
+					pb.AppendSwitch("--test-adapter-path", ".")
+						.AppendSwitch("--logger", $"AppVeyor");
+				}
+				return pb;
+			};
 
         // run open cover for debug build configuration
         OpenCover(
@@ -206,12 +212,6 @@ Task("RunUnitTests")
     .Finally(() => {
         if (!local) {
             CoverallsIo(testCoverageOutputFile);
-
-            foreach(var trxFile in GetFiles($"{artifactsDir}/*.trx"))
-            {
-                Information("Uploading unit-test results: {0}", trxFile);
-                UploadFile("https://ci.appveyor.com/api/testresults/mstest/" + appVeyorJobId, trxFile);
-            }
         }
     });
 
@@ -245,7 +245,7 @@ Task("CreateNugetPackages")
 			var projectFileName = $"{srcDir}/{projectName}/{projectName}.csproj";
 
 			if (isTagged) {
-				var releaseNotes = $"https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/{milestone}";
+				var releaseNotes = $"https://github.com/alphacloud/{repoName}/releases/tag/{milestone}";
 				Information("Updating ReleaseNotes Link for project {0} to {1}", projectName, releaseNotes);
 				XmlPoke(projectFileName,
 					"/Project/PropertyGroup[@Label=\"Package\"]/PackageReleaseNotes",
