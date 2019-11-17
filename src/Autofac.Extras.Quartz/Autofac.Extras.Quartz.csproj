@@ -1,23 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build">
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <AssemblyOriginatorKeyFile>..\keyfile.snk</AssemblyOriginatorKeyFile>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <SignAssembly>True</SignAssembly>
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
-    <Authors>shatl</Authors>
-    <PackageId>Autofac.Extras.Quartz</PackageId>
-    <PackageDescription>Autofac integration for Quartz.Net.</PackageDescription>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/4.4.0</PackageReleaseNotes>
+    <Description>Autofac integration for Quartz.Net.</Description>
     <PackageTags>quartz autofac quartz-net alphacloud</PackageTags>
-    <RepositoryType>git</RepositoryType>
-    <Title>Autofac.Extras.Quartz</Title>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net452' ">

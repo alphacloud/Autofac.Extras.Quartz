@@ -1,0 +1,56 @@
+<Project>
+
+  <PropertyGroup Label="Build">
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+    <SignAssembly>True</SignAssembly>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion>latest</LangVersion>
+    <DebugSymbols>True</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <RepositoryUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>alphacloud quartz autofac</PackageTags>
+    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/4.4.0</PackageReleaseNotes>
+    <Authors>shatl</Authors>
+    <Company>Alphacloud</Company>
+    <Description>Quartz.Net integration</Description>
+    <Copyright>(c) Alphacloud</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Label="SourceLink">
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(MSBuildProjectName.Contains(Tests))' == true ">
+    <NoWarn>$(NoWarn);CS0618;CS1591</NoWarn>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>False</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>
+Autofac.Extras.Quartz.Tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001003b6b2a7202e9a5c9b62e49f9f05bebbfd23fc6f08f0ec853d0857fc6cd3ca06d524c96651f82c6cddec44b9c0a206a169a9848bd57617d8f6a14e77e05587348be5cdcedabd792cb12b0b3b3d8c5d733ba677dd824c990ffb989e72d7671e8beb1034e59b229475e4e41c9a8079ebe999027f888f386b033dc650ffe261317ca
+      </_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  
+</Project>
