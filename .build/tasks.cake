@@ -135,8 +135,8 @@ Task("UpdateReleaseNotesLink")
     .WithCriteria<BuildInfo>((ctx, build) => build.Repository.IsTagged)
     .Does<BuildInfo>(build =>
     {
-        var releaseNotesUrl = $"https://github.com/{build.Settings.RepoOwner}/{build.Settings.RepoOwner}/releases/tag/{build.Version.Milestone}";
-        Information("Updating ReleaseNotes URL to {1}", releaseNotesUrl);
+        var releaseNotesUrl = $"https://github.com/{build.Settings.RepoOwner}/{build.Settings.RepoName}/releases/tag/{build.Version.Milestone}";
+        Information("Updating ReleaseNotes URL to '{0}'", releaseNotesUrl);
         XmlPoke(build.Paths.BuildPropsFile,
             "/Project/PropertyGroup[@Label=\"Package\"]/PackageReleaseNotes",
             releaseNotesUrl
