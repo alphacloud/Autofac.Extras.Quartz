@@ -21,6 +21,7 @@ issue-labels-include:
 - feature
 - sample
 - dependencies
+- build
 
 issue-labels-exclude:
 - 0 - Backlog
