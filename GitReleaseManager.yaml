@@ -21,6 +21,7 @@ issue-labels-include:
 - feature
 - sample
 - dependencies
+- build
 
 issue-labels-exclude:
 - 0 - Backlog
@@ -29,7 +30,6 @@ issue-labels-exclude:
 - 3 - Review
 - 4 - Done
 - blocked
-- build
 - invalid
 - no-response
 - question
@@ -61,3 +61,6 @@ issue-labels-alias:
   - name: dependencies
     header: Dependency upgraded
     plural: Dependencies upgraded
+  - name: build
+    header: Build improvement
+    plural: Build improvements

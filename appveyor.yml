@@ -7,7 +7,7 @@ pull_requests:
 nuget:
   disable_publish_on_pr: true
 
-os: Visual Studio 2017
+os: Visual Studio 2019
 
 environment:
   # Set the DOTNET_SKIP_FIRST_TIME_EXPERIENCE environment variable to stop wasting time caching packages
