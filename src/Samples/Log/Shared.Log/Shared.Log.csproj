@@ -5,11 +5,11 @@
     <IsPackable>False</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DefineConstants>TRACE;RELEASE;LIBLOG_PUBLIC</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD2_0;LIBLOG_PUBLIC</DefineConstants>
   </PropertyGroup>
 
