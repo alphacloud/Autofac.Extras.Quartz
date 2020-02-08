@@ -49,51 +49,51 @@ public class ProjectSettings {
 }
 
 public class Credentials {
-	public string UserName { get; }
-	public string Password { get; }
+    public string UserName { get; }
+    public string Password { get; }
 
-	public Credentials(string userName, string password) {
-		UserName = userName;
-		Password = password;
-	}
+    public Credentials(string userName, string password) {
+        UserName = userName;
+        Password = password;
+    }
 }
 
 public class BuildVersion {
-	public string NuGet { get; }
-	public string Full { get; }
-	public string Informational { get; }
-	public string NextMajor { get; }
-	public string CommitHash { get; }
-	public string Milestone { get; }
+    public string NuGet { get; }
+    public string Full { get; }
+    public string Informational { get; }
+    public string NextMajor { get; }
+    public string CommitHash { get; }
+    public string Milestone { get; }
 
-	public BuildVersion(string nuget, string full, string informational, string nextMajor, string commitHash, string milestone) {
-		NuGet = nuget;
-		Full = full;
-		Informational = informational;
-		NextMajor = nextMajor;
-		CommitHash = commitHash;
-		Milestone = milestone;
-	}
+    public BuildVersion(string nuget, string full, string informational, string nextMajor, string commitHash, string milestone) {
+        NuGet = nuget;
+        Full = full;
+        Informational = informational;
+        NextMajor = nextMajor;
+        CommitHash = commitHash;
+        Milestone = milestone;
+    }
 }
 
 public class RepositoryInfo {
-	public bool IsPullRequest { get; protected set; }
-	public bool IsMain { get; protected set; }
-	public bool IsDevelopBranch { get; protected set; }
-	// Release or hotfix branch
-	public bool IsReleaseBranch { get; protected set; }
-	public bool IsTagged { get; protected set; }
+    public bool IsPullRequest { get; protected set; }
+    public bool IsMain { get; protected set; }
+    public bool IsDevelopBranch { get; protected set; }
+    // Release or hotfix branch
+    public bool IsReleaseBranch { get; protected set; }
+    public bool IsTagged { get; protected set; }
 
-	public static RepositoryInfo Get(BuildSystem buildSystem, ProjectSettings settings) {
-		return new RepositoryInfo {
-			IsPullRequest = buildSystem.AppVeyor.Environment.PullRequest.IsPullRequest,
-			IsDevelopBranch = StringComparer.OrdinalIgnoreCase.Equals("develop", buildSystem.AppVeyor.Environment.Repository.Branch),
-			IsReleaseBranch = buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("releases/", StringComparison.OrdinalIgnoreCase) >= 0
-				|| buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("hotfixes/", StringComparison.OrdinalIgnoreCase) >= 0,
-			IsTagged = buildSystem.AppVeyor.Environment.Repository.Tag.IsTag,
-			IsMain = StringComparer.OrdinalIgnoreCase.Equals($"{settings.RepoOwner}/{settings.RepoName}", buildSystem.AppVeyor.Environment.Repository.Name),
-		};
-	}
+    public static RepositoryInfo Get(BuildSystem buildSystem, ProjectSettings settings) {
+        return new RepositoryInfo {
+            IsPullRequest = buildSystem.AppVeyor.Environment.PullRequest.IsPullRequest,
+            IsDevelopBranch = StringComparer.OrdinalIgnoreCase.Equals("develop", buildSystem.AppVeyor.Environment.Repository.Branch),
+            IsReleaseBranch = buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("releases/", StringComparison.OrdinalIgnoreCase) >= 0
+                || buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("hotfixes/", StringComparison.OrdinalIgnoreCase) >= 0,
+            IsTagged = buildSystem.AppVeyor.Environment.Repository.Tag.IsTag,
+            IsMain = StringComparer.OrdinalIgnoreCase.Equals($"{settings.RepoOwner}/{settings.RepoName}", buildSystem.AppVeyor.Environment.Repository.Name),
+        };
+    }
 }
 
 // default paths and files
@@ -139,7 +139,7 @@ public class BuildInfo {
 
     public RepositoryInfo Repository { get; protected set; }
 
-    public Credentials GitHubCredentials { get; protected set; }
+    public string GitHubToken { get; protected set; }
 
     public Paths Paths { get; protected set; }
 
@@ -164,10 +164,7 @@ public class BuildInfo {
             semVersion.MajorMinorPatch
         );
 
-        var githubCredentials = new Credentials(
-            context.EnvironmentVariable("GITHUB_USER"),
-            context.EnvironmentVariable("GITHUB_PASSWORD")
-        );
+        var gitHubToken = context.EnvironmentVariable("GITHUB_TOKEN");
 
         return new BuildInfo {
             Target = target,
@@ -178,7 +175,7 @@ public class BuildInfo {
             AppVeyorJobId = buildSystem.AppVeyor.Environment.JobId,
             Version = version,
             Repository = RepositoryInfo.Get(buildSystem, settings),
-            GitHubCredentials = githubCredentials,
+            GitHubToken = gitHubToken,
             Settings = settings,
             Paths = new Paths(context),
         };
