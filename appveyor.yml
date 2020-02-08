@@ -17,10 +17,8 @@ environment:
   coveralls_repo_token:
     secure: PuEgFAkWtmyKy5qZYyYdJCSqdL6IZmGzm6fxQfKbOX0T63KQXMbON0azijNuQBC/
   CAKE_SETTINGS_SKIPVERIFICATION: true
-  GITHUB_USER:
-    secure: 5NfHPjw31vB/XxJqwpHp3cl3n/9F7PTUVXhMIqRSDJE=
-  GITHUB_PASSWORD:
-    secure: 9gArAAMTQRHIsSZcJ+87GM+kaSfsBlouuFHtBR1hWBY=
+  GITHUB_TOKEN:
+    secure: SakrMxbclSjNzFQxv8sA35OhulfvNm9VqHBEOgQrebPaF/Bv7AmZRsT8/YEfSQED
 
 build_script:
   - ps: ./build.ps1

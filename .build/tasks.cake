@@ -185,7 +185,7 @@ Task("CreateRelease")
     .Does<BuildInfo>(build =>
     {
         GitReleaseManagerCreate(
-            build.GitHubCredentials.UserName, build.GitHubCredentials.Password,
+            build.GitHubToken,
             build.Settings.RepoOwner, build.Settings.RepoName,
             new GitReleaseManagerCreateSettings {
               Milestone = build.Version.Milestone,
@@ -199,7 +199,7 @@ Task("CloseMilestone")
     .Does<BuildInfo>(build =>
     {
         GitReleaseManagerClose(
-            build.GitHubCredentials.UserName, build.GitHubCredentials.Password,
+            build.GitHubToken,
             build.Settings.RepoOwner, build.Settings.RepoName,
             build.Version.Milestone
         );
