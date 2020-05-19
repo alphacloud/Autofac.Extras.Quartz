@@ -15,8 +15,8 @@ Install package via Nuget: `install-package Autofac.Extras.Quartz`
 
 ||Stable|Pre-release|
 |:--:|:--:|:--:|
-|Build|[![Master branch](https://ci.appveyor.com/api/projects/status/hi40qmgw69rgyot8/branch/master?svg=true)](https://ci.appveyor.com/project/shatl/autofac-extras-quartz/branch/master) | [![Development branch](https://ci.appveyor.com/api/projects/status/hi40qmgw69rgyot8?svg=true)](https://ci.appveyor.com/project/shatl/autofac-extras-quartz)
-|NuGet|[![NuGet](https://img.shields.io/nuget/v/Autofac.Extras.Quartz.svg)](Release) | [![NuGet](https://img.shields.io/nuget/vpre/Autofac.Extras.Quartz.svg)](PreRelease)|
+|Build|[![Master branch](https://ci.appveyor.com/api/projects/status/hi40qmgw69rgyot8/branch/master?svg=true)](https://ci.appveyor.com/project/shatl/autofac-extras-quartz/branch/master) | [![Development branch](https://ci.appveyor.com/api/projects/status/hi40qmgw69rgyot8?svg=true)](https://ci.appveyor.com/project/shatl/autofac-extras-quartz) |
+|NuGet|[![NuGet](https://img.shields.io/nuget/v/Autofac.Extras.Quartz.svg)](https://www.nuget.org/packages/Autofac.Extras.Quartz) | [![NuGet](https://img.shields.io/nuget/vpre/Autofac.Extras.Quartz.svg)](https://www.nuget.org/packages/Autofac.Extras.Quartz/absoluteLatest) |
 |CodeCov|[![codecov](https://codecov.io/gh/alphacloud/Autofac.Extras.Quartz/branch/master/graph/badge.svg)](https://codecov.io/gh/alphacloud/Autofac.Extras.Quartz) | [![codecov](https://codecov.io/gh/alphacloud/Autofac.Extras.Quartz/branch/develop/graph/badge.svg)](https://codecov.io/gh/alphacloud/Autofac.Extras.Quartz/branch/develop) |
 
 
