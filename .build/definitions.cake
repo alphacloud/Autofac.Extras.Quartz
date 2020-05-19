@@ -1,16 +1,16 @@
 // ADDINS
-#addin nuget:?package=Cake.Coveralls&version=0.10.0
+#addin nuget:?package=Cake.Coveralls&version=0.10.1
 #addin nuget:?package=Cake.FileHelpers&version=3.2.1
 #addin nuget:?package=Cake.Incubator&version=5.1.0
-#addin nuget:?package=Cake.Issues&version=0.7.1
+#addin nuget:?package=Cake.Issues&version=0.8.1
 #addin nuget:?package=Cake.AppVeyor&version=4.0.0
 
 // TOOLS
-#tool nuget:?package=GitReleaseManager&version=0.8.0
-#tool nuget:?package=GitVersion.CommandLine&version=5.0.1
+#tool nuget:?package=GitReleaseManager&version=0.11.0
+#tool nuget:?package=GitVersion.CommandLine&version=5.3.3
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.2.17
+#tool nuget:?package=ReportGenerator&version=4.5.8
 
 
 public class CodeCoverageSettings
@@ -139,7 +139,7 @@ public class BuildInfo {
 
     public RepositoryInfo Repository { get; protected set; }
 
-    public string GitHubToken { get; protected set; }
+    public string  GitHubToken { get; protected set; }
 
     public Paths Paths { get; protected set; }
 

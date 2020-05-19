@@ -152,7 +152,7 @@ Task("Build")
     .Does<BuildInfo>(build =>
     {
         if (build.IsRelease) {
-            Information("Running {0} build for code coverage", "Debug");
+            Information("Running {0} build to calculate code coverage", "Debug");
             // need Debug build for code coverage
             DotNetCoreBuild(build.Paths.SrcDir, new DotNetCoreBuildSettings {
                 NoRestore = true,
