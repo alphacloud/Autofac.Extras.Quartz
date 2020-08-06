@@ -10,7 +10,7 @@
     <PackageTags>quartz autofac quartz-net alphacloud</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net452' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <DefineConstants>NETFULL</DefineConstants>
   </PropertyGroup>
 
@@ -26,7 +26,7 @@
     <PackageReference Include="Autofac" Version="[5.2.0, 6.0.0)" />
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="Quartz" Version="[3.1.0-beta2, 4.0.0)" />
+    <PackageReference Include="Quartz" Version="[3.1.0, 4.0.0)" />
   </ItemGroup>
 
 </Project>
