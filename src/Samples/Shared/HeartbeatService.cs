@@ -1,22 +1,24 @@
 ﻿#region copyright
+
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
 // Copyright (c) 2014-2019 Alphacloud.Net
+
 #endregion
 
 namespace SimpleService.AppServices
 {
-    using Shared.Log.Logging;
+    using JetBrains.Annotations;
+    using Serilog;
 
-
-    internal class HeartbeatService: IHeartbeatService
+    internal class HeartbeatService : IHeartbeatService
     {
-        static readonly ILog s_log = LogProvider.GetLogger(typeof(HeartbeatService));
+        [NotNull] private static readonly ILogger s_log = Log.ForContext<HeartbeatService>();
 
         public void UpdateServiceState(string state)
         {
-            s_log.InfoFormat("Service state: {serviceState}.", state);
+            s_log.Information("Service state: {ServiceState}.", state);
         }
     }
 
