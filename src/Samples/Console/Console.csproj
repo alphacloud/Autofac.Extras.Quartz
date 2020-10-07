@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>TRACE;DEBUG;LIBLOG_PORTABLE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DefineConstants>TRACE;LIBLOG_PORTABLE</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Autofac.Extras.Quartz\Autofac.Extras.Quartz.csproj" />
-    <ProjectReference Include="..\Log\Shared.Log\Shared.Log.csproj" />
   </ItemGroup>
 
   <ItemGroup>
