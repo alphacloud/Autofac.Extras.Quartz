@@ -16,22 +16,22 @@ namespace ConsoleScheduler
     using System.Threading.Tasks;
     using Autofac;
     using Quartz;
-    using Shared.Log.Logging;
+    using Serilog;
     using SimpleService.Configuration;
     using SimpleService.Jobs;
 
     static class Program
     {
-        static ILog _log;
+        static ILogger _log;
 
         static async Task Main(string[] args)
         {
             Bootstrap.InitializeLogger();
-            _log = LogProvider.GetLogger(typeof(Program));
+            _log = Serilog.Log.ForContext(typeof(Program));
             IContainer container = null;
 
             Console.WriteLine("This sample demonstrates how to integrate Quartz and Autofac.");
-            _log.Info("Starting...");
+            _log.Information("Starting...");
             try
             {
                 container = Bootstrap.ConfigureContainer(new ContainerBuilder()).Build();
@@ -58,7 +58,7 @@ namespace ConsoleScheduler
             }
             catch (Exception ex)
             {
-                _log.FatalException("Unhandled exception caught", ex);
+                _log.Fatal(ex, "Unhandled exception caught");
             }
 
             container?.Dispose();
