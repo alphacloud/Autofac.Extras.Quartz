@@ -24,7 +24,7 @@
     <PackageReference Include="Autofac" Version="6.0.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0" />
     <PackageReference Include="Moq" Version="4.14.7" />
     <PackageReference Include="Quartz" Version="3.2.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
