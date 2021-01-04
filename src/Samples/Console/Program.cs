@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2019 Alphacloud.Net
+// Copyright (c) 2014-2021 Alphacloud.Net
 
 #endregion
 
