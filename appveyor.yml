@@ -27,7 +27,11 @@ test: off
 
 artifacts:
   - path: artifacts/packages/*.nupkg
-    name: Nugets
+    name: NuGet packages
+
+  - path: artifacts/packages/*.snupkg
+    name: NuGet symbol packages
+    type: NuGetPackage
 
 deploy:
   - provider: NuGet
