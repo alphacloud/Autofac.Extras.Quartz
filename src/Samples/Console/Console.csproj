@@ -8,14 +8,6 @@
     <IsPackable>False</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="..\Shared\Bootstrap.cs" Link="Shared\Bootstrap.cs" />
     <Compile Include="..\Shared\HeartbeatJob.cs" Link="Shared\HeartbeatJob.cs" />
@@ -25,7 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
-    <PackageReference Include="Quartz" Version="3.2.3" />
+    <PackageReference Include="Quartz" Version="3.2.4" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
