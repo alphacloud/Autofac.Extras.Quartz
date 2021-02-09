@@ -87,7 +87,7 @@ namespace Autofac.Extras.Quartz.Tests
             _container = cb.Build();
 
             _lifetimeScope = _container.Resolve<ILifetimeScope>();
-            _jobFactory = new AutofacJobFactory(_lifetimeScope, QuartzAutofacFactoryModule.LifetimeScopeName);
+            _jobFactory = new AutofacJobFactory(_lifetimeScope, QuartzAutofacFactoryModule.LifetimeScopeName, null);
         }
 
         public void Dispose()
