@@ -16,6 +16,24 @@ namespace Autofac.Extras.Quartz
     using global::Quartz.Spi;
     using JetBrains.Annotations;
 
+
+    /// <summary>
+    ///     Provides additional configuration to Quartz scheduler.
+    /// </summary>
+    /// <param name="componentContext"></param>
+    /// <returns></returns>
+    public delegate NameValueCollection QuartzConfigurationProvider([NotNull] IComponentContext componentContext);
+
+    /// <summary>
+    ///     Configures scheduler job scope.
+    /// </summary>
+    /// <remarks>
+    ///     Used to override global container registrations at job scope.
+    /// </remarks>
+    /// <param name="containerBuilder">Autofac container builder.</param>
+    /// <param name="scopeTag">Job scope tag.</param>
+    public delegate void QuartzJobScopeConfigurator([NotNull] ContainerBuilder containerBuilder, [NotNull] object scopeTag);
+
     /// <summary>
     ///     Registers <see cref="ISchedulerFactory" /> and default <see cref="IScheduler" />.
     /// </summary>
@@ -27,7 +45,7 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         public const string LifetimeScopeName = "quartz.job";
 
-        readonly string _lifetimeScopeName;
+        [NotNull] readonly string _lifetimeScopeTag;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="QuartzAutofacFactoryModule" /> class with a default lifetime scope
@@ -42,11 +60,11 @@ namespace Autofac.Extras.Quartz
         /// <summary>
         ///     Initializes a new instance of the <see cref="QuartzAutofacFactoryModule" /> class.
         /// </summary>
-        /// <param name="lifetimeScopeName">Name of the lifetime scope to wrap job resolution and execution.</param>
+        /// <param name="lifetimeScopeTag">Tag of the lifetime scope to wrap job resolution and execution.</param>
         /// <exception cref="System.ArgumentNullException">lifetimeScopeName</exception>
-        public QuartzAutofacFactoryModule([NotNull] string lifetimeScopeName)
+        public QuartzAutofacFactoryModule([NotNull] string lifetimeScopeTag)
         {
-            _lifetimeScopeName = lifetimeScopeName ?? throw new ArgumentNullException(nameof(lifetimeScopeName));
+            _lifetimeScopeTag = lifetimeScopeTag ?? throw new ArgumentNullException(nameof(lifetimeScopeTag));
         }
 
         /// <summary>
@@ -56,7 +74,13 @@ namespace Autofac.Extras.Quartz
         ///     <seealso cref="StdSchedulerFactory" /> for some configuration property names.
         /// </summary>
         [CanBeNull]
-        public Func<IComponentContext, NameValueCollection> ConfigurationProvider { get; set; }
+        public QuartzConfigurationProvider ConfigurationProvider { get; set; }
+
+        /// <summary>
+        ///     Allows to override job scope registrations.
+        /// </summary>
+        [CanBeNull]
+        public QuartzJobScopeConfigurator JobScopeConfigurator { get; set; }
 
         /// <summary>
         ///     Override to add registrations to the container.
@@ -70,7 +94,7 @@ namespace Autofac.Extras.Quartz
         /// </param>
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new AutofacJobFactory(c.Resolve<ILifetimeScope>(), _lifetimeScopeName))
+            builder.Register(c => new AutofacJobFactory(c.Resolve<ILifetimeScope>(), _lifetimeScopeTag, JobScopeConfigurator))
                 .AsSelf()
                 .As<IJobFactory>()
                 .SingleInstance();
