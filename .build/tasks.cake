@@ -103,14 +103,18 @@ Task("CleanPreviousTestResults")
             DeleteFile(build.Paths.TestCoverageOutputFile);
         DeleteFiles(build.Paths.ArtifactsDir + "/*.trx");
         if (DirectoryExists(build.Paths.TestCoverageReportDir))
-            DeleteDirectory(build.Paths.TestCoverageReportDir, recursive: true);
+            DeleteDirectory(build.Paths.TestCoverageReportDir, new DeleteDirectorySettings 
+            {
+                Force = true,
+                Recursive = true
+            });
     });
 
 Task("GenerateCoverageReport")
     .WithCriteria<BuildInfo>((ctx, build) => build.IsLocal)
     .Does<BuildInfo>(build =>
     {
-        ReportGenerator(build.Paths.TestCoverageOutputFile, build.Paths.TestCoverageReportDir);
+        ReportGenerator((FilePath)build.Paths.TestCoverageOutputFile, build.Paths.TestCoverageReportDir);
     });
 
 Task("UploadCoverage")
