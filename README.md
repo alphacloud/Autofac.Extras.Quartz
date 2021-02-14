@@ -53,93 +53,10 @@ cb.RegisterModule(new QuartzAutofacFactoryModule {
     }
 });
 ```
-## Scheduler registration
-
-`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container.
-Both factory and schedulere are registered as singletones.
-
-*Note:* Is is important to resolve `IScheduler` from container, rather than using default one to get jobs resolved by Autofac.
-
-Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
-
-### Job scope configuration
-Starting with version 7 `QuartzAutofacFactoryModule` provides a way to customize lifetime scope configuration for job. This can be done via `JobScopeConfigurator` parameter.
-
-```csharp
-            cb.Register(_ => new ScopedDependency("global"))
-                .AsImplementedInterfaces()
-                .SingleInstance();
-
-            cb.RegisterModule(new QuartzAutofacFactoryModule {
-                JobScopeConfigurator = (builder, tag) => {
-                    // override dependency for job scope
-                    builder.Register(_ => new ScopedDependency("job-local "+ DateTime.UtcNow.ToLongTimeString()))
-                        .AsImplementedInterfaces()
-                        .InstancePerMatchingLifetimeScope(tag);
-
-                }
-            });
-
-
-```
-## Scheduler registration
-
-`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container.
-Both factory and schedulere are registered as singletones.
-*Note:* Is is important to resolve `IScheduler` from container, rather than using default one to get jobs resolved by Autofac.
-
-Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
-
-### Job scope configuration
-Starting with version 7 `QuartzAutofacFactoryModule` provides a way to customize lifetime scope configuration for job. This can be done via `JobScopeConfigurator` parameter.
-
-```csharp
-            cb.Register(_ => new ScopedDependency("global"))
-                .AsImplementedInterfaces()
-                .SingleInstance();
-
-            cb.RegisterModule(new QuartzAutofacFactoryModule {
-                JobScopeConfigurator = (builder, tag) => {
-                    // override dependency for job scope
-                    builder.Register(_ => new ScopedDependency("job-local "+ DateTime.UtcNow.ToLongTimeString()))
-                        .AsImplementedInterfaces()
-                        .InstancePerMatchingLifetimeScope(tag);
-
-                }
-            });
-
-
-```
-## Scheduler registration
-
-`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container.
-Both factory and schedulere are registered as singletones.
-
-*Note:* Is is important to resolve `IScheduler` from container, rather than using default one to get jobs resolved by Autofac.
-
-Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
-
-### Job scope configuration
-Starting with version 7 `QuartzAutofacFactoryModule` provides a way to customize lifetime scope configuration for job. This can be done via `JobScopeConfigurator` parameter.
-
-```csharp
-cb.Register(_ => new ScopedDependency("global"))
-    .AsImplementedInterfaces()
-    .SingleInstance();
-
-cb.RegisterModule(new QuartzAutofacFactoryModule {
-    JobScopeConfigurator = (builder, tag) => {
-        // override dependency for job scope
-        builder.Register(_ => new ScopedDependency("job-local "+ DateTime.UtcNow.ToLongTimeString()))
-            .AsImplementedInterfaces()
-            .InstancePerMatchingLifetimeScope(tag);
-    }
-});
-```
 See [src/Samples/Shared/Bootstrap.cs](src/Samples/Shared/Bootstrap.cs) for details.
 
-
 ## Job registration
+
 `QuartzAutofacJobsModule` scans given assemblies and registers all non-abstract implementors of `IJob` interface as transient instances.
 
 ```csharp
