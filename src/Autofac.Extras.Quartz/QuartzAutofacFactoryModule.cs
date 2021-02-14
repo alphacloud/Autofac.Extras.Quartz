@@ -21,7 +21,7 @@ namespace Autofac.Extras.Quartz
     ///     Provides additional configuration to Quartz scheduler.
     /// </summary>
     /// <param name="componentContext"></param>
-    /// <returns></returns>
+    /// <returns>Quartz configuration settings.</returns>
     public delegate NameValueCollection QuartzConfigurationProvider(IComponentContext componentContext);
 
     /// <summary>

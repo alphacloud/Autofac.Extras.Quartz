@@ -22,7 +22,7 @@ Install package via Nuget: `install-package Autofac.Extras.Quartz`
 
 # Usage example
 
-Autofac configuration for Quartz consists of two steps:
+Autofac configuration for Quartz includes two steps:
 1. Scheduler registration
 2. Job registration
 
@@ -33,6 +33,111 @@ Both factory and schedulere are registered as singletones.
 *Note:* Is is important to resolve `IScheduler` from container, rather than using default one to get jobs resolved by Autofac.
 
 Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
+
+### Job scope configuration
+
+Starting with version 7 `QuartzAutofacFactoryModule` provides a way to customize lifetime scope configuration for job. This can be done via `JobScopeConfigurator` parameter.
+
+```csharp
+cb.Register(_ => new ScopedDependency("global"))
+    .AsImplementedInterfaces()
+    .SingleInstance();
+
+cb.RegisterModule(new QuartzAutofacFactoryModule {
+    JobScopeConfigurator = (builder, jobScopeTag) => {
+        // override dependency for job scope
+        builder.Register(_ => new ScopedDependency("job-local "+ DateTime.UtcNow.ToLongTimeString()))
+            .AsImplementedInterfaces()
+            .InstancePerMatchingLifetimeScope(jobScopeTag);
+
+    }
+});
+```
+## Scheduler registration
+
+`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container.
+Both factory and schedulere are registered as singletones.
+
+*Note:* Is is important to resolve `IScheduler` from container, rather than using default one to get jobs resolved by Autofac.
+
+Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
+
+### Job scope configuration
+Starting with version 7 `QuartzAutofacFactoryModule` provides a way to customize lifetime scope configuration for job. This can be done via `JobScopeConfigurator` parameter.
+
+```csharp
+            cb.Register(_ => new ScopedDependency("global"))
+                .AsImplementedInterfaces()
+                .SingleInstance();
+
+            cb.RegisterModule(new QuartzAutofacFactoryModule {
+                JobScopeConfigurator = (builder, tag) => {
+                    // override dependency for job scope
+                    builder.Register(_ => new ScopedDependency("job-local "+ DateTime.UtcNow.ToLongTimeString()))
+                        .AsImplementedInterfaces()
+                        .InstancePerMatchingLifetimeScope(tag);
+
+                }
+            });
+
+
+```
+## Scheduler registration
+
+`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container.
+Both factory and schedulere are registered as singletones.
+*Note:* Is is important to resolve `IScheduler` from container, rather than using default one to get jobs resolved by Autofac.
+
+Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
+
+### Job scope configuration
+Starting with version 7 `QuartzAutofacFactoryModule` provides a way to customize lifetime scope configuration for job. This can be done via `JobScopeConfigurator` parameter.
+
+```csharp
+            cb.Register(_ => new ScopedDependency("global"))
+                .AsImplementedInterfaces()
+                .SingleInstance();
+
+            cb.RegisterModule(new QuartzAutofacFactoryModule {
+                JobScopeConfigurator = (builder, tag) => {
+                    // override dependency for job scope
+                    builder.Register(_ => new ScopedDependency("job-local "+ DateTime.UtcNow.ToLongTimeString()))
+                        .AsImplementedInterfaces()
+                        .InstancePerMatchingLifetimeScope(tag);
+
+                }
+            });
+
+
+```
+## Scheduler registration
+
+`QuartzAutofacFactoryModule` registers custom `ISchedulerFactory` and default instance of `IScheduler` in Autofac container.
+Both factory and schedulere are registered as singletones.
+
+*Note:* Is is important to resolve `IScheduler` from container, rather than using default one to get jobs resolved by Autofac.
+
+Optionally custom Quartz configuration can be passed using `ConfigurationProvider` property. Provider is callback which returns settings using `NameValueCollection`.
+
+### Job scope configuration
+Starting with version 7 `QuartzAutofacFactoryModule` provides a way to customize lifetime scope configuration for job. This can be done via `JobScopeConfigurator` parameter.
+
+```csharp
+cb.Register(_ => new ScopedDependency("global"))
+    .AsImplementedInterfaces()
+    .SingleInstance();
+
+cb.RegisterModule(new QuartzAutofacFactoryModule {
+    JobScopeConfigurator = (builder, tag) => {
+        // override dependency for job scope
+        builder.Register(_ => new ScopedDependency("job-local "+ DateTime.UtcNow.ToLongTimeString()))
+            .AsImplementedInterfaces()
+            .InstancePerMatchingLifetimeScope(tag);
+    }
+});
+```
+See [src/Samples/Shared/Bootstrap.cs](src/Samples/Shared/Bootstrap.cs) for details.
+
 
 ## Job registration
 `QuartzAutofacJobsModule` scans given assemblies and registers all non-abstract implementors of `IJob` interface as transient instances.
@@ -55,7 +160,7 @@ scheduler.Start();
 ```
 
 ## Sample projects
-* See ``src/Samples/Console`` for .NetCore console application.
-* ``src/Samples/Shared`` contains source code shared between samples.
+* See [src/Samples/Console](src/Samples/Console/) for .NetCore console application.
+* [src/Samples/Shared](src/Samples/Shared/) contains source code shared between samples.
 
 TopShelf-based sample was removed since Topshelf.Quartz is not compatible with Quartz 3 as af now.
