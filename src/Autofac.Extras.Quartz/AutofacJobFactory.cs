@@ -25,11 +25,11 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class AutofacJobFactory : IJobFactory, IDisposable
     {
-        [NotNull] readonly ILifetimeScope _lifetimeScope;
+        readonly ILifetimeScope _lifetimeScope;
 
-        [NotNull] readonly object _scopeTag;
+        readonly object _scopeTag;
 
-        [CanBeNull] private readonly QuartzJobScopeConfigurator _jobScopeConfigurator;
+        readonly QuartzJobScopeConfigurator? _jobScopeConfigurator;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AutofacJobFactory" /> class.
@@ -41,8 +41,8 @@ namespace Autofac.Extras.Quartz
         ///     <paramref name="lifetimeScope" /> or <paramref name="scopeTag" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public AutofacJobFactory([NotNull] ILifetimeScope lifetimeScope, [NotNull] object scopeTag,
-            [CanBeNull] QuartzJobScopeConfigurator jobScopeConfigurator)
+        public AutofacJobFactory(ILifetimeScope lifetimeScope, object scopeTag,
+            QuartzJobScopeConfigurator? jobScopeConfigurator)
         {
             _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
             _scopeTag = scopeTag ?? throw new ArgumentNullException(nameof(scopeTag));
@@ -50,7 +50,7 @@ namespace Autofac.Extras.Quartz
         }
 
         internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs { get; } =
-            new ConcurrentDictionary<object, JobTrackingInfo>();
+            new();
 
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -88,7 +88,6 @@ namespace Autofac.Extras.Quartz
         ///     Error resolving exception. Original exception will be stored in
         ///     <see cref="Exception.InnerException" />.
         /// </exception>
-        [NotNull]
         public virtual IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
             if (bundle == null) throw new ArgumentNullException(nameof(bundle));
@@ -141,7 +140,7 @@ namespace Autofac.Extras.Quartz
         /// <summary>
         ///     Allows the the job factory to destroy/cleanup the job if needed.
         /// </summary>
-        public void ReturnJob(IJob job)
+        public void ReturnJob(IJob? job)
         {
             if (job == null)
                 return;
@@ -153,7 +152,7 @@ namespace Autofac.Extras.Quartz
             }
             else
             {
-                trackingInfo.Scope?.Dispose();
+                trackingInfo.Scope.Dispose();
             }
         }
 

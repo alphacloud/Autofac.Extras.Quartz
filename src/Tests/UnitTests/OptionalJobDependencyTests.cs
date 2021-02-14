@@ -33,13 +33,13 @@ namespace Autofac.Extras.Quartz.Tests
         }
 
 
-        private IContainer _container;
-        private readonly ContainerBuilder _containerBuilder;
+        IContainer? _container;
+        readonly ContainerBuilder _containerBuilder;
 
         [UsedImplicitly]
         class TestJobWithOptionalDependency : IJob
         {
-            public IJobDependency Dependency { get; [UsedImplicitly] set; }
+            public IJobDependency? Dependency { get; [UsedImplicitly] set; }
 
             public Task Execute(IJobExecutionContext context) => Task.CompletedTask;
         }

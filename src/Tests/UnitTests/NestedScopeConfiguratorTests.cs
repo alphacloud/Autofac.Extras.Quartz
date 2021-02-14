@@ -21,10 +21,10 @@ namespace Autofac.Extras.Quartz.Tests
 
     public class NestedScopeConfiguratorTests : IDisposable
     {
-        private const string LocalScope = "local";
-        private const string GlobalScope = "global";
-        [NotNull] private readonly IContainer _container;
-        [NotNull] private readonly AutofacJobFactory _jobFactory;
+        const string LocalScope = "local";
+        const string GlobalScope = "global";
+        readonly IContainer _container;
+        readonly AutofacJobFactory _jobFactory;
 
 
         public NestedScopeConfiguratorTests()
@@ -45,7 +45,7 @@ namespace Autofac.Extras.Quartz.Tests
 
         public void Dispose()
         {
-            _container?.Dispose();
+            _container.Dispose();
             GC.SuppressFinalize(this);
         }
 
@@ -69,12 +69,12 @@ namespace Autofac.Extras.Quartz.Tests
 
         [UsedImplicitly]
         [PersistJobDataAfterExecution]
-        private class SampleJob : IJob
+        class SampleJob : IJob
         {
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
-            public SampleJob([NotNull] NestedDependency dependency)
+            public SampleJob(NestedDependency dependency)
             {
                 Dependency = dependency ?? throw new ArgumentNullException(nameof(dependency));
             }
@@ -86,9 +86,9 @@ namespace Autofac.Extras.Quartz.Tests
 
 
         [UsedImplicitly]
-        private class NestedDependency
+        class NestedDependency
         {
-            public NestedDependency([NotNull] string scope)
+            public NestedDependency(string scope)
             {
                 if (string.IsNullOrEmpty(scope))
                     throw new ArgumentException("Value cannot be null or empty.", nameof(scope));
@@ -98,7 +98,6 @@ namespace Autofac.Extras.Quartz.Tests
             /// <summary>
             ///     Scope.
             /// </summary>
-            [NotNull]
             public string Scope { get; }
         }
     }

@@ -12,6 +12,7 @@
     <Compile Include="..\Shared\Bootstrap.cs" Link="Shared\Bootstrap.cs" />
     <Compile Include="..\Shared\HeartbeatJob.cs" Link="Shared\HeartbeatJob.cs" />
     <Compile Include="..\Shared\HeartbeatService.cs" Link="Shared\HeartbeatService.cs" />
+    <Compile Include="..\Shared\ScopedDependency.cs" Link="Shared\ScopedDependency.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,10 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Autofac.Extras.Quartz\Autofac.Extras.Quartz.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Shared\" />
   </ItemGroup>
 
 </Project>

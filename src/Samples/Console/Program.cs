@@ -22,16 +22,15 @@ namespace ConsoleScheduler
 
     static class Program
     {
-        static ILogger _log;
-
-        static async Task Main(string[] args)
+        static async Task Main()
         {
             Bootstrap.InitializeLogger();
-            _log = Serilog.Log.ForContext(typeof(Program));
-            IContainer container = null;
+            var log = Log.ForContext(typeof(Program));
+
+            IContainer? container = null;
 
             Console.WriteLine("This sample demonstrates how to integrate Quartz and Autofac.");
-            _log.Information("Starting...");
+            log.Information("Starting...");
             try
             {
                 container = Bootstrap.ConfigureContainer(new ContainerBuilder()).Build();
@@ -58,10 +57,11 @@ namespace ConsoleScheduler
             }
             catch (Exception ex)
             {
-                _log.Fatal(ex, "Unhandled exception caught");
+                log.Fatal(ex, "Unhandled exception caught");
             }
 
             container?.Dispose();
+            Log.CloseAndFlush();
         }
     }
 }
