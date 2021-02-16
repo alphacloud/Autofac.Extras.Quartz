@@ -21,26 +21,26 @@ namespace Autofac.Extras.Quartz.Tests
     using JetBrains.Annotations;
     using Moq;
     using Xunit;
-    using IContainer = Autofac.IContainer;
+    using IContainer = IContainer;
 
 
     public class ScopeTrackerTests : IDisposable
     {
-        private readonly IContainer _container;
-        private readonly AutofacJobFactory _jobFactory;
-        private readonly ILifetimeScope _lifetimeScope;
+        readonly IContainer _container;
+        readonly AutofacJobFactory _jobFactory;
+        readonly ILifetimeScope _lifetimeScope;
 
 
         [UsedImplicitly]
         [PersistJobDataAfterExecution]
-        private class SampleJob : IJob
+        class SampleJob : IJob
         {
-            [UsedImplicitly] private readonly DisposableDependency _dependency;
+            [UsedImplicitly] readonly DisposableDependency _dependency;
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
-            public SampleJob([NotNull] DisposableDependency dependency)
+            public SampleJob(DisposableDependency dependency)
             {
                 _dependency = dependency ?? throw new ArgumentNullException(nameof(dependency));
             }
@@ -54,11 +54,12 @@ namespace Autofac.Extras.Quartz.Tests
 
 
         [UsedImplicitly]
-        private class DisposableDependency : IDisposable
+        class DisposableDependency : IDisposable
         {
             public static int DisposeCount;
             public static int CreateCount;
 
+            [UsedImplicitly]
             public bool Disposed { get; private set; }
 
             public DisposableDependency()
@@ -87,12 +88,13 @@ namespace Autofac.Extras.Quartz.Tests
             _container = cb.Build();
 
             _lifetimeScope = _container.Resolve<ILifetimeScope>();
-            _jobFactory = new AutofacJobFactory(_lifetimeScope, QuartzAutofacFactoryModule.LifetimeScopeName);
+            _jobFactory = new AutofacJobFactory(_lifetimeScope, QuartzAutofacFactoryModule.LifetimeScopeName, null);
         }
 
         public void Dispose()
         {
-            _container?.Dispose();
+            _container.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         [Fact]

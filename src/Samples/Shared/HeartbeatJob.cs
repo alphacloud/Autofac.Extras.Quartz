@@ -7,6 +7,7 @@
 
 #endregion
 
+// ReSharper disable once CheckNamespace
 namespace SimpleService.Jobs
 {
     using System;
@@ -16,16 +17,18 @@ namespace SimpleService.Jobs
 
     public class HeartbeatJob : IJob
     {
-        private readonly IHeartbeatService _heartbeat;
+        readonly IHeartbeatService _heartbeat;
+        readonly IScopedDependency _scopedDependency;
 
-        public HeartbeatJob(IHeartbeatService heartbeat)
+        public HeartbeatJob(IHeartbeatService heartbeat, IScopedDependency scopedDependency)
         {
             _heartbeat = heartbeat ?? throw new ArgumentNullException(nameof(heartbeat));
+            _scopedDependency = scopedDependency ?? throw new ArgumentNullException(nameof(scopedDependency));
         }
 
         public Task Execute(IJobExecutionContext context)
         {
-            _heartbeat.UpdateServiceState("alive");
+            _heartbeat.UpdateServiceState($"alive, scope: {_scopedDependency.Scope}");
             return Task.CompletedTask;
         }
     }

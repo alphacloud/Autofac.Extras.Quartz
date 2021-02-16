@@ -7,8 +7,10 @@
 
 #endregion
 
+// ReSharper disable once CheckNamespace
 namespace SimpleService.Configuration
 {
+    using System;
     using System.Collections.Specialized;
     using AppServices;
     using Autofac;
@@ -18,7 +20,7 @@ namespace SimpleService.Configuration
     using Serilog.Sinks.SystemConsole.Themes;
 
 
-    internal class Bootstrap
+    class Bootstrap
     {
         public static void InitializeLogger()
         {
@@ -36,8 +38,19 @@ namespace SimpleService.Configuration
                 {"quartz.scheduler.threadName", "Scheduler"}
             };
 
+            cb.Register(_ => new ScopedDependency("global"))
+                .AsImplementedInterfaces()
+                .SingleInstance();
+
             cb.RegisterModule(new QuartzAutofacFactoryModule {
-                ConfigurationProvider = c => schedulerConfig
+                ConfigurationProvider = _ => schedulerConfig,
+                JobScopeConfigurator = (builder, tag) => {
+                    // override dependency for job scope
+                    builder.Register(_ => new ScopedDependency("job-local "+ DateTime.UtcNow.ToLongTimeString()))
+                        .AsImplementedInterfaces()
+                        .InstancePerMatchingLifetimeScope(tag);
+
+                }
             });
             cb.RegisterModule(new QuartzAutofacJobsModule(typeof(HeartbeatJob).Assembly));
 

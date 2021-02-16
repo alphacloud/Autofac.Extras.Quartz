@@ -14,6 +14,7 @@ namespace Autofac.Extras.Quartz
     using System.Runtime.CompilerServices;
     using global::Quartz;
     using JetBrains.Annotations;
+    // ReSharper disable once RedundantNameQualifier
     using Module = Autofac.Module;
 
     /// <summary>
@@ -29,7 +30,7 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class QuartzAutofacJobsModule : Module
     {
-        [NotNull] readonly Assembly[] _assembliesToScan;
+        readonly Assembly[] _assembliesToScan;
 
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace Autofac.Extras.Quartz
         /// </summary>
         /// <param name="assembliesToScan">The assemblies to scan for jobs.</param>
         /// <exception cref="System.ArgumentNullException">assembliesToScan</exception>
-        public QuartzAutofacJobsModule([NotNull] params Assembly[] assembliesToScan)
+        public QuartzAutofacJobsModule(params Assembly[] assembliesToScan)
         {
             _assembliesToScan = assembliesToScan ?? throw new ArgumentNullException(nameof(assembliesToScan));
         }
@@ -63,8 +64,7 @@ namespace Autofac.Extras.Quartz
         ///     Job registration filter callback.
         /// </summary>
         /// <seealso cref="JobRegistrationFilter" />
-        [CanBeNull]
-        public JobRegistrationFilter JobFilter { get; set; }
+        public JobRegistrationFilter? JobFilter { get; set; }
 
         /// <summary>
         ///     Override to add registrations to the container.
@@ -87,12 +87,12 @@ namespace Autofac.Extras.Quartz
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool FilterJob([NotNull] Type jobType)
+        bool FilterJob(Type jobType)
         {
             return JobFilter?.Invoke(jobType) ?? true;
         }
 
-        private static bool IsAbstract([NotNull] Type type)
+        static bool IsAbstract(Type type)
         {
             return type.IsAbstract;
         }

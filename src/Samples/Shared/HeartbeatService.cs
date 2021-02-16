@@ -7,18 +7,18 @@
 
 #endregion
 
+// ReSharper disable once CheckNamespace
 namespace SimpleService.AppServices
 {
-    using JetBrains.Annotations;
     using Serilog;
 
-    internal class HeartbeatService : IHeartbeatService
+    class HeartbeatService : IHeartbeatService
     {
-        [NotNull] private static readonly ILogger s_log = Log.ForContext<HeartbeatService>();
+        static readonly ILogger s_log = Log.ForContext<HeartbeatService>();
 
         public void UpdateServiceState(string state)
         {
-            s_log.Information("Service state: {ServiceState}.", state);
+            s_log.Information("Service state: {ServiceState}", state);
         }
     }
 

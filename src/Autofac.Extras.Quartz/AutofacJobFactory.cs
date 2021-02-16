@@ -25,27 +25,32 @@ namespace Autofac.Extras.Quartz
     [PublicAPI]
     public class AutofacJobFactory : IJobFactory, IDisposable
     {
-        [NotNull] readonly ILifetimeScope _lifetimeScope;
+        readonly ILifetimeScope _lifetimeScope;
 
-        [NotNull] readonly object _scopeTag;
+        readonly object _scopeTag;
+
+        readonly QuartzJobScopeConfigurator? _jobScopeConfigurator;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AutofacJobFactory" /> class.
         /// </summary>
         /// <param name="lifetimeScope">The lifetime scope.</param>
         /// <param name="scopeTag">The tag to use for new scopes.</param>
+        /// <param name="jobScopeConfigurator">Configures job scope.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="lifetimeScope" /> or <paramref name="scopeTag" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public AutofacJobFactory([NotNull] ILifetimeScope lifetimeScope, [NotNull] object scopeTag)
+        public AutofacJobFactory(ILifetimeScope lifetimeScope, object scopeTag,
+            QuartzJobScopeConfigurator? jobScopeConfigurator)
         {
             _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
             _scopeTag = scopeTag ?? throw new ArgumentNullException(nameof(scopeTag));
+            _jobScopeConfigurator = jobScopeConfigurator;
         }
 
         internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs { get; } =
-            new ConcurrentDictionary<object, JobTrackingInfo>();
+            new();
 
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -83,14 +88,18 @@ namespace Autofac.Extras.Quartz
         ///     Error resolving exception. Original exception will be stored in
         ///     <see cref="Exception.InnerException" />.
         /// </exception>
-        [NotNull]
         public virtual IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
             if (bundle == null) throw new ArgumentNullException(nameof(bundle));
             if (scheduler == null) throw new ArgumentNullException(nameof(scheduler));
 
             var jobDetail = bundle.JobDetail;
-            var nestedScope = _lifetimeScope.BeginLifetimeScope(_scopeTag);
+
+            // don't call nested container configuration unless custom configurator was specified
+            // this is have operation so try to skip it if possible.
+            var nestedScope = _jobScopeConfigurator != null
+                ? _lifetimeScope.BeginLifetimeScope(_scopeTag, builder => _jobScopeConfigurator(builder, _scopeTag))
+                : _lifetimeScope.BeginLifetimeScope(_scopeTag);
 
             IJob newJob;
             try
@@ -131,7 +140,7 @@ namespace Autofac.Extras.Quartz
         /// <summary>
         ///     Allows the the job factory to destroy/cleanup the job if needed.
         /// </summary>
-        public void ReturnJob(IJob job)
+        public void ReturnJob(IJob? job)
         {
             if (job == null)
                 return;
@@ -143,7 +152,7 @@ namespace Autofac.Extras.Quartz
             }
             else
             {
-                trackingInfo.Scope?.Dispose();
+                trackingInfo.Scope.Dispose();
             }
         }
 

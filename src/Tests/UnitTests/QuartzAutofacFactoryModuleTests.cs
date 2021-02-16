@@ -26,12 +26,12 @@ namespace Autofac.Extras.Quartz.Tests
 
     public class QuartzAutofacFactoryModuleTests : IDisposable
     {
-        private readonly IContainer _container;
-        private readonly QuartzAutofacFactoryModule _quartzAutofacFactoryModule;
+        readonly IContainer _container;
+        readonly QuartzAutofacFactoryModule _quartzAutofacFactoryModule;
 
 
         [UsedImplicitly]
-        private class TestJob : IJob
+        class TestJob : IJob
         {
             public Task Execute(IJobExecutionContext context)
             {
@@ -51,7 +51,7 @@ namespace Autofac.Extras.Quartz.Tests
 
         public void Dispose()
         {
-            _container?.Dispose();
+            _container.Dispose();
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Autofac.Extras.Quartz.Tests
             var customSchedulerName = Guid.NewGuid().ToString();
             configuration[StdSchedulerFactory.PropertySchedulerInstanceName] = customSchedulerName;
 
-            _quartzAutofacFactoryModule.ConfigurationProvider = context => configuration;
+            _quartzAutofacFactoryModule.ConfigurationProvider = _ => configuration;
 
             var scheduler = _container.Resolve<IScheduler>();
             scheduler.SchedulerName.Should().BeEquivalentTo(customSchedulerName);

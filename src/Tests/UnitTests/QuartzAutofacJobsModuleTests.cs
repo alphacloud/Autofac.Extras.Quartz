@@ -24,7 +24,7 @@ namespace Autofac.Extras.Quartz.Tests
 
     public class QuartzAutofacJobsModuleTests: IDisposable
     {
-        IContainer _container;
+        IContainer? _container;
 
 
         [UsedImplicitly]
