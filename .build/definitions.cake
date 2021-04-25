@@ -1,14 +1,14 @@
 // ADDINS
-#addin nuget:?package=Cake.Coveralls&version=0.10.2
-#addin nuget:?package=Cake.FileHelpers&version=3.3.0
-#addin nuget:?package=Cake.AppVeyor&version=4.0.0
+#addin nuget:?package=Cake.Coveralls&version=1.0.1
+#addin nuget:?package=Cake.FileHelpers&version=4.0.1
+#addin nuget:?package=Cake.AppVeyor&version=5.0.1
 
 // TOOLS
 #tool nuget:?package=GitReleaseManager&version=0.11.0
-#tool nuget:?package=GitVersion.CommandLine&version=5.6.6
+#tool nuget:?package=GitVersion.CommandLine&version=5.6.8
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.8.5
+#tool nuget:?package=ReportGenerator&version=4.8.8
 
 
 public class CodeCoverageSettings
