@@ -1,0 +1,24 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/src"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  target-branch: develop
+  assignees:
+  - shatl
+  ignore:
+  - dependency-name: Quartz
+    versions:
+    - 3.3.2
+  - dependency-name: JetBrains.Annotations
+    versions:
+    - 2021.1.0
+  - dependency-name: Microsoft.NET.Test.Sdk
+    versions:
+    - 16.9.1
+    - 16.9.4
+  - dependency-name: Moq
+    versions:
+    - 4.16.1
