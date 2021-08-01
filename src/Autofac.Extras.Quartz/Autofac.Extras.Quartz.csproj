@@ -22,7 +22,7 @@
     <PackageReference Include="Autofac" Version="[6.2.0, 7.0.0)" />
     <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="Quartz" Version="[3.3.2, 4.0.0)" />
+    <PackageReference Include="Quartz" Version="[3.3.3, 4.0.0)" />
   </ItemGroup>
 
 </Project>
