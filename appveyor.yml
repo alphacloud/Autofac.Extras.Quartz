@@ -21,7 +21,7 @@ environment:
     secure: SakrMxbclSjNzFQxv8sA35OhulfvNm9VqHBEOgQrebPaF/Bv7AmZRsT8/YEfSQED
 
 install:
-  - ps: ./dotnet-install.ps1 -Version 6.0.100-preview.3.21202.5 -InstallDir "C:\Program Files\dotnet"
+  - ps: ./dotnet-install.ps1 -Version 6.0.100-preview.6.21355.2 -InstallDir "C:\Program Files\dotnet"
   - ps: dotnet tool install Cake.Tool --version 1.1.0 --global
 
 build_script:
@@ -41,7 +41,7 @@ deploy:
   - provider: NuGet
     name: Pre release
     api_key:
-      secure: vOqx1kFHlM67juhiUf/8zTnsItKSRcPSacnVAHlFfVIBe24FhWGYxQ7phvGmtPuk
+      secure: p/ZJ+/gjSUGrr+pBIY9/yLZMoVw9QOqgIiUlhP0IaSPbqM4ZYaMw2WziKGJIVmuH
     on:
       branch:
         - develop
@@ -52,6 +52,6 @@ deploy:
   - provider: NuGet
     name: Tagged release
     api_key:
-      secure: vOqx1kFHlM67juhiUf/8zTnsItKSRcPSacnVAHlFfVIBe24FhWGYxQ7phvGmtPuk
+      secure: p/ZJ+/gjSUGrr+pBIY9/yLZMoVw9QOqgIiUlhP0IaSPbqM4ZYaMw2WziKGJIVmuH
     on:
       appveyor_repo_tag: true

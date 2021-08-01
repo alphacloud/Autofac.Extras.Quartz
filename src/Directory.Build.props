@@ -15,6 +15,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <DebugSymbols>True</DebugSymbols>
+    <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
@@ -31,7 +32,7 @@
     <PackageProjectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>alphacloud quartz autofac</PackageTags>
-    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/releases/tag/7.1.0</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/milestone/23</PackageReleaseNotes>
     <Authors>shatl</Authors>
     <Company>Alphacloud</Company>
     <Description>Quartz.Net integration</Description>
