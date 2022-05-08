@@ -3,29 +3,25 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2021 Alphacloud.Net
+// Copyright (c) 2014-2022 Alphacloud.Net
 
 #endregion
 
 // ReSharper disable once CheckNamespace
-namespace SimpleService.AppServices
+namespace SimpleService.AppServices;
+
+[PublicAPI]
+public interface IScopedDependency
 {
-    using System;
-    using JetBrains.Annotations;
+    string Scope { get; }
+}
 
-    [PublicAPI]
-    public interface IScopedDependency
+class ScopedDependency : IScopedDependency
+{
+    public ScopedDependency(string scope)
     {
-        string Scope { get; }
+        Scope = scope ?? throw new ArgumentNullException(nameof(scope));
     }
 
-    class ScopedDependency : IScopedDependency
-    {
-        public ScopedDependency(string scope)
-        {
-            Scope = scope ?? throw new ArgumentNullException(nameof(scope));
-        }
-
-        public string Scope { get; }
-    }
+    public string Scope { get; }
 }

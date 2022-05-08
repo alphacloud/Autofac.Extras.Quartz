@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Autofac.Extras.Quartz\Autofac.Extras.Quartz.csproj" />
+    <ProjectReference Include="..\..\Lib\Autofac.Extras.Quartz\Autofac.Extras.Quartz.csproj" />
   </ItemGroup>
 
 </Project>
