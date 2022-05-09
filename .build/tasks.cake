@@ -41,57 +41,81 @@ Task("RunXunitTests")
     {
         var projectPath = build.Paths.SrcDir;
         var projectFilename = build.Settings.SolutionName;
-        Information("Calculating code coverage for {0} ...", projectFilename);
-
-        Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) => {
-            var pb = new ProcessArgumentBuilder()
-                .AppendSwitch("--configuration", buildCfg)
-                .AppendSwitch("--filter", "Category!=ManualTests")
-                .AppendSwitch("--results-directory", build.Paths.RootDir.Combine(build.Paths.ArtifactsDir).FullPath)
-                .Append("--no-restore")
-                .Append("--no-build");
-            if (!build.IsLocal) {
-                pb.AppendSwitch("--test-adapter-path", ".")
-                    .AppendSwitch("--logger", "AppVeyor");
-            }
-            else {
-                pb.AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx");
-            }
-            return pb;
+        // keep in sync with src/Directory.Build.props
+        var testTargets = new KeyValuePair<string, bool>[] {
+            new KeyValuePair<string,bool>("netcoreapp3.1", true),
+            new KeyValuePair<string,bool>("net5.0", true),
+            new KeyValuePair<string,bool>("net6.0", true),
+            new KeyValuePair<string,bool>("net7.0", false)  // opencover does not work with .NET 7 preview
         };
-
-        var openCoverSettings = new OpenCoverSettings
+        foreach(var targetFw in testTargets)
         {
-            OldStyle = true,
-            ReturnTargetCodeOffset = 0,
-            ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
-            WorkingDirectory = projectPath,
-        }
-        .WithFilter($"{build.Settings.CodeCoverage.IncludeFilter} {build.Settings.CodeCoverage.ExcludeFilter}")
-        .ExcludeByAttribute(build.Settings.CodeCoverage.ExcludeByAttribute)
-        .ExcludeByFile(build.Settings.CodeCoverage.ExcludeByFile);
+            Func<string,string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg, targetFramework) => {
+                var pb = new ProcessArgumentBuilder()
+                    .AppendSwitch("--configuration", buildCfg)
+                    .AppendSwitch("--filter", "Category!=ManualTests")
+                    .AppendSwitch("--results-directory", build.Paths.RootDir.Combine(build.Paths.ArtifactsDir).FullPath)
+                    .AppendSwitch("--framework", targetFramework)
+                    .Append("--no-restore")
+                    .Append("--no-build");
+                if (!build.IsLocal) {
+                    pb.AppendSwitch("--test-adapter-path", ".")
+                        .AppendSwitch("--logger", "AppVeyor");
+                }
+                else {
+                    pb.AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx");
+                }
+                return pb;
+            };
 
-        // run open cover for debug build configuration
-        OpenCover(
-            tool => tool.DotNetCoreTool(
-                projectPath.ToString(),
-                "test",
-                buildProcessArgs("Debug")
-            ),
-            build.Paths.RootDir.Combine(build.Paths.TestCoverageOutputFile).FullPath,
-            openCoverSettings
-        );
-
-        // run tests again if Release mode was requested
-        if (build.IsRelease)
-        {
-            var solutionFullPath = build.Paths.RootDir.Combine(build.Paths.SrcDir).Combine(build.Settings.SolutionName) + ".sln";
-            Information("Running Release mode tests for {0}", projectFilename);
-            DotNetCoreTool(
-                solutionFullPath,
-                "test",
-                buildProcessArgs("Release")
-            );
+            if (targetFw.Value) // calculate coverage
+            {
+                Information("Calculating code coverage for {0} ({1}) ...", projectFilename, targetFw.Key);
+                
+                var openCoverSettings = new OpenCoverSettings
+                {
+                    OldStyle = true,
+                    ReturnTargetCodeOffset = 0,
+                    ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
+                    WorkingDirectory = projectPath,
+                }
+                .WithFilter($"{build.Settings.CodeCoverage.IncludeFilter} {build.Settings.CodeCoverage.ExcludeFilter}")
+                .ExcludeByAttribute(build.Settings.CodeCoverage.ExcludeByAttribute)
+                .ExcludeByFile(build.Settings.CodeCoverage.ExcludeByFile);
+                
+                // run open cover for debug build configuration
+                OpenCover(
+                    tool => tool.DotNetCoreTool(
+                        projectPath.ToString(),
+                        "test",
+                        buildProcessArgs("Debug", targetFw.Key)
+                    ),
+                    build.Paths.RootDir.Combine(build.Paths.TestCoverageOutputFile).FullPath,
+                    openCoverSettings
+                );
+            } else 
+            {
+                var solutionFullPath = build.Paths.RootDir.Combine(build.Paths.SrcDir).Combine(build.Settings.SolutionName) + ".sln";
+                Information("Running Debug mode tests for {0} ({1})", projectFilename, targetFw.Key);
+                DotNetCoreTool(
+                    solutionFullPath,
+                    "test",
+                    buildProcessArgs("Debug", targetFw.Key)
+                );
+            
+            }
+            
+            // run tests again if Release mode was requested
+            if (build.IsRelease)
+            {
+                var solutionFullPath = build.Paths.RootDir.Combine(build.Paths.SrcDir).Combine(build.Settings.SolutionName) + ".sln";
+                Information("Running Release mode tests for {0} ({1})", projectFilename, targetFw.Key);
+                DotNetCoreTool(
+                    solutionFullPath,
+                    "test",
+                    buildProcessArgs("Release", targetFw.Key)
+                );
+            }
         }
     })
     .DeferOnError();
@@ -103,7 +127,7 @@ Task("CleanPreviousTestResults")
             DeleteFile(build.Paths.TestCoverageOutputFile);
         DeleteFiles(build.Paths.ArtifactsDir + "/*.trx");
         if (DirectoryExists(build.Paths.TestCoverageReportDir))
-            DeleteDirectory(build.Paths.TestCoverageReportDir, new DeleteDirectorySettings 
+            DeleteDirectory(build.Paths.TestCoverageReportDir, new DeleteDirectorySettings
             {
                 Force = true,
                 Recursive = true
