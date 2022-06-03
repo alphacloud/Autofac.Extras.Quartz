@@ -86,8 +86,11 @@ public class RepositoryInfo {
         return new RepositoryInfo {
             IsPullRequest = buildSystem.AppVeyor.Environment.PullRequest.IsPullRequest,
             IsDevelopBranch = StringComparer.OrdinalIgnoreCase.Equals("develop", buildSystem.AppVeyor.Environment.Repository.Branch),
-            IsReleaseBranch = buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("releases/", StringComparison.OrdinalIgnoreCase) >= 0
-                || buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("hotfixes/", StringComparison.OrdinalIgnoreCase) >= 0,
+            IsReleaseBranch = buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("release/", StringComparison.OrdinalIgnoreCase) >= 0
+                || buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("releases/", StringComparison.OrdinalIgnoreCase) >= 0
+                || buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("hotfix/", StringComparison.OrdinalIgnoreCase) >= 0
+                || buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("hotfixes/", StringComparison.OrdinalIgnoreCase) >= 0
+                ,
             IsTagged = buildSystem.AppVeyor.Environment.Repository.Tag.IsTag,
             IsMain = StringComparer.OrdinalIgnoreCase.Equals($"{settings.RepoOwner}/{settings.RepoName}", buildSystem.AppVeyor.Environment.Repository.Name),
         };
