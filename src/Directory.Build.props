@@ -1,8 +1,8 @@
 <Project>
 
   <PropertyGroup Label="Common">
-    <LibraryTargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</LibraryTargetFrameworks>
-    <ApplicationTargetFrameworks>netcoreapp3.1;net5.0;net6.0</ApplicationTargetFrameworks>
+    <LibraryTargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net7.0</LibraryTargetFrameworks>
+    <ApplicationTargetFrameworks>netcoreapp3.1;net6.0;net7.0</ApplicationTargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="Build">
@@ -12,8 +12,9 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <DebugSymbols>True</DebugSymbols>
     <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
   </PropertyGroup>
@@ -32,7 +33,7 @@
     <PackageProjectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>alphacloud quartz autofac</PackageTags>
-    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/milestone/24</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/milestone/26</PackageReleaseNotes>
     <Authors>shatl</Authors>
     <Company>Alphacloud</Company>
     <Description>Quartz.Net integration</Description>
@@ -49,12 +50,21 @@
   <PropertyGroup Condition=" '$(MSBuildProjectFullPath.Contains(Samples))' == true">
     <NoWarn>$(NoWarn);CS0618;CS1591</NoWarn>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition=" '$(MSBuildProjectName.Contains(Tests))' == true ">
     <NoWarn>$(NoWarn);CS0618;CS1591</NoWarn>
     <IsTestProject>true</IsTestProject>
     <IsPackable>False</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Autofac" />
+    <Using Include="JetBrains.Annotations" />
+    <Using Include="Quartz" />
+    <Using Include="Quartz.Core" />
+    <Using Include="Quartz.Impl" />
+    <Using Include="Quartz.Spi" />
+  </ItemGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
@@ -64,5 +74,5 @@ Autofac.Extras.Quartz.Tests, PublicKey=00240000048000009400000006020000002400005
     </AssemblyAttribute>
   </ItemGroup>
 
-  
+
 </Project>

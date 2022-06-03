@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30523.141
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac.Extras.Quartz", "Autofac.Extras.Quartz\Autofac.Extras.Quartz.csproj", "{30027DBA-C4A2-4212-94C8-C0AD202D9782}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BD8ADEE0-CF2B-4C69-94A0-2C866BBB591F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{F3595C94-A2F2-40AC-8CB3-911808133F71}"
@@ -22,16 +20,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "Samples\Console\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{BE6BB1DB-3E84-49C4-8BBA-3BC8A5811105}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{E399A27D-9744-4D5C-B2AD-26EE921362A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac.Extras.Quartz", "Lib\Autofac.Extras.Quartz\Autofac.Extras.Quartz.csproj", "{EE43CF75-AE5F-4D77-945D-9CB4F86934EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{30027DBA-C4A2-4212-94C8-C0AD202D9782}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30027DBA-C4A2-4212-94C8-C0AD202D9782}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30027DBA-C4A2-4212-94C8-C0AD202D9782}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30027DBA-C4A2-4212-94C8-C0AD202D9782}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B430AE4F-AD05-4D61-A909-6603C4346D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B430AE4F-AD05-4D61-A909-6603C4346D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B430AE4F-AD05-4D61-A909-6603C4346D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,6 +38,10 @@ Global
 		{BE6BB1DB-3E84-49C4-8BBA-3BC8A5811105}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE6BB1DB-3E84-49C4-8BBA-3BC8A5811105}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE6BB1DB-3E84-49C4-8BBA-3BC8A5811105}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE43CF75-AE5F-4D77-945D-9CB4F86934EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE43CF75-AE5F-4D77-945D-9CB4F86934EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE43CF75-AE5F-4D77-945D-9CB4F86934EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE43CF75-AE5F-4D77-945D-9CB4F86934EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +49,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B430AE4F-AD05-4D61-A909-6603C4346D22} = {F3595C94-A2F2-40AC-8CB3-911808133F71}
 		{BE6BB1DB-3E84-49C4-8BBA-3BC8A5811105} = {BD8ADEE0-CF2B-4C69-94A0-2C866BBB591F}
+		{EE43CF75-AE5F-4D77-945D-9CB4F86934EA} = {E399A27D-9744-4D5C-B2AD-26EE921362A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B88AF062-266B-47A6-AC62-DE585E522369}

@@ -3,33 +3,29 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2021 Alphacloud.Net
+// Copyright (c) 2014-2022 Alphacloud.Net
 
 #endregion
 
 // ReSharper disable once CheckNamespace
-namespace SimpleService.Jobs
+namespace SimpleService.Jobs;
+
+using AppServices;
+
+public class HeartbeatJob : IJob
 {
-    using System;
-    using System.Threading.Tasks;
-    using AppServices;
-    using Quartz;
+    readonly IHeartbeatService _heartbeat;
+    readonly IScopedDependency _scopedDependency;
 
-    public class HeartbeatJob : IJob
+    public HeartbeatJob(IHeartbeatService heartbeat, IScopedDependency scopedDependency)
     {
-        readonly IHeartbeatService _heartbeat;
-        readonly IScopedDependency _scopedDependency;
+        _heartbeat = heartbeat ?? throw new ArgumentNullException(nameof(heartbeat));
+        _scopedDependency = scopedDependency ?? throw new ArgumentNullException(nameof(scopedDependency));
+    }
 
-        public HeartbeatJob(IHeartbeatService heartbeat, IScopedDependency scopedDependency)
-        {
-            _heartbeat = heartbeat ?? throw new ArgumentNullException(nameof(heartbeat));
-            _scopedDependency = scopedDependency ?? throw new ArgumentNullException(nameof(scopedDependency));
-        }
-
-        public Task Execute(IJobExecutionContext context)
-        {
-            _heartbeat.UpdateServiceState($"alive, scope: {_scopedDependency.Scope}");
-            return Task.CompletedTask;
-        }
+    public Task Execute(IJobExecutionContext context)
+    {
+        _heartbeat.UpdateServiceState($"alive, scope: {_scopedDependency.Scope}");
+        return Task.CompletedTask;
     }
 }

@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2021 Alphacloud.Net
+// Copyright (c) 2014-2022 Alphacloud.Net
 
 #endregion
 
@@ -11,74 +11,68 @@
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable HeapView.ClosureAllocation
 // ReSharper disable HeapView.DelegateAllocation
-namespace Autofac.Extras.Quartz.Tests
+namespace Autofac.Extras.Quartz.Tests;
+
+using System.Reflection;
+using FluentAssertions;
+using Xunit;
+
+public class OptionalJobDependencyTests : IDisposable
+
 {
-    using System;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using FluentAssertions;
-    using global::Quartz;
-    using JetBrains.Annotations;
-    using Xunit;
+    readonly ContainerBuilder _containerBuilder;
 
 
-    public class OptionalJobDependencyTests: IDisposable
+    IContainer? _container;
 
+    public OptionalJobDependencyTests()
     {
-       
-        public OptionalJobDependencyTests()
-        {
-            _containerBuilder = new ContainerBuilder();
-            _containerBuilder.RegisterType<JobDependency>().As<IJobDependency>();
-        }
+        _containerBuilder = new ContainerBuilder();
+        _containerBuilder.RegisterType<JobDependency>().As<IJobDependency>();
+    }
+
+    public void Dispose()
+    {
+        _container?.Dispose();
+    }
+
+    [Fact]
+    public void ShouldIgnoreRegisteredOptionalDependencies_UnlessExplicitlyConfigured()
+    {
+        _containerBuilder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()));
+        _container = _containerBuilder.Build();
+
+        var job = _container.Resolve<TestJobWithOptionalDependency>();
+        job.Dependency.Should().BeNull();
+    }
+
+    [Fact]
+    public void ShouldWireRegisteredOptionalDependencies()
+    {
+        _containerBuilder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()) {
+            AutoWireProperties = true
+        });
+        _container = _containerBuilder.Build();
 
 
-        IContainer? _container;
-        readonly ContainerBuilder _containerBuilder;
+        var job = _container.Resolve<TestJobWithOptionalDependency>();
+        job.Dependency.Should().NotBeNull("should wire optional dependency");
+    }
 
-        [UsedImplicitly]
-        class TestJobWithOptionalDependency : IJob
-        {
-            public IJobDependency? Dependency { get; [UsedImplicitly] set; }
+    [UsedImplicitly]
+    class TestJobWithOptionalDependency : IJob
+    {
+        public IJobDependency? Dependency { get; [UsedImplicitly] set; }
 
-            public Task Execute(IJobExecutionContext context) => Task.CompletedTask;
-        }
+        public Task Execute(IJobExecutionContext context) => Task.CompletedTask;
+    }
 
-        interface IJobDependency
-        {
-        }
+    interface IJobDependency
+    {
+    }
 
-        [UsedImplicitly]
-        class JobDependency : IJobDependency
-        {
-        }
-
-        [Fact]
-        public void ShouldIgnoreRegisteredOptionalDependencies_UnlessExplicitlyConfigured()
-        {
-            _containerBuilder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()));
-            _container = _containerBuilder.Build();
-
-            var job = _container.Resolve<TestJobWithOptionalDependency>();
-            job.Dependency.Should().BeNull();
-        }
-
-        [Fact]
-        public void ShouldWireRegisteredOptionalDependencies()
-        {
-            _containerBuilder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()) {
-                AutoWireProperties = true
-            });
-            _container = _containerBuilder.Build();
-
-
-            var job = _container.Resolve<TestJobWithOptionalDependency>();
-            job.Dependency.Should().NotBeNull("should wire optional dependency");
-        }
-
-        public void Dispose()
-        {
-            _container?.Dispose();
-        }
+    [UsedImplicitly]
+    class JobDependency : IJobDependency
+    {
     }
 }
