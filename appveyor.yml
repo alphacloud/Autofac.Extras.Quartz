@@ -15,7 +15,7 @@ environment:
   # Disable sending usage data to Microsoft
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   coveralls_repo_token:
-    secure: PuEgFAkWtmyKy5qZYyYdJCSqdL6IZmGzm6fxQfKbOX0T63KQXMbON0azijNuQBC/
+    secure: viDubwFnf8h5XEP5TIY6JV8mOVDZ+9DAc1uye9KL6qRHsoP95ycbV0pa6QRTgSVV
   CAKE_SETTINGS_SKIPVERIFICATION: true
   GITHUB_TOKEN:
     secure: SakrMxbclSjNzFQxv8sA35OhulfvNm9VqHBEOgQrebPaF/Bv7AmZRsT8/YEfSQED
