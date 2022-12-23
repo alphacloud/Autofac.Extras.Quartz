@@ -6,7 +6,7 @@
 // TOOLS
 #tool nuget:?package=GitReleaseManager&version=0.12.1
 #tool nuget:?package=GitVersion.CommandLine&version=5.7.0
-#tool nuget:?package=coveralls.io&version=1.4.2
+#tool nuget:?package=coveralls.net&version=4.0.1
 #tool nuget:?package=OpenCover&version=4.7.1221
 #tool nuget:?package=ReportGenerator&version=4.8.13
 
