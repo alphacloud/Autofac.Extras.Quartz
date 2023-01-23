@@ -22,6 +22,7 @@ environment:
 
 install:
   - ps: dotnet tool install Cake.Tool --version 1.3.0 --global
+  - ps: dotnet tool install coveralls.net --version 4.0.1 --global
 
 build_script:
   - ps: dotnet cake
