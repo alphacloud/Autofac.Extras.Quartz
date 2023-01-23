@@ -144,7 +144,10 @@ Task("UploadCoverage")
     .WithCriteria<BuildInfo>((ctx, build) => !build.IsLocal)
     .Does<BuildInfo>(build =>
     {
-        CoverallsIo(build.Paths.TestCoverageOutputFile);
+        CoverallsNet(build.Paths.TestCoverageOutputFile, CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+        {
+            RepoTokenVariable = "COVERALLS_REPO_TOKEN"
+        });
     });
 
 Task("RunUnitTests")
