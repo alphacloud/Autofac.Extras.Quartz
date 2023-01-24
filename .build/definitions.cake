@@ -6,7 +6,7 @@
 // TOOLS
 #tool nuget:?package=GitReleaseManager&version=0.12.1
 #tool nuget:?package=GitVersion.CommandLine&version=5.7.0
-#tool nuget:?package=coveralls.io&version=1.4.2
+#tool nuget:?package=coveralls.net&version=4.0.1
 #tool nuget:?package=OpenCover&version=4.7.1221
 #tool nuget:?package=ReportGenerator&version=4.8.13
 
@@ -86,8 +86,11 @@ public class RepositoryInfo {
         return new RepositoryInfo {
             IsPullRequest = buildSystem.AppVeyor.Environment.PullRequest.IsPullRequest,
             IsDevelopBranch = StringComparer.OrdinalIgnoreCase.Equals("develop", buildSystem.AppVeyor.Environment.Repository.Branch),
-            IsReleaseBranch = buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("releases/", StringComparison.OrdinalIgnoreCase) >= 0
-                || buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("hotfixes/", StringComparison.OrdinalIgnoreCase) >= 0,
+            IsReleaseBranch = buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("release/", StringComparison.OrdinalIgnoreCase) >= 0
+                || buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("releases/", StringComparison.OrdinalIgnoreCase) >= 0
+                || buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("hotfix/", StringComparison.OrdinalIgnoreCase) >= 0
+                || buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("hotfixes/", StringComparison.OrdinalIgnoreCase) >= 0
+                ,
             IsTagged = buildSystem.AppVeyor.Environment.Repository.Tag.IsTag,
             IsMain = StringComparer.OrdinalIgnoreCase.Equals($"{settings.RepoOwner}/{settings.RepoName}", buildSystem.AppVeyor.Environment.Repository.Name),
         };
