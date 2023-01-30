@@ -11,19 +11,24 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable;$(WarningsAsErrors)</WarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
     <DebugSymbols>True</DebugSymbols>
     <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(CI)' =='true' ">
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
