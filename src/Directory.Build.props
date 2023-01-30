@@ -13,11 +13,16 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable;$(WarningsAsErrors)</WarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
     <DebugSymbols>True</DebugSymbols>
     <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(CI)' =='true' ">
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
