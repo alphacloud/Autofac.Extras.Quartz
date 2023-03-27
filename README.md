@@ -6,8 +6,8 @@ Autofac integration package for [Quartz.Net](http://www.quartz-scheduler.net/).
 Autofac.Extras.Quartz creates nested litefime scope for each Quartz Job. 
 Nested scope is disposed after job execution has been completed.
 
-This allows to have [single instance per job execution](https://github.com/autofac/Autofac/wiki/Instance-Scope#per-lifetime-scope) 
-as well as deterministic [disposal of resources](https://github.com/autofac/Autofac/wiki/Deterministic-Disposal).
+This allows to have [single instance per job execution](https://autofac.readthedocs.io/en/latest/lifetime/instance-scope.html#instance-per-lifetime-scope)
+ as well as deterministic [disposal of resources](https://autofac.readthedocs.io/en/latest/lifetime/disposal.html#automatic-disposal).
 
 Install package via Nuget: `install-package Autofac.Extras.Quartz`
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup Label="Common">
     <LibraryTargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net7.0</LibraryTargetFrameworks>
-    <ApplicationTargetFrameworks>netcoreapp3.1;net6.0;net7.0</ApplicationTargetFrameworks>
+    <ApplicationTargetFrameworks>net6.0;net7.0</ApplicationTargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="Build">
@@ -38,7 +38,7 @@
     <PackageProjectUrl>https://github.com/alphacloud/Autofac.Extras.Quartz</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>alphacloud quartz autofac</PackageTags>
-    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/milestone/27</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/alphacloud/Autofac.Extras.Quartz/milestone/29</PackageReleaseNotes>
     <Authors>shatl</Authors>
     <Company>Alphacloud</Company>
     <Description>Quartz.Net integration</Description>
