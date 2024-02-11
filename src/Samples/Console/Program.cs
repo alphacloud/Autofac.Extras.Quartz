@@ -57,6 +57,6 @@ static class Program
         }
 
         container?.Dispose();
-        Log.CloseAndFlush();
+        await Log.CloseAndFlushAsync();
     }
 }
