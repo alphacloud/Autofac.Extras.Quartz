@@ -21,6 +21,7 @@ environment:
     secure: SakrMxbclSjNzFQxv8sA35OhulfvNm9VqHBEOgQrebPaF/Bv7AmZRsT8/YEfSQED
 
 install:
+  - ps: dotnet tool install coveralls.net --version 4.0.1 --global
   - ps: dotnet tool restore
 
 build_script:
