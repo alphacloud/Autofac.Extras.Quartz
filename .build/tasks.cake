@@ -44,7 +44,8 @@ Task("RunXunitTests")
         // keep in sync with src/Directory.Build.props
         var testTargets = new KeyValuePair<string, bool>[] {
             new KeyValuePair<string,bool>("net6.0", true),
-            new KeyValuePair<string,bool>("net7.0", true)  // opencover does not work with .NET 7 preview
+            new KeyValuePair<string,bool>("net7.0", true),
+            new KeyValuePair<string,bool>("net8.0", true)
         };
         foreach(var targetFw in testTargets)
         {
