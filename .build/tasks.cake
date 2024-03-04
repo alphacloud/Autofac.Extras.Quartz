@@ -205,7 +205,7 @@ Task("CreateNugetPackages")
             NoBuild = true,
             ArgumentCustomization = args => 
                 args.Append($"-p:Version={build.Version.NuGet}")
-                    .Append($"-p:PublishDir={build.Paths.PackagesDir}")
+                    .Append($"--output {build.Paths.PackagesDir}")
         });
     });
 
