@@ -8,6 +8,7 @@
   <PropertyGroup Label="Package">
     <Description>Autofac integration for Quartz.Net.</Description>
     <PackageTags>quartz autofac quartz-net alphacloud</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +17,10 @@
 
   <ItemGroup>
     <None Include="..\..\keyfile.snk" Link="keyfile.snk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
