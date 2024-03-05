@@ -7,6 +7,7 @@
 
   <PropertyGroup Label="Build">
     <TargetFrameworks>$(LibraryTargetFrameworks)</TargetFrameworks>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
     <SignAssembly>True</SignAssembly>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>

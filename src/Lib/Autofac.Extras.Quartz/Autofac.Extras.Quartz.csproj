@@ -20,14 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="[8.0.0, 9.0.0)" />
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
     <PackageReference Include="Quartz" Version="[3.8.1, 4.0.0)" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
