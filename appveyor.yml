@@ -21,8 +21,8 @@ environment:
     secure: SakrMxbclSjNzFQxv8sA35OhulfvNm9VqHBEOgQrebPaF/Bv7AmZRsT8/YEfSQED
 
 install:
-  - ps: dotnet tool install Cake.Tool --version 1.3.0 --global
   - ps: dotnet tool install coveralls.net --version 4.0.1 --global
+  - ps: dotnet tool restore
 
 build_script:
   - ps: dotnet cake
