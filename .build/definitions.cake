@@ -1,14 +1,14 @@
 // ADDINS
-#addin nuget:?package=Cake.Coveralls&version=1.1.0
-#addin nuget:?package=Cake.FileHelpers&version=4.0.1
-#addin nuget:?package=Cake.AppVeyor&version=5.0.1
+#addin nuget:?package=Cake.Coveralls&version=2.0.0
+#addin nuget:?package=Cake.FileHelpers&version=5.0.0
+#addin nuget:?package=Cake.AppVeyor&version=6.0.0
 
 // TOOLS
-#tool nuget:?package=GitReleaseManager&version=0.16.0
-#tool nuget:?package=GitVersion.CommandLine&version=5.7.0
+#tool nuget:?package=GitReleaseManager&version=0.20.0
+#tool nuget:?package=GitVersion.CommandLine&version=5.12.0
 #tool nuget:?package=coveralls.net&version=4.0.1
 #tool nuget:?package=OpenCover&version=4.7.1221
-#tool nuget:?package=ReportGenerator&version=4.8.13
+#tool nuget:?package=ReportGenerator&version=5.5.1
 
 
 public class CodeCoverageSettings
@@ -20,7 +20,8 @@ public class CodeCoverageSettings
 }
 
 // params
-public class ProjectSettings {
+public class ProjectSettings
+{
     public string RepoOwner { get; set; }
     public string RepoName { get; set; }
     public string SolutionName { get; set; }
@@ -40,23 +41,27 @@ public class ProjectSettings {
         RepoName = repoName;
         SolutionName = solutionName;
 
-        CodeCoverage = new CodeCoverageSettings {
+        CodeCoverage = new CodeCoverageSettings
+        {
             IncludeFilter = $"+[solutionName*]*"
         };
     }
 }
 
-public class Credentials {
+public class Credentials
+{
     public string UserName { get; }
     public string Password { get; }
 
-    public Credentials(string userName, string password) {
+    public Credentials(string userName, string password)
+    {
         UserName = userName;
         Password = password;
     }
 }
 
-public class BuildVersion {
+public class BuildVersion
+{
     public string NuGet { get; }
     public string Full { get; }
     public string Informational { get; }
@@ -64,7 +69,8 @@ public class BuildVersion {
     public string CommitHash { get; }
     public string Milestone { get; }
 
-    public BuildVersion(string nuget, string full, string informational, string nextMajor, string commitHash, string milestone) {
+    public BuildVersion(string nuget, string full, string informational, string nextMajor, string commitHash, string milestone)
+    {
         NuGet = nuget;
         Full = full;
         Informational = informational;
@@ -74,7 +80,8 @@ public class BuildVersion {
     }
 }
 
-public class RepositoryInfo {
+public class RepositoryInfo
+{
     public bool IsPullRequest { get; protected set; }
     public bool IsMain { get; protected set; }
     public bool IsDevelopBranch { get; protected set; }
@@ -82,8 +89,10 @@ public class RepositoryInfo {
     public bool IsReleaseBranch { get; protected set; }
     public bool IsTagged { get; protected set; }
 
-    public static RepositoryInfo Get(BuildSystem buildSystem, ProjectSettings settings) {
-        return new RepositoryInfo {
+    public static RepositoryInfo Get(BuildSystem buildSystem, ProjectSettings settings)
+    {
+        return new RepositoryInfo
+        {
             IsPullRequest = buildSystem.AppVeyor.Environment.PullRequest.IsPullRequest,
             IsDevelopBranch = StringComparer.OrdinalIgnoreCase.Equals("develop", buildSystem.AppVeyor.Environment.Repository.Branch),
             IsReleaseBranch = buildSystem.AppVeyor.Environment.Repository.Branch.IndexOf("release/", StringComparison.OrdinalIgnoreCase) >= 0
@@ -98,10 +107,11 @@ public class RepositoryInfo {
 }
 
 // default paths and files
-public class Paths {
+public class Paths
+{
     public DirectoryPath RootDir { get; }
     public string SrcDir { get; set; }
-    public string ArtifactsDir {get; set; }
+    public string ArtifactsDir { get; set; }
     public string TestCoverageOutputFile { get; set; }
     public string TestCoverageReportDir { get; set; }
     public string PackagesDir { get; set; }
@@ -126,12 +136,13 @@ public class Paths {
 }
 
 
-public class BuildInfo {
+public class BuildInfo
+{
     public string Target { get; protected set; }
     public string Config { get; protected set; }
 
     public bool IsDebug { get; protected set; }
-    public bool IsRelease {get; protected set;}
+    public bool IsRelease { get; protected set; }
 
     public bool IsLocal { get; protected set; }
     public string AppVeyorJobId { get; protected set; }
@@ -140,7 +151,7 @@ public class BuildInfo {
 
     public RepositoryInfo Repository { get; protected set; }
 
-    public string  GitHubToken { get; protected set; }
+    public string GitHubToken { get; protected set; }
 
     public Paths Paths { get; protected set; }
 
@@ -160,14 +171,15 @@ public class BuildInfo {
             semVersion.NuGetVersion,
             semVersion.FullBuildMetaData,
             semVersion.InformationalVersion,
-            $"{semVersion.Major+1}.0.0",
+            $"{semVersion.Major + 1}.0.0",
             semVersion.Sha,
             semVersion.MajorMinorPatch
         );
 
         var gitHubToken = context.EnvironmentVariable("GITHUB_TOKEN");
 
-        return new BuildInfo {
+        return new BuildInfo
+        {
             Target = target,
             Config = config,
             IsDebug = string.Equals(config, "Debug", StringComparison.OrdinalIgnoreCase),

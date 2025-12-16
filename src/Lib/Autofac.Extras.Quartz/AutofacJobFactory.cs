@@ -44,7 +44,7 @@ public class AutofacJobFactory : IJobFactory, IDisposable
         _jobScopeConfigurator = jobScopeConfigurator;
     }
 
-    internal ConcurrentDictionary<object, JobTrackingInfo> RunningJobs { get; } =
+    public ConcurrentDictionary<object, JobTrackingInfo> RunningJobs { get; } =
         new();
 
     /// <summary>
@@ -150,7 +150,7 @@ public class AutofacJobFactory : IJobFactory, IDisposable
 
     #region Job data
 
-    internal sealed class JobTrackingInfo
+    public sealed class JobTrackingInfo
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
