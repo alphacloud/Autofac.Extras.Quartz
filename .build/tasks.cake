@@ -43,8 +43,9 @@ Task("RunXunitTests")
         var projectFilename = build.Settings.SolutionName;
         // keep in sync with src/Directory.Build.props
         var testTargets = new KeyValuePair<string, bool>[] {
-            new KeyValuePair<string,bool>("net6.0", true),
-            new KeyValuePair<string,bool>("net7.0", true)  // opencover does not work with .NET 7 preview
+            new KeyValuePair<string,bool>("net8.0", true),
+            new KeyValuePair<string,bool>("net9.0", true),
+            new KeyValuePair<string,bool>("net10.0", true)
         };
         foreach(var targetFw in testTargets)
         {
@@ -205,7 +206,7 @@ Task("CreateNugetPackages")
             NoBuild = true,
             ArgumentCustomization = args => 
                 args.Append($"-p:Version={build.Version.NuGet}")
-                    .Append($"-p:PublishDir={build.Paths.PackagesDir}")
+                    .Append($"--output {build.Paths.PackagesDir}")
         });
     });
 

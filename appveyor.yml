@@ -21,9 +21,10 @@ environment:
     secure: SakrMxbclSjNzFQxv8sA35OhulfvNm9VqHBEOgQrebPaF/Bv7AmZRsT8/YEfSQED
 
 install:
+  - ps: ./dotnet-install.ps1 -Channel 10.0 -InstallDir "C:\Program Files\dotnet"
   - ps: dotnet tool install coveralls.net --version 4.0.1 --global
   - ps: dotnet tool restore
-
+  
 build_script:
   - ps: dotnet cake
 
@@ -41,7 +42,7 @@ deploy:
   - provider: NuGet
     name: Pre release
     api_key:
-      secure: pDQpeet/1FErGM/rXfNGkVy3KW1AggVTp0k0GNx4O6OsKoKqUUcYT6f307wCt9WJ
+      secure: dY4bp7AjkMRC6y/rp0QEEijOh4M5oi54hczmGgPuiXGeXNyqVg2tl8pssHGckLrT
     on:
       branch:
         - develop
@@ -52,6 +53,6 @@ deploy:
   - provider: NuGet
     name: Tagged release
     api_key:
-      secure: pDQpeet/1FErGM/rXfNGkVy3KW1AggVTp0k0GNx4O6OsKoKqUUcYT6f307wCt9WJ
+      secure: dY4bp7AjkMRC6y/rp0QEEijOh4M5oi54hczmGgPuiXGeXNyqVg2tl8pssHGckLrT
     on:
       appveyor_repo_tag: true
