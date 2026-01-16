@@ -43,7 +43,9 @@ Task("RunXunitTests")
         var projectFilename = build.Settings.SolutionName;
         // keep in sync with src/Directory.Build.props
         var testTargets = new KeyValuePair<string, bool>[] {
-            new KeyValuePair<string,bool>("net8.0", true)
+            new KeyValuePair<string,bool>("net8.0", true),
+            new KeyValuePair<string,bool>("net9.0", true),
+            new KeyValuePair<string,bool>("net10.0", true)
         };
         foreach(var targetFw in testTargets)
         {
