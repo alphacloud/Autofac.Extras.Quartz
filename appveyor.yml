@@ -23,9 +23,10 @@ environment:
 
 install:
   - ps: ./dotnet-install.ps1 -Channel 10.0 -InstallDir "C:\Program Files\dotnet"
-  - ps: dotnet tool restore
+  - ps: dotnet tool restore --tl:off
   
 build_script:
+  - ps: dotnet --info
   - ps: dotnet cake
 
 test: off
