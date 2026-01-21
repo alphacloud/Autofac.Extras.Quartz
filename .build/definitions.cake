@@ -150,20 +150,38 @@ public class BuildInfo {
     {
         if (context == null)
             throw new ArgumentNullException(nameof(context));
+            
         var target = context.Argument("target", "Default");
         var config = context.Argument("buildConfig", "Release");
         var buildSystem = context.BuildSystem();
-
-        // Calculate version and commit hash
-        GitVersion semVersion = context.GitVersion();
-        var version = new BuildVersion(
-            semVersion.NuGetVersion,
-            semVersion.FullBuildMetaData,
-            semVersion.InformationalVersion,
-            $"{semVersion.Major+1}.0.0",
-            semVersion.Sha,
-            semVersion.MajorMinorPatch
-        );
+        var repositoryInfo = RepositoryInfo.Get(buildSystem, settings);
+        
+        if (repositoryInfo.IsPullRequest) {
+            // GitVersion fails on PR builds, use 0.PullRequestId.0 as a version number
+            var buildVersion = $"0.{AppVeyor.Environment.PullRequest.Number}.{AppVeyor.Environment.Build.Id}";
+            var commitHash = AppVeyor.Environment.Repository.Commit.Id;
+            
+            var version = new BuildVersion(
+                buildVersion,
+                $"{buildVersion}/{commitHash}",
+                buildVersion,
+                buildVersion,
+                commitHash,
+                buildVersion
+            );
+        }
+        else {
+            // Calculate version and commit hash
+            GitVersion semVersion = context.GitVersion();
+            var version = new BuildVersion(
+                semVersion.NuGetVersion,
+                semVersion.FullBuildMetaData,
+                semVersion.InformationalVersion,
+                $"{semVersion.Major+1}.0.0",
+                semVersion.Sha,
+                semVersion.MajorMinorPatch
+            );
+        }
 
         var gitHubToken = context.EnvironmentVariable("GITHUB_TOKEN");
 
@@ -175,7 +193,7 @@ public class BuildInfo {
             IsLocal = buildSystem.IsLocalBuild,
             AppVeyorJobId = buildSystem.AppVeyor.Environment.JobId,
             Version = version,
-            Repository = RepositoryInfo.Get(buildSystem, settings),
+            Repository = ,
             GitHubToken = gitHubToken,
             Settings = settings,
             Paths = new Paths(context),
