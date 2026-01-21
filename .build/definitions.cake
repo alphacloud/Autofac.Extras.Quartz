@@ -155,13 +155,14 @@ public class BuildInfo {
         var config = context.Argument("buildConfig", "Release");
         var buildSystem = context.BuildSystem();
         var repositoryInfo = RepositoryInfo.Get(buildSystem, settings);
+        BuildVersion version;
         
         if (repositoryInfo.IsPullRequest) {
             // GitVersion fails on PR builds, use 0.PullRequestId.0 as a version number
-            var buildVersion = $"0.{AppVeyor.Environment.PullRequest.Number}.{AppVeyor.Environment.Build.Id}";
-            var commitHash = AppVeyor.Environment.Repository.Commit.Id;
+            var buildVersion = $"0.{buildSystem.AppVeyor.Environment.PullRequest.Number}.{buildSystem.AppVeyor.Environment.Build.Id}";
+            var commitHash = buildSystem.AppVeyor.Environment.Repository.Commit.Id;
             
-            var version = new BuildVersion(
+            version = new BuildVersion(
                 buildVersion,
                 $"{buildVersion}/{commitHash}",
                 buildVersion,
@@ -173,7 +174,7 @@ public class BuildInfo {
         else {
             // Calculate version and commit hash
             GitVersion semVersion = context.GitVersion();
-            var version = new BuildVersion(
+            version = new BuildVersion(
                 semVersion.NuGetVersion,
                 semVersion.FullBuildMetaData,
                 semVersion.InformationalVersion,
@@ -193,7 +194,7 @@ public class BuildInfo {
             IsLocal = buildSystem.IsLocalBuild,
             AppVeyorJobId = buildSystem.AppVeyor.Environment.JobId,
             Version = version,
-            Repository = ,
+            Repository = repositoryInfo,
             GitHubToken = gitHubToken,
             Settings = settings,
             Paths = new Paths(context),
