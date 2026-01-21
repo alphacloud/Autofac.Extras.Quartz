@@ -22,12 +22,12 @@ environment:
     secure: SakrMxbclSjNzFQxv8sA35OhulfvNm9VqHBEOgQrebPaF/Bv7AmZRsT8/YEfSQED
 
 install:
-  - ps: ./dotnet-install.ps1 -Channel 10.0 -InstallDir "C:\Program Files\dotnet"
-  - ps: dotnet tool restore --tl:off
+  - pwsh: ./dotnet-install.ps1 -Channel 10.0 -InstallDir "C:\Program Files\dotnet"
+  - pwsh: dotnet tool restore --tl:off
   
 build_script:
-  - ps: dotnet --info
-  - ps: dotnet cake
+  - pwsh: dotnet --info
+  - pwsh: dotnet cake
 
 test: off
 
