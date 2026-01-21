@@ -158,15 +158,15 @@ public class BuildInfo {
         BuildVersion version;
         
         if (repositoryInfo.IsPullRequest) {
-            // GitVersion fails on PR builds, use 0.PullRequestId.0 as a version number
-            var buildVersion = $"0.{buildSystem.AppVeyor.Environment.PullRequest.Number}.{buildSystem.AppVeyor.Environment.Build.Id}";
+            // GitVersion fails on PR builds, use 0.PullRequestId.BuildNumber as a version number
+            var buildVersion = $"0.{buildSystem.AppVeyor.Environment.PullRequest.Number}.{buildSystem.AppVeyor.Environment.Build.Number}";
             var commitHash = buildSystem.AppVeyor.Environment.Repository.Commit.Id;
             
             version = new BuildVersion(
                 buildVersion,
-                $"{buildVersion}/{commitHash}",
+                $"{buildVersion}/{commitHash}-PR-{buildSystem.AppVeyor.Environment.PullRequest.Title}",
                 buildVersion,
-                buildVersion,
+                $"{buildVersion}.0",
                 commitHash,
                 buildVersion
             );
