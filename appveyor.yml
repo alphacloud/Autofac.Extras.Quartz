@@ -23,7 +23,7 @@ environment:
 
 install:
   - pwsh: ./dotnet-install.ps1 -Channel 10.0 -InstallDir "C:\Program Files\dotnet"
-  - pwsh: dotnet tool restore --tl:off
+  - pwsh: dotnet tool restore
   
 build_script:
   - pwsh: dotnet --info
