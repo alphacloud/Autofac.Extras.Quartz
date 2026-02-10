@@ -22,11 +22,13 @@ environment:
     secure: SakrMxbclSjNzFQxv8sA35OhulfvNm9VqHBEOgQrebPaF/Bv7AmZRsT8/YEfSQED
 
 install:
-  - ps: ./dotnet-install.ps1 -Channel 10.0 -InstallDir "C:\Program Files\dotnet"
-  - ps: dotnet tool restore
+  - pwsh: ./dotnet-install.ps1 -Channel 10.0 -InstallDir "C:\Program Files\dotnet"
+  - cmd: dotnet tool install coveralls.net --version 4.0.1 --global
+  - cmd: dotnet tool restore
   
 build_script:
-  - ps: dotnet cake
+  - cmd: dotnet --info
+  - cmd: dotnet cake
 
 test: off
 

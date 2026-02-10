@@ -141,7 +141,7 @@ Task("GenerateCoverageReport")
     });
 
 Task("UploadCoverage")
-    .WithCriteria<BuildInfo>((ctx, build) => !build.IsLocal)
+    .WithCriteria<BuildInfo>((ctx, build) => (!build.IsPullRequest && !build.IsLocal))
     .Does<BuildInfo>(build =>
     {
         CoverallsNet(build.Paths.TestCoverageOutputFile, CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
