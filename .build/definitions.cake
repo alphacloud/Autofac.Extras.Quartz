@@ -135,6 +135,7 @@ public class BuildInfo {
 
     public bool IsLocal { get; protected set; }
     public string AppVeyorJobId { get; protected set; }
+    public bool IsPullRequest { get; protected set; }
 
     public BuildVersion Version { get; protected set; }
 
@@ -192,6 +193,7 @@ public class BuildInfo {
             IsDebug = string.Equals(config, "Debug", StringComparison.OrdinalIgnoreCase),
             IsRelease = string.Equals(config, "Release", StringComparison.OrdinalIgnoreCase),
             IsLocal = buildSystem.IsLocalBuild,
+            IsPullRequest = repositoryInfo.IsPullRequest,
             AppVeyorJobId = buildSystem.AppVeyor.Environment.JobId,
             Version = version,
             Repository = repositoryInfo,
