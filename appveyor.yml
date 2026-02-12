@@ -19,7 +19,7 @@ environment:
     secure: lnqi85UfPll4Gyb1pKU4hktQa3UI+eg8F5aS/5uDj5Ja1vU7VW1ZGoeds2IPWB/m
   CAKE_SETTINGS_SKIPVERIFICATION: true
   GITHUB_TOKEN:
-    secure: SakrMxbclSjNzFQxv8sA35OhulfvNm9VqHBEOgQrebPaF/Bv7AmZRsT8/YEfSQED
+    secure: +QNLnbjiRv9Sc8PEEk3ZnVKAStxHBx9brWaj6VYyyOULbaMn30cvn01aMsr3rb27qVYwmo62r73804xlJ9M6DK3LLSDWPcpyqpXzhJr4evRBsjY/+BcvAQAbJ3Cqjd4A
 
 install:
   - pwsh: ./dotnet-install.ps1 -Channel 10.0 -InstallDir "C:\Program Files\dotnet"
