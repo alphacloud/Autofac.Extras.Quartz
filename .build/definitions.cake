@@ -4,7 +4,7 @@
 #addin nuget:?package=Cake.AppVeyor&version=6.0.0
 
 // TOOLS
-#tool nuget:?package=GitReleaseManager&version=0.16.0
+#tool nuget:?package=GitReleaseManager&version=0.20.0
 #tool nuget:?package=GitVersion.CommandLine&version=5.12.0
 #tool nuget:?package=coveralls.net&version=4.0.1
 #tool nuget:?package=OpenCover&version=4.7.1221
