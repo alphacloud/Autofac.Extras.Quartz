@@ -9,8 +9,8 @@
 
 namespace Autofac.Extras.Quartz.Tests;
 
-using FluentAssertions;
 using Moq;
+using Shouldly;
 using Xunit;
 
 public class NestedScopeConfiguratorTests : IDisposable
@@ -55,7 +55,7 @@ public class NestedScopeConfiguratorTests : IDisposable
         );
 
         var job = _jobFactory.NewJob(triggerBundle, Mock.Of<IScheduler>());
-        job.As<SampleJob>().Dependency.Scope.Should().Be(LocalScope);
+        job.ShouldBeOfType<SampleJob>().Dependency.Scope.ShouldBe(LocalScope);
 
         _jobFactory.ReturnJob(job);
     }

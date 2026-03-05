@@ -1,0 +1,110 @@
+# Autofac.Extras.Quartz – Project Context
+
+## Purpose
+`Autofac.Extras.Quartz` is a .NET library that integrates [Quartz.NET](https://www.quartz-scheduler.net/) with [Autofac](https://autofac.org/).
+It creates a **nested Autofac lifetime scope for every Quartz job execution** so that per-scope dependencies are resolved fresh for each job run and are deterministically disposed when the job finishes.
+
+Published on NuGet as `Autofac.Extras.Quartz`.
+Repository: <https://github.com/alphacloud/Autofac.Extras.Quartz>
+License: MIT
+
+---
+
+## Solution structure
+
+```
+Autofac.Extras.Quartz/
+├── src/
+│   ├── Directory.Build.props          # shared MSBuild props (TFMs, language, signing, package metadata)
+│   ├── Lib/
+│   │   └── Autofac.Extras.Quartz/     # main library project
+│   │       ├── AutofacJobFactory.cs       – IJobFactory impl; creates/disposes nested scopes per job
+│   │       ├── AutofacSchedulerFactory.cs – StdSchedulerFactory subclass; wires AutofacJobFactory
+│   │       ├── QuartzAutofacFactoryModule.cs – Autofac Module; registers ISchedulerFactory, IScheduler, AutofacJobFactory
+│   │       └── QuartzAutofacJobsModule.cs    – Autofac Module; scans assemblies and registers all IJob impls
+│   ├── Samples/
+│   │   ├── Console/                   # .NET console sample app
+│   │   └── Shared/                    # Bootstrap, HeartbeatJob, ScopedDependency shared by samples
+│   └── Tests/
+│       └── UnitTests/                 # xUnit test project
+│           ├── NestedScopeConfiguratorTests.cs
+│           ├── OptionalJobDependencyTests.cs
+│           ├── QuartzAutofacFactoryModuleTests.cs
+│           ├── QuartzAutofacJobsModuleTests.cs
+│           └── ScopeTrackerTests.cs
+├── build.cake                         # Cake build script
+├── appveyor.yml                       # CI configuration
+└── GitVersion.yml                     # semantic versioning config
+```
+
+---
+
+## Key public API
+
+| Type | Description |
+|------|-------------|
+| `QuartzAutofacFactoryModule` | Registers `ISchedulerFactory`, `IScheduler` (singleton), and `AutofacJobFactory` (singleton). Accepts optional `ConfigurationProvider` (Quartz settings) and `JobScopeConfigurator` (scope override callback). |
+| `QuartzAutofacJobsModule` | Scans assemblies for non-abstract `IJob` implementations and registers them as `InstancePerLifetimeScope`. Supports `AutoWireProperties`, `PropertyWiringOptions`, and `JobFilter`. |
+| `AutofacJobFactory` | `IJobFactory` implementation. Creates a tagged nested lifetime scope per job; disposes the scope via `ReturnJob`. |
+| `AutofacSchedulerFactory` | `StdSchedulerFactory` subclass. Injects `AutofacJobFactory` into every scheduler it creates. |
+
+---
+
+## Target frameworks
+
+| Project | Frameworks |
+|---------|-----------|
+| Library (`Autofac.Extras.Quartz`) | `netstandard2.0`, `netstandard2.1`, `net8.0`, `net9.0`, `net10.0` |
+| Tests & Samples | `net8.0`, `net9.0`, `net10.0` |
+
+---
+
+## Dependencies
+
+### Library
+- `Autofac` `[9.0.0, 10.0.0)`
+- `Quartz` `[3.16.1, 4.0.0)`
+- `JetBrains.Annotations` (compile-time only, `[PublicAPI]`, `[UsedImplicitly]`, etc.)
+- `Microsoft.SourceLink.GitHub` (build/pack only)
+
+### Test project
+- `xunit` + `xunit.runner.visualstudio`
+- `Shouldly` – fluent assertion library used in tests
+- `Moq` – mocking `IScheduler`, `IOperableTrigger`, `ICalendar`
+- `Microsoft.NET.Test.Sdk`
+- `Appveyor.TestLogger`
+
+---
+
+## Coding conventions
+
+- **C# `preview` language version**, `<Nullable>enable</Nullable>`, `<ImplicitUsings>enable</ImplicitUsings>`.
+- Nullable warnings treated as errors (`<WarningsAsErrors>Nullable</WarningsAsErrors>`).
+- Global usings (via `Directory.Build.props`): `Autofac`, `JetBrains.Annotations`, `Quartz`, `Quartz.Core`, `Quartz.Impl`, `Quartz.Spi`.
+- All public members must have **XML doc comments**.
+- Assembly is **strong-named** (`keyfile.snk`).
+- `[PublicAPI]` attribute marks public library surface; `[UsedImplicitly]` suppresses JetBrains warnings on test helpers.
+
+---
+
+## Running the build
+
+```bash
+# restore & build (all TFMs)
+dotnet build src/Autofac.Extras.Quartz.sln
+
+# run tests
+dotnet test src/Autofac.Extras.Quartz.sln
+
+# full Cake build (restore → build → test → pack)
+dotnet cake build.cake
+```
+
+---
+
+## Contributing guidelines (summary)
+- Target the **develop** branch for pull requests.
+- Add XML documentation to all public members.
+- Add/update unit tests for any changed behaviour.
+- All tests must pass before merging.
+- Squash commits (1 commit per feature/fix ideally).
