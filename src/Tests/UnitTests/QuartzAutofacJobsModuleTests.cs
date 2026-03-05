@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2022 Alphacloud.Net
+// Copyright (c) 2014-2026 Alphacloud.Net
 
 #endregion
 
@@ -14,7 +14,7 @@
 namespace Autofac.Extras.Quartz.Tests;
 
 using System.Reflection;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 public class QuartzAutofacJobsModuleTests : IDisposable
@@ -35,7 +35,7 @@ public class QuartzAutofacJobsModuleTests : IDisposable
         });
         _container = builder.Build();
 
-        _container.IsRegistered<TestJob2>().Should().BeFalse();
+        _container.IsRegistered<TestJob2>().ShouldBeFalse();
     }
 
     [Fact]
@@ -45,8 +45,7 @@ public class QuartzAutofacJobsModuleTests : IDisposable
         builder.RegisterModule(new QuartzAutofacJobsModule(Assembly.GetExecutingAssembly()));
         _container = builder.Build();
 
-        _container.IsRegistered<TestJob>()
-            .Should().BeTrue();
+        _container.IsRegistered<TestJob>().ShouldBeTrue();
     }
 
 

@@ -3,14 +3,14 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2022 Alphacloud.Net
+// Copyright (c) 2014-2026 Alphacloud.Net
 
 #endregion
 
 namespace Autofac.Extras.Quartz.Tests;
 
-using FluentAssertions;
 using Moq;
+using Shouldly;
 using Xunit;
 
 public class NestedScopeConfiguratorTests : IDisposable
@@ -55,7 +55,7 @@ public class NestedScopeConfiguratorTests : IDisposable
         );
 
         var job = _jobFactory.NewJob(triggerBundle, Mock.Of<IScheduler>());
-        job.As<SampleJob>().Dependency.Scope.Should().Be(LocalScope);
+        job.ShouldBeOfType<SampleJob>().Dependency.Scope.ShouldBe(LocalScope);
 
         _jobFactory.ReturnJob(job);
     }

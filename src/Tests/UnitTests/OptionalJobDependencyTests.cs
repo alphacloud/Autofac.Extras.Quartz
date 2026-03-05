@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2022 Alphacloud.Net
+// Copyright (c) 2014-2026 Alphacloud.Net
 
 #endregion
 
@@ -14,7 +14,7 @@
 namespace Autofac.Extras.Quartz.Tests;
 
 using System.Reflection;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 public class OptionalJobDependencyTests : IDisposable
@@ -43,7 +43,7 @@ public class OptionalJobDependencyTests : IDisposable
         _container = _containerBuilder.Build();
 
         var job = _container.Resolve<TestJobWithOptionalDependency>();
-        job.Dependency.Should().BeNull();
+        job.Dependency.ShouldBeNull();
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public class OptionalJobDependencyTests : IDisposable
 
 
         var job = _container.Resolve<TestJobWithOptionalDependency>();
-        job.Dependency.Should().NotBeNull("should wire optional dependency");
+        job.Dependency.ShouldNotBeNull("should wire optional dependency");
     }
 
     [UsedImplicitly]

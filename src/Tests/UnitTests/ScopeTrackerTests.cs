@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2022 Alphacloud.Net
+// Copyright (c) 2014-2026 Alphacloud.Net
 
 #endregion
 
@@ -12,8 +12,8 @@ namespace Autofac.Extras.Quartz.Tests;
 
 using System.ComponentModel;
 using System.Diagnostics;
-using FluentAssertions;
 using Moq;
+using Shouldly;
 using Xunit;
 
 public class ScopeTrackerTests : IDisposable
@@ -57,8 +57,7 @@ public class ScopeTrackerTests : IDisposable
     public void ReturnJob_Should_HandleMissingMatchingScope()
     {
         var job = new Mock<IJob>();
-        var returnJob = () => _jobFactory.ReturnJob(job.Object);
-        returnJob.Should().NotThrow("Failed to handle missing job.");
+        Should.NotThrow(() => _jobFactory.ReturnJob(job.Object));
     }
 
     [Fact]
@@ -75,10 +74,11 @@ public class ScopeTrackerTests : IDisposable
         var job = _jobFactory.NewJob(triggerBundle, Mock.Of<IScheduler>());
         _jobFactory.ReturnJob(job);
 
-        _jobFactory.RunningJobs.Should().BeEmpty("Scope was not disposed after job completion");
-        DisposableDependency.CreateCount.Should().BeGreaterThan(0, "No dependencies were created");
-        DisposableDependency.DisposeCount.Should().BeGreaterThan(0, "Scoped dependencies were not disposed")
-            .And.Be(DisposableDependency.CreateCount, "Not all dependencies were disposed");
+        _jobFactory.RunningJobs.ShouldBeEmpty("Scope was not disposed after job completion");
+        DisposableDependency.CreateCount.ShouldBeGreaterThan(0, "No dependencies were created");
+        DisposableDependency.DisposeCount.ShouldBeGreaterThan(0, "Scoped dependencies were not disposed");
+        DisposableDependency.DisposeCount.ShouldBe(DisposableDependency.CreateCount,
+            "Not all dependencies were disposed");
     }
 
 

@@ -3,7 +3,7 @@
 // Autofac Quartz integration
 // https://github.com/alphacloud/Autofac.Extras.Quartz
 // Licensed under MIT license.
-// Copyright (c) 2014-2022 Alphacloud.Net
+// Copyright (c) 2014-2026 Alphacloud.Net
 
 #endregion
 
@@ -14,7 +14,7 @@
 namespace Autofac.Extras.Quartz.Tests;
 
 using System.Collections.Specialized;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 public class QuartzAutofacFactoryModuleTests : IDisposable
@@ -55,15 +55,15 @@ public class QuartzAutofacFactoryModuleTests : IDisposable
         _quartzAutofacFactoryModule.ConfigurationProvider = _ => configuration;
 
         var scheduler = _container.Resolve<IScheduler>();
-        scheduler.SchedulerName.Should().BeEquivalentTo(customSchedulerName);
+        scheduler.SchedulerName.ShouldBe(customSchedulerName);
     }
 
     [Fact]
     public void ShouldRegisterAutofacJobFactory()
     {
-        _container.Resolve<AutofacJobFactory>().Should().NotBeNull();
-        _container.Resolve<IJobFactory>().Should().BeOfType<AutofacJobFactory>();
-        _container.Resolve<IJobFactory>().Should().BeSameAs(_container.Resolve<AutofacJobFactory>(),
+        _container.Resolve<AutofacJobFactory>().ShouldNotBeNull();
+        _container.Resolve<IJobFactory>().ShouldBeOfType<AutofacJobFactory>();
+        _container.Resolve<IJobFactory>().ShouldBeSameAs(_container.Resolve<AutofacJobFactory>(),
             "should be singleton");
     }
 
@@ -71,21 +71,21 @@ public class QuartzAutofacFactoryModuleTests : IDisposable
     public void ShouldRegisterAutofacSchedulerFactory()
     {
         var factory = _container.Resolve<ISchedulerFactory>();
-        factory.Should().BeOfType<AutofacSchedulerFactory>();
+        factory.ShouldBeOfType<AutofacSchedulerFactory>();
     }
 
     [Fact]
     public void ShouldRegisterFactoryAsSingleton()
     {
         var factory = _container.Resolve<ISchedulerFactory>();
-        _container.Resolve<ISchedulerFactory>().Should().BeSameAs(factory);
+        _container.Resolve<ISchedulerFactory>().ShouldBeSameAs(factory);
     }
 
     [Fact]
     public void ShouldRegisterSchedulerAsSingleton()
     {
         var scheduler = _container.Resolve<IScheduler>();
-        _container.Resolve<IScheduler>().Should().BeSameAs(scheduler);
+        _container.Resolve<IScheduler>().ShouldBeSameAs(scheduler);
     }
 
 
