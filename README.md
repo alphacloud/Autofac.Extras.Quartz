@@ -9,7 +9,7 @@ Nested scope is disposed after job execution has been completed.
 This allows to have [single instance per job execution](https://autofac.readthedocs.io/en/latest/lifetime/instance-scope.html#instance-per-lifetime-scope)
  as well as deterministic [disposal of resources](https://autofac.readthedocs.io/en/latest/lifetime/disposal.html#automatic-disposal).
 
-Install package via Nuget: `install-package Autofac.Extras.Quartz`
+Install package: `dotnet add package Autofac.Extras.Quartz`
 
 ## Build status
 

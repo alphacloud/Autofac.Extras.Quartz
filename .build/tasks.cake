@@ -32,7 +32,7 @@ Task("UpdateAppVeyorBuildNumber")
 Task("Restore")
     .Does<BuildInfo>(build =>
     {
-        DotNetCoreRestore(build.Paths.SrcDir);
+        DotNetRestore(build.Paths.SrcDir);
     });
 
 
@@ -43,9 +43,9 @@ Task("RunXunitTests")
         var projectFilename = build.Settings.SolutionName;
         // keep in sync with src/Directory.Build.props
         var testTargets = new KeyValuePair<string, bool>[] {
-            new KeyValuePair<string,bool>("net6.0", true),
-            new KeyValuePair<string,bool>("net7.0", true),
-            new KeyValuePair<string,bool>("net8.0", true)
+            new KeyValuePair<string,bool>("net8.0", true),
+            new KeyValuePair<string,bool>("net9.0", true),
+            new KeyValuePair<string,bool>("net10.0", true)
         };
         foreach(var targetFw in testTargets)
         {
@@ -84,7 +84,7 @@ Task("RunXunitTests")
                 
                 // run open cover for debug build configuration
                 OpenCover(
-                    tool => tool.DotNetCoreTool(
+                    tool => tool.DotNetTool(
                         projectPath.ToString(),
                         "test",
                         buildProcessArgs("Debug", targetFw.Key)
@@ -96,7 +96,7 @@ Task("RunXunitTests")
             {
                 var solutionFullPath = build.Paths.RootDir.Combine(build.Paths.SrcDir).Combine(build.Settings.SolutionName) + ".sln";
                 Information("Running Debug mode tests for {0} ({1})", projectFilename, targetFw.Key);
-                DotNetCoreTool(
+                DotNetTool(
                     solutionFullPath,
                     "test",
                     buildProcessArgs("Debug", targetFw.Key)
@@ -109,7 +109,7 @@ Task("RunXunitTests")
             {
                 var solutionFullPath = build.Paths.RootDir.Combine(build.Paths.SrcDir).Combine(build.Settings.SolutionName) + ".sln";
                 Information("Running Release mode tests for {0} ({1})", projectFilename, targetFw.Key);
-                DotNetCoreTool(
+                DotNetTool(
                     solutionFullPath,
                     "test",
                     buildProcessArgs("Release", targetFw.Key)
@@ -141,7 +141,7 @@ Task("GenerateCoverageReport")
     });
 
 Task("UploadCoverage")
-    .WithCriteria<BuildInfo>((ctx, build) => !build.IsLocal)
+    .WithCriteria<BuildInfo>((ctx, build) => (!build.IsPullRequest && !build.IsLocal))
     .Does<BuildInfo>(build =>
     {
         CoverallsNet(build.Paths.TestCoverageOutputFile, CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
@@ -184,13 +184,13 @@ Task("Build")
         if (build.IsRelease) {
             Information("Running {0} build to calculate code coverage", "Debug");
             // need Debug build for code coverage
-            DotNetCoreBuild(build.Paths.SrcDir, new DotNetCoreBuildSettings {
+            DotNetBuild(build.Paths.SrcDir, new DotNetBuildSettings {
                 NoRestore = true,
                 Configuration = "Debug",
             });
         }
         Information("Running {0} build", build.Config);
-        DotNetCoreBuild(build.Paths.SrcDir, new DotNetCoreBuildSettings {
+        DotNetBuild(build.Paths.SrcDir, new DotNetBuildSettings {
             NoRestore = true,
             Configuration = build.Config,
         });
@@ -200,7 +200,7 @@ Task("Build")
 Task("CreateNugetPackages")
     .Does<BuildInfo>(build =>
     {
-        DotNetCorePack(build.Paths.SrcDir, new DotNetCorePackSettings {
+        DotNetPack(build.Paths.SrcDir, new DotNetPackSettings {
             Configuration = build.Config,
             NoRestore = true,
             NoBuild = true,
