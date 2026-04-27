@@ -27,7 +27,7 @@
     <PackageReference Include="Autofac" Version="[9.0.0, 10.0.0)" />
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageReference Include="Quartz" Version="[3.16.1, 4.0.0)" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.103">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.203">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
